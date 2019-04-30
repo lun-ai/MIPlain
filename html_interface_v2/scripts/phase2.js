@@ -1,4 +1,4 @@
-var TOTAL_GAMES = 10,
+var TOTAL_GAMES = 7,
     N_SIZE = 3,
     EMPTY = '&nbsp;',
     TIMER_SLICE = 1000,
@@ -20,8 +20,9 @@ var t,
     regret = 0,
     games = [],
     ended = false,
-    wrongMove = [-1] * TOTAL_GAMES,
-    positions = [-1] * TOTAL_GAMES,
+    phase3_start = false;
+    wrongMoves = [-1, -1, -1, -1, -1, -1, -1],
+    positions = [-1, -1, -1, -1, -1, -1, -1],
     minimaxTable = canonicalData,
     boardRepreToCanonical = canonicalMap;
 
@@ -78,9 +79,18 @@ function boardClicked() {
         games[currentGame - 1].push(prevBoard);
 
         var currentBoard = convertBoxesTOBoard(boxes);
-        if (wrongMove[currentGame - 1] == -1 && getMiniMaxScore(prevBoard, currentBoard, 1) != 10) {
-            wrongMove[currentGame - 1] = games[currentGame - 1].length - 1;
+        games[currentGame - 1].push(currentBoard);
+
+        if (wrongMoves[currentGame - 1] == -1 && getMiniMaxScore(prevBoard, currentBoard, 1) != 10) {
+            wrongMoves[currentGame - 1] = games[currentGame - 1].length - 1;
+            positions[currentGame - 1] = prevBoard
+                                         .map(function(_, i) { return prevBoard[i] != currentBoard[i] ? i : -1;})
+                                         .filter(i => i != -1)[0];
         }
+
+        console.log(wrongMoves);
+        console.log(positions);
+        console.log(games);
 
         if (win(currentBoard, 1)){
             regret += 0;
@@ -89,7 +99,6 @@ function boardClicked() {
             createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
             return;
         } else {
-            console.log(currentBoard);
 
             if (currentBoard.filter(mark => mark == 0).length == 0) {
                 regret += 1;
@@ -105,6 +114,7 @@ function boardClicked() {
             if (win(newBoard, 2)) {
                 regret += 2;
                 ended = true;
+                games[currentGame - 1].push(newBoard);
                 document.getElementById('outcome').textContent = 'LOSE';
                 createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
                 return;
@@ -160,6 +170,11 @@ function nextGame() {
     }
 
     document.getElementById('game').appendChild(board);
+}
+
+
+function phase3 () {
+    phase3_start = true;
 }
 
 alert('In this phase, you play 7 games. Each GAME ' +
