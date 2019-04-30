@@ -90,16 +90,19 @@ function boardClicked() {
             return;
         } else {
             console.log(currentBoard);
-            var newBoard = computeNextMove(currentBoard, 2);
-            convertBoardToBoxes(newBoard, boxes);
 
-            if (newBoard.filter(mark => mark == 0).length == 0) {
+            if (currentBoard.filter(mark => mark == 0).length == 0) {
                 regret += 1;
                 ended = true;
                 document.getElementById('outcome').textContent = 'DRAW';
                 createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
                 return;
-            } else if (win(newBoard, 2)) {
+            }
+
+            var newBoard = computeNextMove(currentBoard, 2);
+            convertBoardToBoxes(newBoard, boxes);
+
+            if (win(newBoard, 2)) {
                 regret += 2;
                 ended = true;
                 document.getElementById('outcome').textContent = 'LOSE';

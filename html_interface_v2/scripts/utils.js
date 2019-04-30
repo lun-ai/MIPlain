@@ -1,3 +1,25 @@
+function win(board, player) {
+    if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
+        return true
+    } else if (board[0] === board[3] && board[3] === board[7] && board[7] === player) {
+        return true
+    } else if (board[1] === board[2] && board[2] === board[3] && board[3] === player) {
+        return true
+    } else if (board[3] === board[4] && board[4] === board[5] && board[5] === player) {
+        return true
+    } else if (board[7] === board[6] && board[6] === board[5] && board[5] === player) {
+        return true
+    } else if (board[7] === board[8] && board[8] === board[1] && board[1] === player) {
+        return true
+    } else if (board[8] === board[0] && board[0] === board[4] && board[4] === player) {
+        return true
+    } else if (board[2] === board[0] && board[0] === board[6] && board[6] === player) {
+        return true
+    }
+    return false
+}
+
+
 /*
     Change number labels to o / x labels on a board and switch positioning of cells.
 */
@@ -150,23 +172,56 @@ function win(board, player) {
 function computeNextMove(board, player){
     var canonicalRepre = boardRepreToCanonical[board.join('')];
     var entry = minimaxTable[canonicalRepre];
-    var bestOutcomeScore = player === 1 ? Math.max(...entry[1]) : Math.min(...entry[1]);
+    var bestOutcomeScore = player == 1 ? Math.max(...entry[1]) : Math.min(...entry[1]);
+    var opponent = player == 1 ? 2 : 1;
 
     var optimalMoves = entry[0].filter(function(move, i){
         return entry[1][i] === bestOutcomeScore;
     });
 
-//    var optimalMove = optimalMoves[Math.floor(Math.random() * optimalMoves.length)];
-    var optimalMove = optimalMoves[0];
-    var canonicalNextBoard = canonicalRepre.split('').map(Number);
-    canonicalNextBoard[optimalMove] = player;
-    var canonicalNextRepre = canonicalNextBoard.join('');
-    console.log(minimaxTable[boardRepreToCanonical[canonicalNextRepre]]);
+    var optimalRepre = canonicalRepre.split('').map(Number);
+    optimalRepre[optimalMoves[0]] = player;
+    optimalRepre = optimalRepre.join('');
+
+    var score = 0;
+
+    for (var i = 0; i < optimalMoves.length; i++) {
+
+        var optimalMove = optimalMoves[i];
+        var canonicalNextBoard = canonicalRepre.split('').map(Number);
+        var copyBoard = [...canonicalNextBoard];
+        copyBoard[optimalMove] = opponent;
+        canonicalNextBoard[optimalMove] = player;
+        var canonicalNextRepre = canonicalNextBoard.join('');
+
+        if (win(copyBoard, opponent)) {
+            optimalRepre = canonicalNextRepre;
+            break;
+        }
+
+        console.log(canonicalNextRepre);
+        var scores = minimaxTable[boardRepreToCanonical[canonicalNextRepre]][1];
+        console.log(minimaxTable[boardRepreToCanonical[canonicalNextRepre]]);
+
+        if (player == 1 && score < Math.min(...scores)) {
+            score = Math.min(...scores);
+            optimalRepre = canonicalNextRepre;
+            console.log(score);
+        } else if (player == 2 && score > Math.max(...scores)){
+            score = Math.max(...scores);
+            optimalRepre = canonicalNextRepre;
+            console.log(score);
+        }
+
+
+    }
+
+
     return board.map(function(_, i){
                         var copyBoard = board.slice();
                         copyBoard[i] = copyBoard[i] === 0  ?  player : copyBoard[i];
                         return copyBoard.join('');})
-                        .filter(repre => boardRepreToCanonical[repre] === boardRepreToCanonical[canonicalNextRepre])[0]
+                        .filter(repre => boardRepreToCanonical[repre] === boardRepreToCanonical[optimalRepre])[0]
                         .split('')
                         .map(Number);
 }
