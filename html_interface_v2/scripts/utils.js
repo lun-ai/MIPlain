@@ -27,7 +27,7 @@ function parsePrologVar(sub){
 
 function composeStrategyState(board){
     var numMove = board.filter(x => x === 0).length;
-    var toPlay = numMove % 2 === 1 ? 'o' : 'x';
+    var toPlay = numMove % 2 === 1 ? 'x' : 'o';
         outcome = '_';
     return 's('
             + toPlay
@@ -186,6 +186,7 @@ function win(board, player) {
  *  Find (AI / player) 's optimal board state.
  */
 function computeNextMove(board, player){
+    console.log(board);
     var canonicalRepre = boardRepreToCanonical[board.join('')];
     var entry = minimaxTable[canonicalRepre];
     var bestOutcomeScore = player == 1 ? Math.max(...entry[1]) : Math.min(...entry[1]);
@@ -220,11 +221,9 @@ function computeNextMove(board, player){
         if (player == 1 && score < Math.min(...scores)) {
             score = Math.min(...scores);
             optimalRepre = canonicalNextRepre;
-            console.log(score);
         } else if (player == 2 && score > Math.max(...scores)){
             score = Math.max(...scores);
             optimalRepre = canonicalNextRepre;
-            console.log(score);
         }
 
 

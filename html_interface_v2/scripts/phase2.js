@@ -1,6 +1,7 @@
 var TWO_PLY_BOARDS_PHASE2 = [[0,0,0,0,0,1,0,2,0], [0,0,0,0,0,1,2,0,0]],
     TWO_PLY_BOARDS_PHASE4 = [[0,2,0,0,0,1,0,0,0], [0,0,2,0,0,0,0,0,1]],
     TOTAL_GAMES = TWO_PLY_BOARDS_PHASE2.length,
+    RESOLUTION_DEPTH = 50000,
     N_SIZE = 3,
     EMPTY = '&nbsp;',
     TIMER_SLICE = 1000,
@@ -21,8 +22,8 @@ var t,
     currentGame = 0,
     prevBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
     test_boards = TWO_PLY_BOARDS_PHASE2,
-    regret = 0,
-    strategyRegret = 0,
+    regrets = [],
+    strategyRegrets = [],
     games = [],
     timeTaken = [],
     ended = false,
@@ -34,57 +35,62 @@ var t,
     boardRepreToCanonical = canonicalMap;
 
 var texts = String(window.location).split('=');
-var participantID = Number(texts[texts.length - 1]);
-
+var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
 function applyStrategy(board) {
 
     var session = pl.create(RESOLUTION_DEPTH);
 
-    session.consult(PL_FILE_NAME + (participantID % 3) + '.pl');
+    console.log(session.consult(PL_FILE_NAME + (participantID % 3) + '.pl'));
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
+    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
     session.answer(x => queryWin = x);
 
-    var nextBoard = parsePrologVar(queryWin.lookup('B'));
-    console.log(nextBoard);
+    console.log(queryWin);
 
-    return newBoard;
+    var nextBoard = parsePrologVar(queryWin.lookup('B'));
+
+    return nextBoard;
 }
 
 
 function learnerPlayGame(board) {
 
-    gamesUsingStrategy.push([board]);
+    var game = [board];
+    var nextBoard = board;
 
     while(true) {
-        var nextBoard = applyStrategy(board);
-        gamesUsingStrategy[currentGame - 1].push(nextBoard);
+
+        nextBoard = applyStrategy(nextBoard);
+        game.push(nextBoard);
 
         if (win(nextBoard, 1)) {
-            strategyRegret += 0;
+            strategyRegrets.push(0);
             break;
         }
 
         if (nextBoard.filter(mark => mark == 0).length == 0) {
-            strategyRegret += 1;
+            strategyRegrets.push(1);
             break;
         }
 
+        console.log(nextBoard);
         nextBoard = computeNextMove(nextBoard, 2);
-        gamesUsingStrategy[currentGame - 1].push(nextBoard);
+        game.push(nextBoard);
 
-        if (win(nextBoard, 1)){
-            strategyRegret += 2;
+        if (win(nextBoard, 2)){
+            strategyRegrets.push(2);
             break;
         }
 
     }
 
-}
+    return game;
 
+}
 
 function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
@@ -130,6 +136,7 @@ function stopCountPhase2() {
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
+        gamesUsingStrategy.push(learnerPlayGame(test_boards[currentGame - 1]));
         nextGame();
         startCount();
     }
@@ -190,7 +197,7 @@ function boardClicked() {
 
         if (win(currentBoard, 1)){
 
-            regret += 0;
+            regrets.push(0);
             ended = true;
             document.getElementById('outcome').textContent += 'WIN';
             createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
@@ -200,7 +207,7 @@ function boardClicked() {
 
             if (currentBoard.filter(mark => mark == 0).length == 0) {
 
-                regret += 1;
+                regrets.push(1);
                 ended = true;
                 document.getElementById('outcome').textContent += 'DRAW';
                 createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
@@ -213,7 +220,7 @@ function boardClicked() {
 
             if (win(newBoard, 2)) {
 
-                regret += 2;
+                regrets.push(2);
                 ended = true;
                 games[currentGame - 1].push(newBoard);
                 document.getElementById('outcome').textContent += 'LOSE';
@@ -227,7 +234,6 @@ function boardClicked() {
         }
     }
 }
-
 
 
 function nextGame() {
@@ -278,7 +284,7 @@ function endExpr() {
 
     record += '\n\nPhase 4: \n'
         + games.map(g => '[\n' + g.join('\n') + '\n]\n')
-        + 'cumulative regret: ' + regret + '\n'
+        + 'cumulative regrets: ' + regrets + '\n'
         + 'time: ' + timeTaken + '\n'
         + 'moves: ' + wrongMoves + '\n'
         + 'position played: ' + positions;
@@ -301,12 +307,13 @@ function phase4() {
 
     record += '\n\nPhase 3: \n'
         + 'time: ' + timeTaken + '\n';
-    games = [];
-    timeTaken = [];
-    wrongMoves = [-1, -1, -1, -1, -1, -1, -1];
+
+    games = [],
+    timeTaken = [],
+    wrongMoves = [-1, -1, -1, -1, -1, -1, -1],
     positions = [-1, -1, -1, -1, -1, -1, -1];
 
-    phase = 4;
+    phase = 4,
     totalTime = 30;
 
     document.getElementById('phase').textContent = 'Phase No.' + phase;
