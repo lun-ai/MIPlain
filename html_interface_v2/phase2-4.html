@@ -346,11 +346,11 @@ win_2_3(A):-count_strong_to_play(A,B),count_zero(B).
 win_3(A,B):- move(A,B), win_3_1(B).
 win_3_1(A):- win_3_2(A), win_3_3(A).
 win_3_2(A):- count_strong_just_played(A,B), count_one(B).
-%win_3_3(A):- move(A,B), \+(win_3_4(B)).
-%win_3_4(A):- move(A,B), \+(win_2(A,B)).
-win_3_3(A):- win_3_4(A), \+(draw_pattern(A)).
-win_3_3(A):- empty_triangle(A).
-win_3_4(A):- count_unoccupied_diags(A,B), count_zero(B).
+win_3_3(A):- move(A,B), win_3_4(B).
+win_3_4(A):- win_2_3(A), win_2(A,B).
+%win_3_3(A):- win_3_4(A), \+(draw_pattern(A)).
+%win_3_3(A):- empty_triangle(A).
+%win_3_4(A):- count_unoccupied_diags(A,B), count_zero(B).
 
 </script>
 
