@@ -13,22 +13,44 @@
 <div align="center">
     <div id='instruction1' style="font-size:1.5vw" align="center"></div>
     <div id='instruction2' style="font-size:1.5vw" align="center"></div>
-    <div id='instruction3' style="font-size:1.5vw" align="center"></div>
     <div id='numGame' style="font-size:2vw" align="center"></div>
+    <div id='instruction3' style="font-size:1.5vw" align="center"></div>
 </div>
 <div id='outcome' style="font-size:2vw" class='row' align="center"></div>
 <div id='game' class='row' align="center"></div>
-<div id='explanation1'></div>
-<div id='explanation2'></div>
+<div id='explanation1' style="display:none" align="center">
+    <div style="font-weight: bold">Rule 1:</div>
+    <div>your move + won = win in 1 move</div>
+    <div style="font-weight: bold">Rule 2:</div>
+    <div>opponent move + cannot win in 1 move +</div>
+    <div>one of your move + win in 1 move</div>
+    <div>= win in 2 moves</div>
+    <div style="font-weight: bold">Rule 3:</div>
+    <div>opponent move + no win in 2 moves + no win in 1 move +</div>
+    <div>one of your move + win in 2 moves + win in 1 move</div>
+    <div>= win in 3 moves</div>
+</div>
+<div id='explanation2' style="display:none" align="center">
+    <div style="font-weight: bold">Rule 1:</div>
+    <div>your move + won = win in 1 move</div>
+    <div style="font-weight: bold">Rule 2:</div>
+    <div>opponent has zero strong option + </div>
+    <div>you have two strong options</div>
+    <div>= win in 2 moves</div>
+    <div style="font-weight: bold">Rule 3:</div>
+    <div>you have one strong option + zero unoccupied diagonal</div>
+    <div>one of your move + win in 2 moves + win in 1 move</div>
+    <div>= win in 3 moves</div>
+</div>
 <div class="row">
-    <div id="example_1_comment" style="font-size:1vw" align="left"></div>
-    <table align="left">
-        <tr id='example_1' class='table' align="left"></tr>
+    <div id="example_1_comment" style="font-size:1.5vw" align="left"></div>
+    <table align="left" cellspacing="10px">
+        <tr id='example_1' class='table' align="left" ></tr>
     </table>
 </div>
 <div class="row">
-    <div id="example_2_comment" style="font-size:1vw" align="left"></div>
-    <table align="left">
+    <div id="example_2_comment" style="font-size:1.5vw" align="left" ></div>
+    <table align="left" cellspacing="10px">
         <tr id='example_2' class='table' align="left"></tr>
     </table>
 </div>
@@ -40,6 +62,7 @@
 <script type="text/javascript" src="scripts/data.js"></script>
 <script type="text/javascript" src="scripts/canonicalMap.js"></script>
 <script type="text/javascript" src="scripts/core.js"></script>
+<script type="text/javascript" src="scripts/lists.js"></script>
 
 <script id="strategy1.pl" type="text/prolog">
 % use embedding prolog script instead of loading from file
@@ -112,13 +135,14 @@ win_3(A,B):- win_3_1_1(A,B), \+(win_3_1_1(B,C)).
 <script id="strategy2.pl" type="text/prolog">
 % use embedding prolog script instead of loading from file
 % for reference check strategy_and_BK.pl
+:-use_module(library(lists)).
 
 is_board(B) :-
     functor(B,b,9),!.
 
 value(e,1) :- !.
-value(o,2) :- !.
-value(x,3) :- !.
+value(x,2) :- !.
+value(o,3) :- !.
 next_mark(o,x) :- !.
 next_mark(x,o) :- !.
 
@@ -319,10 +343,14 @@ win_2(A,B):-move(A,B),win_2_1(B).
 win_2_1(A):-win_2_2(A),win_2_3(A).
 win_2_2(A):-count_strong_just_played(A,B),count_two(B).
 win_2_3(A):-count_strong_to_play(A,B),count_zero(B).
-win_3(A,B):-move(A,B),win_3_1(B).
-win_3_1(A):-win_3_2(A),win_3_3(A).
-win_3_2(A):-count_unoccupied_diags(A,B),count_zero(B).
-win_3_3(A):-count_strong_just_played(A,B),count_one(B).
+win_3(A,B):- move(A,B), win_3_1(B).
+win_3_1(A):- win_3_2(A), win_3_3(A).
+win_3_2(A):- count_strong_just_played(A,B), count_one(B).
+%win_3_3(A):- move(A,B), \+(win_3_4(B)).
+%win_3_4(A):- move(A,B), \+(win_2(A,B)).
+win_3_3(A):- win_3_4(A), \+(draw_pattern(A)).
+win_3_3(A):- empty_triangle(A).
+win_3_4(A):- count_unoccupied_diags(A,B), count_zero(B).
 
 </script>
 

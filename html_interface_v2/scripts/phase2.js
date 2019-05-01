@@ -35,20 +35,19 @@ var t,
     boardRepreToCanonical = canonicalMap;
 
 var texts = String(window.location).split('=');
-var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+var participantID = isNaN(texts[texts.length - 1]) ? 2 : Number(texts[texts.length - 1]);
 
 function applyStrategy(board) {
 
     var session = pl.create(RESOLUTION_DEPTH);
 
-    console.log(session.consult(PL_FILE_NAME + (participantID % 3) + '.pl'));
+    session.consult(PL_FILE_NAME + (participantID % 3) + '.pl');
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
     console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
     session.answer(x => queryWin = x);
-
     console.log(queryWin);
 
     var nextBoard = parsePrologVar(queryWin.lookup('B'));
@@ -127,8 +126,20 @@ function stopCountPhase2() {
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent = 'In phase 3, you are given chances to look at the games '
                             + 'you just played and learn from them.';
-        document.getElementById('instruction2').textContent = '';
-        document.getElementById('instruction3').textContent = '';
+        if (participantID % 3 == 0) {
+        document.getElementById('instruction2').textContent = 'For each GAME ' +
+                        'you WON, think about a strategy which led you to win. ';
+        document.getElementById('instruction3').textContent =
+            'For each other GAME you played, the first non-optimal move will is marked' +
+            ' and you should think about a strategy which could make you win.';
+    } else {
+        document.getElementById('instruction2').textContent = 'For each GAME ' +
+                        'you WON, you can compare the strategy you played against the provided strategy. ';
+        document.getElementById('instruction3').textContent =
+            'For each other GAME you played, the first non-optimal move is marked and ' +
+            'you should try to understand the provided strategy to apply it.';
+        //document.getElementById('instruction3').textContent = 'Press \'Next\' to continue.';
+    }
         document.getElementById('numGame').textContent = '';
         document.getElementById('outcome').textContent = '';
         removeChild('gameBoard', 'game');
@@ -321,7 +332,7 @@ function phase4() {
                         ' for what you think is an optimal move. ';
     document.getElementById('instruction2').textContent = 'You have only one shot for each of your move. ' +
                         ' The outcome of the game is either you WIN, LOSE or DRAW with O. ';
-    document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
+    //document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
 
     test_boards = TWO_PLY_BOARDS_PHASE4;
     stopCount();
@@ -343,5 +354,5 @@ document.getElementById('instruction1').textContent = 'You play X, and for every
                         ' for what you think is an optimal move. ';
 document.getElementById('instruction2').textContent = 'You have only one shot for each of your move. ' +
                         ' The outcome of the game is either you WIN, LOSE or DRAW with O. ';
-document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
+//document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
 stopCount();

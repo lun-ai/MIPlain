@@ -1,4 +1,5 @@
 function showVerbalExpl() {
+    document.getElementById('explanation' + (participantID % 3)).style.display = 'block';
 }
 
 function showVisualExpl() {
@@ -13,15 +14,20 @@ function showVisualExpl() {
         var outcome = win(game[game.length - 1], 2) ? 'Lose' : 'Draw'
 
         showNegExample(game, wrongMoveIdx, pos);
-        document.getElementById('example_1_comment').textContent = 'Played by you: ' + outcome;
-        document
-            .getElementById('negboard' + (game.length - 1) + 'Comment')
-            .textContent = outcome;
+        document.getElementById('example_1_comment').textContent = 'Game NO.' + (TOTAL_GAMES - currentGame + 1)
+                                                                    + ' played by you: ' + outcome;
+        document.getElementById('negboard' + (game.length - 1) + 'Comment').textContent = outcome;
+        if (participantID % 3 != 0) {
+            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Violates rule '
+                + Math.floor((9 - (2 + wrongMoveIdx)) / 2);
 
-        game = game.slice(0, wrongMoveIdx - 1).concat(learnerPlayGame(game[wrongMoveIdx - 1]));
-        document.getElementById('example_2_comment').textContent = 'Played by strategy: Win';
-        showPosExample(game, wrongMoves[TOTAL_GAMES - currentGame]);
-        document.getElementById('posboard' + (game.length - 1) + 'Comment').textContent = 'Win';
+            game = game.slice(0, wrongMoveIdx - 1).concat(learnerPlayGame(game[wrongMoveIdx - 1]));
+            document.getElementById('example_2_comment').textContent = 'Played by strategy: Win';
+            showPosExample(game, wrongMoves[TOTAL_GAMES - currentGame]);
+            document.getElementById('posboard' + (game.length - 1) + 'Comment').textContent = 'Win';
+        } else {
+            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Bad move';
+        }
     }
     // Pos example
     else {
@@ -171,7 +177,7 @@ function stopCountPhase3() {
         removeChild('nextGameButton', 'nextGame');
         document.getElementById('phase').textContent = '';
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'In phase 3, you will play 7'
+        document.getElementById('instruction1').textContent = 'In phase 4, you will play 7'
                         + ' games. Each GAME starts from 2-ply board and you will play against '
                         + 'the OPTIMAL opponent. You have 30 SECS for each GAME.';
         document.getElementById('instruction2').textContent = '';
@@ -180,6 +186,8 @@ function stopCountPhase3() {
         document.getElementById('outcome').textContent = '';
         document.getElementById('example_1_comment').textContent = '';
         document.getElementById('example_2_comment').textContent = '';
+        document.getElementById('explanation1').style.display = 'none';
+        document.getElementById('explanation2').style.display = 'none';
         removeChild('gameBoard', 'game');
 
         removeChild('nextExampleButton', 'nextExample');
@@ -195,12 +203,13 @@ function stopCountPhase3() {
 
 function nextExpl() {
 
-    document.getElementById('numGame').textContent = 'Played game NO.' + (TOTAL_GAMES - currentGame + 1);
     document.getElementById('example_1_comment').textContent = '';
     document.getElementById('example_2_comment').textContent = '';
 
     showVisualExpl();
-    showVerbalExpl();
+    if (participantID % 3 != 0) {
+        showVerbalExpl();
+    }
 
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 }
@@ -224,12 +233,10 @@ function phase3 () {
     ended = false;
 
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = 'For each GAME ' +
-                        'you WON, you can check your moves against provided strategy. ';
-    document.getElementById('instruction2').textContent =
-        'For each other GAME you played, you can look at the first non-optimal move and ' +
-        'compare with provided strategy from which you could play otherwise.';
-    document.getElementById('instruction3').textContent = 'Press \'Next\' to continue.';
+
+    document.getElementById('instruction1').textContent = '';
+    document.getElementById('instruction2').textContent = '';
+    document.getElementById('instruction3').textContent = '';
 
     stopCount();
 }
