@@ -2,34 +2,30 @@ function showVerbalExpl() {
 }
 
 function showVisualExpl() {
-    // mistake
-    if(wrongMoves[TOTAL_GAMES - currentGame] != -1) {
-    } else {
-    }
-}
-
-function nextExample() {
-
-    document.getElementById('numExample').textContent = 'Example NO.' + current_example;
-    createButton('nextExampleButton', 'nextExample', 'Next example', stopCount);
 
     // Neg example
-    if (current_example % 2 === 0) {
-        showNegExample(examples[current_example - 1],
-                       moves[Math.floor(current_example / 2) - 1],
-                       positions[Math.floor(current_example / 2) - 1]);
-        var outcome = examples[current_example - 1].length === 7 ? 'Lose' : 'Draw'
+    if (wrongMoves[TOTAL_GAMES - currentGame] != -1) {
+        showNegExample(games[TOTAL_GAMES - currentGame],
+                       wrongMoves[TOTAL_GAMES - currentGame],
+                       positions[TOTAL_GAMES - currentGame]);
+        var outcome = games[TOTAL_GAMES - currentGame].length === 7 ? 'Lose' : 'Draw'
         document.getElementById('outcome').textContent = 'Outcome - ' + outcome;
-        document.getElementById('board' + (examples[current_example - 1].length - 1) + 'Comment').textContent = outcome;
+        document
+            .getElementById('board' + (games[TOTAL_GAMES - currentGame].length - 1) + 'Comment')
+            .textContent = outcome;
+
+
     }
     // Pos example
     else {
-        showPosExample(examples[current_example - 1]);
+        showPosExample(games[TOTAL_GAMES - currentGame]);
         document.getElementById('outcome').textContent = 'Outcome - Win';
-        document.getElementById('board' + (examples[current_example - 1].length - 1) + 'Comment').textContent = 'Win';
+        document
+            .getElementById('board' + (games[TOTAL_GAMES - currentGame].length - 1) + 'Comment')
+            .textContent = 'Win';
     }
-
 }
+
 
 // board has row1-row2-row3 format
 function createBoard(board, boardId, parentId, pos, color) {
@@ -95,7 +91,11 @@ function clearBoards() {
     for (var i = 0; i < 9; i++) {
         var child = document.getElementById('board'+i);
         if (child != null){
-            document.getElementById('example').removeChild(child);
+            if (child.parentNode.id == 'example_1') {
+                document.getElementById('example_1').removeChild(child);
+            } else {
+                document.getElementById('example_2').removeChild(child);
+            }
         }
     }
 }
@@ -104,7 +104,7 @@ function clearBoards() {
 function showPosExample(example){
 
     for (var i = 0; i < example.length; i++) {
-        createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', 0, 'white');
+        createBoard(example[i], 'board'+i, 'example_2', 0, 'white');
     }
 }
 
@@ -112,26 +112,47 @@ function showNegExample(example, move, pos){
 
     for (var i = 0; i < example.length; i++) {
         if (i === move) {
-            createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', changeIndex(pos), 'red');
+            createBoard(example[i], 'board'+i, 'example_1', changeIndex(pos), 'red');
         } else {
-            createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', 0, 'white');
+            createBoard(example[i], 'board'+i, 'example_1', 0, 'white');
         }
     }
 
-
 }
 
-function stopCount() {
+
+function stopCountPhase3() {
 
     if (t != null) {
+        if (timeTaken.length <= (TOTAL_GAMES - currentGame)) {
+            timeTaken.push(Math.min(sec, totalTime));
+            console.log(timeTaken);
+        }
         clearTimeout(t);
         sec = 0;
     }
 
-    currentGame += 1;
+    currentGame -= 1;
 
-    if (currentGame > 10) {
-        createButton('nextPhaseButton', 'nextPhase', 'Next Phase', phase3);
+    clearBoards();
+
+    if (currentGame < 1) {
+
+        removeChild('nextGameButton', 'nextGame');
+        document.getElementById('phase').textContent = '';
+        document.getElementById('timer').textContent = '';
+        document.getElementById('instruction1').textContent = 'In phase 3, you will play 7'
+                        + ' games. Each GAME starts from 2-ply board and you will play against '
+                        + 'the OPTIMAL opponent. You have 30 SECS for each GAME.';
+        document.getElementById('instruction2').textContent = '';
+        document.getElementById('instruction3').textContent = '';
+        document.getElementById('numGame').textContent = '';
+        document.getElementById('outcome').textContent = '';
+        removeChild('gameBoard', 'game');
+
+        removeChild('nextExampleButton', 'nextExample');
+        createButton('nextPhaseButton', 'nextPhase', 'Next Phase', phase4);
+
     } else {
         nextExpl();
         startCount();
@@ -141,17 +162,45 @@ function stopCount() {
 
 
 function nextExpl() {
-    currentGame -= 1;
 
-    showVerbalExpl();
+    document.getElementById('numGame').textContent = 'Played game NO.' + (TOTAL_GAMES - currentGame + 1);
+
     showVisualExpl();
+    showVerbalExpl();
+
+    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 }
 
 
-while(!phase3_start) {
+function phase3 () {
+
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    record += 'Phase 2: \n'
+        + games.map(g => '[\n' + g.join('\n') + '\n]\n')
+        + 'cumulative regret: ' + regret + '\n'
+        + 'time: ' + timeTaken + '\n'
+        + 'moves: ' + wrongMoves + '\n'
+        + 'position played: ' + positions;
+    timeTaken = [];
+
+    totalTime = 60;
+    phase = 3;
+    ended = false;
+
+    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('instruction1').textContent = 'For each GAME ' +
+                        'you WON, you can check your moves against provided strategy. ';
+    document.getElementById('instruction2').textContent =
+        'For each other GAME you played, you can look at the first non-optimal move and ' +
+        'compare with provided strategy from which you could play otherwise.';
+    document.getElementById('instruction3').textContent = 'Press \'Next\' to continue.';
+
+    stopCount();
 }
 
-var totalTime = 60;
+
+
 
 
 

@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="css/layout.css">
 </head>
 <body>
+<div id='phase' style="font-size:2vw" align="left"></div>
 <div align="center">
     <span id='timer' style="color:red; font-size:2vw"></span>
 </div>
@@ -15,6 +16,7 @@
     <div id='instruction3' style="font-size:1.5vw" align="center"></div>
     <div id='numGame' style="font-size:2vw" align="center"></div>
 </div>
+<div id='outcome' style="font-size:2vw" class='row' align="center"></div>
 <div id='game' class='row' align="center"></div>
 <table align="center">
     <tr id='example_1' class='table' align="center"></tr>
@@ -23,9 +25,8 @@
     <tr id='example_2' class='table' align="center"></tr>
 </table>
 <div id="explanations"></div>
-<div id='outcome' style="font-size:2vw" class='row' align="center"></div>
 <div id="nextGame" align="center"></div>
-<div id="nextExample"></div>
+<div id="nextExample" align="center"></div>
 <div id="nextPhase" align="center"></div>
 
 
@@ -34,7 +35,8 @@
 <script type="text/javascript" src="scripts/core.js"></script>
 <script type="text/javascript" src="scripts/utils.js"></script>
 <script type="text/javascript" src="scripts/phase2.js"></script>
-<script id="strategy.pl" type="text/prolog">
+<script type="text/javascript" src="scripts/phase3.js"></script>
+<script id="strategy1.pl" type="text/prolog">
             % use embedding prolog script instead of loading from file
             % for reference check strategy_and_BK.pl
 

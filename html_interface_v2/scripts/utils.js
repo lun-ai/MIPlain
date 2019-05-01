@@ -20,6 +20,23 @@ function win(board, player) {
 }
 
 
+function parsePrologVar(sub){
+    return inverseLabelsOnBoard(sub.toString().split('(')[2].split(')')[0].split(', '));
+}
+
+
+function composeStrategyState(board){
+    var numMove = board.filter(x => x === 0).length;
+    var toPlay = numMove % 2 === 1 ? 'o' : 'x';
+        outcome = '_';
+    return 's('
+            + toPlay
+            + ',' + outcome
+            + ',b(' + changeLabelsOnBoard(board).join(',')
+            + '))';
+}
+
+
 /*
     Change number labels to o / x labels on a board and switch positioning of cells.
 */
@@ -129,7 +146,6 @@ function convertBoxesTOBoard(boxes){
   return board;
 }
 
-
 function convertBoardToBoxes(board, boxes){
   boxes[4].innerHTML = convertIDToSymbol(board[0]);
   boxes[0].innerHTML = convertIDToSymbol(board[1]);
@@ -199,9 +215,7 @@ function computeNextMove(board, player){
             break;
         }
 
-        console.log(canonicalNextRepre);
         var scores = minimaxTable[boardRepreToCanonical[canonicalNextRepre]][1];
-        console.log(minimaxTable[boardRepreToCanonical[canonicalNextRepre]]);
 
         if (player == 1 && score < Math.min(...scores)) {
             score = Math.min(...scores);

@@ -31,7 +31,7 @@ function nextExample() {
     // Neg example
     if (current_example % 2 === 0) {
         showNegExample(examples[current_example - 1],
-                       moves[Math.floor(current_example / 2) - 1],
+                       wrongMoves[Math.floor(current_example / 2) - 1],
                        positions[Math.floor(current_example / 2) - 1]);
         var outcome = examples[current_example - 1].length === 7 ? 'Lose' : 'Draw'
         document.getElementById('outcome').textContent = 'Outcome - ' + outcome;
@@ -147,8 +147,19 @@ function stopCount() {
     clearBoards();
 
     if (current_example > TOTAL_EXAMPLE) {
+
         removeChild('nextExampleButton', 'nextExample');
-        createButton('nextPhaseButton', 'nextPhase', 'Next Phase', phase2);
+        document.getElementById('phase').textContent = '';
+        document.getElementById('timer').textContent = '';
+        document.getElementById('instruction1').textContent = 'In phase 2, you will play 7'
+                        + ' games. Each GAME starts from 2-ply board and you will play against '
+                        + 'the OPTIMAL opponent. You have 30 SECS for each GAME.';
+        document.getElementById('instruction2').textContent = '';
+        document.getElementById('instruction3').textContent = '';
+        document.getElementById('numExample').textContent = '';
+        document.getElementById('outcome').textContent = '';
+
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
     } else {
         nextExample();
         startCount();
@@ -167,22 +178,28 @@ function wrapTime(time) {
     return time;
 }
 
-function phase1_instruction() {
-
-
-}
-
 
 function phase2() {
     window.location.href = 'phase2-4.html?' + 'participantID=' + participantID;
 }
 
-alert('In phase 1, you will see ' + TOTAL_EXAMPLE +
-    ' games of Noughts and Crosses. Each GAME starts from 2-ply board. You have 30 SECS to inspect each example.');
-document.getElementById('instruction1').textContent = 'Each GAME is either a WIN for X, a LOSE or a DRAW.' +
-                        ' For each lost or drawn game, the first bad move is highlighted in ';
-document.getElementById('instruction2').textContent = 'RED';
-document.getElementById('instruction3').textContent = 'Press \'Next Example\' to continue to the next game.';
-stopCount();
+function phase1() {
+
+    removeChild('nextPhaseButton', 'nextPhase');
+    document.getElementById('phase').textContent = 'Phase NO.1';
+    document.getElementById('instruction1').textContent = 'Each GAME is either a WIN for X, a LOSE or a DRAW.'
+                        + ' For each lost or drawn game, the first bad move is highlighted in ';
+    document.getElementById('instruction2').textContent = 'RED';
+    document.getElementById('instruction3').textContent = 'Press \'Next Example\' to continue to the next game.';
+
+    stopCount();
+}
+
+
+document.getElementById('instruction1').textContent = 'In phase 1, you will see '
+    + TOTAL_EXAMPLE
+    + ' games of Noughts and Crosses. Each GAME starts from 2-ply board. You have 30 SECS to inspect each example.';
+createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+
 
 
