@@ -97,6 +97,7 @@ function startCount() {
     if (!ended) {
         if (totalTime - sec < 0) {
             timeTaken.push(totalTime);
+            regrets.push(2);
             console.log(timeTaken);
             stopCount();
         } else {
@@ -147,7 +148,9 @@ function stopCountPhase2() {
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
-        gamesUsingStrategy.push(learnerPlayGame(test_boards[currentGame - 1]));
+        if (participantID % 3 != 0) {
+            gamesUsingStrategy.push(learnerPlayGame(test_boards[currentGame - 1]));
+        }
         nextGame();
         startCount();
     }
@@ -348,6 +351,7 @@ function stopCount() {
         stopCountPhase4();
     }
 }
+
 
 document.getElementById('phase').textContent = 'Phase No.' + phase;
 document.getElementById('instruction1').textContent = 'You play X, and for every move you can press corresponding cell' +

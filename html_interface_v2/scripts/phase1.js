@@ -47,7 +47,7 @@ function nextExample() {
 }
 
 // board has row1-row2-row3 format
-function createBoard(board, boardId, parentId, pos, color) {
+function createBoard(board, boardNum, boardId, parentId, pos, color) {
 
   var div = document.createElement('td');
   div.setAttribute('id', boardId);
@@ -91,10 +91,17 @@ function createBoard(board, boardId, parentId, pos, color) {
       var comment = document.createElement('div');
       comment.setAttribute('id', boardId+'Comment');
 
+      var count = Math.floor((boardNum + 1) / 2);
+      count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
+
       if (color == 'white') {
-        comment.textContent = ' -> ';
+        if (boardNum % 2 == 1) {
+            comment.textContent = count + ' move';
+        } else {
+            comment.textContent = ' => ';
+        }
       } else {
-        comment.textContent = 'Bad move';
+        comment.textContent = 'Bad ' + count + ' move';
       }
 
       comment.classList.add('col');
@@ -119,7 +126,7 @@ function clearBoards() {
 function showPosExample(example){
 
     for (var i = 0; i < example.length; i++) {
-        createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', 0, 'white');
+        createBoard(boardRepreToBoardRotated(example[i]), i, 'board'+i, 'example', 0, 'white');
     }
 }
 
@@ -127,9 +134,9 @@ function showNegExample(example, move, pos){
 
     for (var i = 0; i < example.length; i++) {
         if (i === move) {
-            createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', changeIndex(pos), 'red');
+            createBoard(boardRepreToBoardRotated(example[i]), i, 'board'+i, 'example', changeIndex(pos), 'red');
         } else {
-            createBoard(boardRepreToBoardRotated(example[i]), 'board'+i, 'example', 0, 'white');
+            createBoard(boardRepreToBoardRotated(example[i]), i, 'board'+i, 'example', 0, 'white');
         }
     }
 

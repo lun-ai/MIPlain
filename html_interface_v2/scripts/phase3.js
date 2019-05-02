@@ -11,22 +11,22 @@ function showVisualExpl() {
 
         var wrongMoveIdx = wrongMoves[TOTAL_GAMES - currentGame];
         var pos = positions[TOTAL_GAMES - currentGame];
-        var outcome = win(game[game.length - 1], 2) ? 'Lose' : 'Draw'
+        var outcome = win(game[game.length - 1], 2) ? 'Lose' : game.length == 8 ? 'Draw' : 'Unfinished';
 
         showNegExample(game, wrongMoveIdx, pos);
         document.getElementById('example_1_comment').textContent = 'Game NO.' + (TOTAL_GAMES - currentGame + 1)
                                                                     + ' played by you: ' + outcome;
         document.getElementById('negboard' + (game.length - 1) + 'Comment').textContent = outcome;
         if (participantID % 3 != 0) {
-            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Violates rule '
-                + Math.floor((9 - (2 + wrongMoveIdx)) / 2);
 
             game = game.slice(0, wrongMoveIdx - 1).concat(learnerPlayGame(game[wrongMoveIdx - 1]));
             document.getElementById('example_2_comment').textContent = 'Played by strategy: Win';
             showPosExample(game, wrongMoves[TOTAL_GAMES - currentGame]);
             document.getElementById('posboard' + (game.length - 1) + 'Comment').textContent = 'Win';
         } else {
-            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Bad move';
+            var count = Math.floor((wrongMoveIdx + 1) / 2);
+            count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
+            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Bad ' + count + ' move';
         }
     }
     // Pos example
@@ -39,7 +39,7 @@ function showVisualExpl() {
 
 
 // board has row1-row2-row3 format
-function createBoard(board, boardId, parentId, pos, color) {
+function createBoard(board, boardNum, boardId, parentId, pos, color) {
 
   var div = document.createElement('td');
   div.setAttribute('id', boardId);
@@ -83,12 +83,19 @@ function createBoard(board, boardId, parentId, pos, color) {
       var comment = document.createElement('div');
       comment.setAttribute('id', boardId+'Comment');
 
+      var count = Math.floor((boardNum + 1) / 2);
+      count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
+
       if (color == 'green') {
-        comment.textContent = 'Correct move';
+        comment.textContent = 'Correct ' + count + ' move' ;
       } else if (color == 'red') {
-        comment.textContent = '';
+        comment.textContent = 'Violates ' + count + ' rule';
       } else {
-        comment.textContent = '->';
+        if (boardNum % 2 == 1) {
+            comment.textContent = count + ' move';
+        } else {
+            comment.textContent = ' => ';
+        }
       }
 
       comment.classList.add('col');
@@ -137,9 +144,9 @@ function showPosExample(example, move){
         if (i === move) {
             var pos = example[i].map(function(_, j) { return example[i][j] != example[i - 1][j] ? j : -1;})
                                          .filter(j => j != -1)[0];
-            createBoard(example[i], 'posboard'+i, 'example_2', changeIndex(pos), 'green');
+            createBoard(example[i], i, 'posboard'+i, 'example_2', changeIndex(pos), 'green');
         } else {
-            createBoard(example[i], 'posboard'+i, 'example_2', 0, 'white');
+            createBoard(example[i], i, 'posboard'+i, 'example_2', 0, 'white');
         }
     }
 }
@@ -148,9 +155,9 @@ function showNegExample(example, move, pos){
 
     for (var i = 0; i < example.length; i++) {
         if (i === move) {
-            createBoard(example[i], 'negboard'+i, 'example_1', changeIndex(pos), 'red');
+            createBoard(example[i], i, 'negboard'+i, 'example_1', changeIndex(pos), 'red');
         } else {
-            createBoard(example[i], 'negboard'+i, 'example_1', 0, 'white');
+            createBoard(example[i], i, 'negboard'+i, 'example_1', 0, 'white');
         }
     }
 
