@@ -21,23 +21,23 @@ canonical_map = {'000000000': '000000000'}
 
 
 # Check for a winning termination
-def check_for_win(board, to_move_char):
-    assert to_move_char != 0
-    if board[0] == board[1] == board[5] == to_move_char:
+def check_for_win(board, player):
+    assert player != 0
+    if board[0] == board[1] == board[5] == player:
         return True
-    if board[0] == board[3] == board[7] == to_move_char:
+    if board[0] == board[3] == board[7] == player:
         return True
-    if board[1] == board[2] == board[3] == to_move_char:
+    if board[1] == board[2] == board[3] == player:
         return True
-    if board[3] == board[4] == board[5] == to_move_char:
+    if board[3] == board[4] == board[5] == player:
         return True
-    if board[7] == board[6] == board[5] == to_move_char:
+    if board[7] == board[6] == board[5] == player:
         return True
-    if board[7] == board[8] == board[1] == to_move_char:
+    if board[7] == board[8] == board[1] == player:
         return True
-    if board[8] == board[0] == board[4] == to_move_char:
+    if board[8] == board[0] == board[4] == player:
         return True
-    if board[2] == board[0] == board[6] == to_move_char:
+    if board[2] == board[0] == board[6] == player:
         return True
     return False
 

@@ -7,7 +7,7 @@ canonical = pickle.load(open('canonical_map.m', 'rb'))
 
 def board_change_ori(board):
     newBoard = ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e']
-    keys = ['e', 'o', 'x']
+    keys = ['e', 'x', 'o']
 
     newBoard[4] = keys[board[0]]
     newBoard[0] = keys[board[1]]
@@ -49,19 +49,19 @@ def get_examples_from_valid_states():
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    win_1.append('win_1(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    win_1.append('win_1(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if data[d][1][i] == 0:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    draw_2.append('win_1(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    draw_2.append('win_1(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if 10 in data[d][1] and data[d][1][i] != 10:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    neg_1.append('win_1(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    neg_1.append('win_1(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
 
 
         if len(data[d][0]) == 5:
@@ -71,19 +71,19 @@ def get_examples_from_valid_states():
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    win_2.append('win_2(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    win_2.append('win_2(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if data[d][1][i] == 0:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    draw_3.append('win_2(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    draw_3.append('win_2(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if 10 in data[d][1] and data[d][1][i] != 10:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    neg_2.append('win_2(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    neg_2.append('win_2(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
 
         if len(data[d][0]) == 7:
             for i in range(len(data[d][0])):
@@ -92,19 +92,19 @@ def get_examples_from_valid_states():
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    win_3.append('win_3(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    win_3.append('win_3(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if data[d][1][i] == 0:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    draw_4.append('win_3(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    draw_4.append('win_3(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
                 if 10 in data[d][1] and data[d][1][i] != 10:
                     b = map(int, list(d))
                     bstr1 = ','.join(board_change_ori(b))
                     b[data[d][0][i]] = 1
                     bstr2 = ','.join(board_change_ori(b))
-                    neg_3.append('win_3(s(o,_,b(%s)), s(x,_,b(%s)))' % (bstr1, bstr2))
+                    neg_3.append('win_3(s(x,_,b(%s)), s(o,_,b(%s)))' % (bstr1, bstr2))
 
     # print('win\n\n%s\n\n%s\n\n%s' % (',\n'.join(win_1), ',\n'.join(win_2), ',\n'.join(win_3)))
     # print('draw\n\n%s\n\n%s\n\n%s\n\n%s' % (',\n'.join(draw_1), ',\n'.join(draw_2), ',\n'.join(draw_3), ',\n'.join(draw_4)))
@@ -138,7 +138,16 @@ def get_examples_from_minimax_games(N):
             b_repre = get_example_aux(b_repre, rand_ind, win_pos[i], win_neg[i], win[i])
             if b_repre == None or len(data[b_repre][0]) == 0:
                 break
+
             rand_move = random.choice([data[b_repre][0][i] for i in range(len(data[b_repre][0])) if data[b_repre][1][i] == min(data[b_repre][1])])
+
+            for j in range(len(data[b_repre][0])):
+                b_win = list(map(int, list(b_repre)))
+                b_win[data[b_repre][0][j]] = 1
+                if nc.check_for_win(b_win, 1):
+                    rand_move = data[b_repre][0][j]
+                    break
+
             b = list(map(int, list(b_repre)))
             b[rand_move] = 2
 
@@ -159,7 +168,7 @@ def get_example_aux(board_repre, i, pos, neg, name):
         bstr1 = ','.join(board_change_ori(b))
         b[data[board_repre][0][i]] = 1
         bstr2 = ','.join(board_change_ori(b))
-        pos.append('%s(s(o,_,b(%s)), s(x,_,b(%s)))' % (name, bstr1, bstr2))
+        pos.append('%s(s(x,_,b(%s)), s(o,_,b(%s)))' % (name, bstr1, bstr2))
 
         return nc.compute_canonical(b)[0]
 
@@ -169,19 +178,14 @@ def get_example_aux(board_repre, i, pos, neg, name):
         bstr1 = ','.join(board_change_ori(b))
         b[data[board_repre][0][i]] = 1
         bstr2 = ','.join(board_change_ori(b))
-        neg.append('%s(s(o,_,b(%s)), s(x,_,b(%s)))' % (name, bstr1, bstr2))
+        neg.append('%s(s(x,_,b(%s)), s(o,_,b(%s)))' % (name, bstr1, bstr2))
 
         return nc.compute_canonical(b)[0]
 
-def get_games():
-    pos_games = []
-    neg_games = []
-    moves = []
-    positions = []
 
 
 
 
-# get_examples_from_minimax_games(100)
+get_examples_from_minimax_games(100)
 # get_examples_from_valid_states()
 # get_games()

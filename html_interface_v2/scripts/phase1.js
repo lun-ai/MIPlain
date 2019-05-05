@@ -1,11 +1,11 @@
-var TOTAL_EXAMPLE = 2,
+var TOTAL_EXAMPLE = examples.length,
     N_SIZE = 3,
     EMPTY = '&nbsp;',
     TIMER_SLICE = 1000,
     NUM_GROUP = 3;
 var t,
     sec = 0,
-    current_example = 0;
+    currentExample = 0;
 var texts = String(window.location).split('=');
 var participantID = Number(texts[texts.length - 1]);
 
@@ -25,23 +25,23 @@ function startCount() {
 
 function nextExample() {
 
-    document.getElementById('numExample').textContent = 'Example NO.' + current_example;
+    document.getElementById('numExample').textContent = 'Example NO.' + currentExample;
     createButton('nextExampleButton', 'nextExample', 'Next example', stopCount);
 
     // Neg example
-    if (current_example % 2 === 0) {
-        showNegExample(examples[current_example - 1],
-                       wrongMoves[Math.floor(current_example / 2) - 1],
-                       positions[Math.floor(current_example / 2) - 1]);
-        var outcome = examples[current_example - 1].length === 7 ? 'Lose' : 'Draw'
+    if (currentExample % 2 === 0) {
+        showNegExample(examples[currentExample - 1],
+                       wrongMoves[Math.floor(currentExample / 2) - 1],
+                       positions[Math.floor(currentExample / 2) - 1]);
+        var outcome = examples[currentExample - 1].length === 7 ? 'Lose' : 'Draw'
         document.getElementById('outcome').textContent = 'Outcome - ' + outcome;
-        document.getElementById('board' + (examples[current_example - 1].length - 1) + 'Comment').textContent = outcome;
+        document.getElementById('board' + (examples[currentExample - 1].length - 1) + 'Comment').textContent = outcome;
     }
     // Pos example
     else {
-        showPosExample(examples[current_example - 1]);
+        showPosExample(examples[currentExample - 1]);
         document.getElementById('outcome').textContent = 'Outcome - Win';
-        document.getElementById('board' + (examples[current_example - 1].length - 1) + 'Comment').textContent = 'Win';
+        document.getElementById('board' + (examples[currentExample - 1].length - 1) + 'Comment').textContent = 'Win';
     }
 
 }
@@ -150,10 +150,10 @@ function stopCount() {
         sec = 0;
     }
 
-    current_example += 1;
+    currentExample += 1;
     clearBoards();
 
-    if (current_example > TOTAL_EXAMPLE) {
+    if (currentExample > TOTAL_EXAMPLE) {
 
         removeChild('nextExampleButton', 'nextExample');
         document.getElementById('phase').textContent = '';
@@ -194,10 +194,10 @@ function phase1() {
 
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('phase').textContent = 'Phase NO.1';
-    document.getElementById('instruction1').textContent = 'Each GAME is either a WIN for X, a LOSE or a DRAW.'
-                        + ' For each lost or drawn game, the first bad move is highlighted in ';
+    document.getElementById('instruction1').textContent = 'For each lost or drawn game, the first bad move is highlighted in ';
     document.getElementById('instruction2').textContent = 'RED';
-    document.getElementById('instruction3').textContent = 'Press \'Next Example\' to continue to the next game.';
+    document.getElementById('instruction3').textContent = '';
+//    document.getElementById('instruction3').textContent = 'Press \'Next Example\' to continue to the next game.';
 
     stopCount();
 }
@@ -206,6 +206,7 @@ function phase1() {
 document.getElementById('instruction1').textContent = 'In phase 1, you will see '
     + TOTAL_EXAMPLE
     + ' games of Noughts and Crosses. Each GAME starts from 2-ply board. You have 30 SECS to inspect each example.';
+document.getElementById('instruction3').textContent = 'Each GAME is either a WIN for X, a LOSE or a DRAW.';
 createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
 
 
