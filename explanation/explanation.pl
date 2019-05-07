@@ -1,4 +1,4 @@
-:- ['../MIGO/metagol'].
+:- ['./MIGO/metagol'].
 :- [sl_migo].
 
 explanation_operator(or, ' / ').
