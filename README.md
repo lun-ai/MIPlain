@@ -11,7 +11,7 @@
 
 -minimax_DB.py (functions for creating database, visualization and conversion to JS)
 
-## Interface
+## Interface V1
 ### Using database with html via js
 Run Python binary_to_JS() in ./minimax_DB.py to generate js usable minimax database
 
@@ -50,5 +50,38 @@ to re-generate explanations check ./translation.py)
 Instructions on submission are on html_interface/submission.html
 
 Collector of records needs to have a google account with a usable google drive dir.
+
+## Interface V2
+### Experiment session interface and control
+-html_interface_v2/index.html
+
+-html_interface_v2/phase1.html
+
+-html_interface_v2/phase2-4.html
+
+-html_interface_v2/submission.html
+
+-html_interface_v2/scripts/~
+
+### Strategy program explanation
+**Requirement: SWI prolog V8.0**
+
+--html_interface_v2/explanation
+
+--html_interface_v2/explanation/MIGO
+
+#### Generating explanation
+1.locate to 'html_interface_v2/explanation'
+
+2.Start SWI Prolog session in terminal
+
+3.Consult in interactive Prolog mode, `consult(loader).`
+
+4.Examples are given in html_interface_v2/explanation/sl_background_features 
+and html_interface_v2/explanation/sl_migo
+
+5.To add targets, `add_target(rule_name).`
+
+6.To start generating explanation, `interpret_program.`
 
 
