@@ -18,23 +18,35 @@
 </div>
 <div id='outcome' style="font-size:2vw" class='row' align="center"></div>
 <div id='game' class='row' align="center"></div>
-<div id='explanation1' style="display:none" align="center">
-    <div style="font-weight: bold">Rule 1: win in three moves for X =</div>
-    <div>X moves + O cannot win in two moves + O moves </div>
-    <div> + X forces a win in two moves while O does not win</div>
-    <div style="font-weight: bold">Rule 2: win in two moves for X =</div>
-    <div>X moves + O cannot win in one move + X forces win in one move</div>
-    <div style="font-weight: bold">Rule 3: win in one move for X =</div>
-    <div>X moves + X has three pieces in a line</div>
+<div id='explanation1' style="display:none" >
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div style="font-weight: bold" >Rule 1: </div>
+        <div>win in three moves for X = X moves + O cannot win in two moves </div>
+        <div> + O moves + X forces a win in two moves while O does not win</div>
+    </div>
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div class="column3" align="center" style="font-weight: bold">Rule 2: </div>
+        <div>win in two moves for X = X moves + O cannot win in one move + X forces win in one move</div>
+    </div>
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div style="font-weight: bold">Rule 3: </div>
+        <div>win in one move for X = X moves + X has three pieces in a line</div>
+    </div>
 </div>
-<div id='explanation2' style="display:none" align="center">
-    <div style="font-weight: bold">Rule 1: winning 1st move for X =</div>
-    <div>X moves + X has one strong option + O moves + X will be blocked by O</div>
-    <div> + X can force two more strong options than O</div>
-    <div style="font-weight: bold">Rule 2: winning 2nd move for X =</div>
-    <div>X moves + X has two more strong options than O</div>
-    <div style="font-weight: bold">Rule 3: winning 3rd move for X =</div>
-    <div>X moves + X has three pieces in a line</div>
+<div id='explanation2' style="display:none" >
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div style="font-weight: bold;" >Rule 1: </div>
+        <div>winning 1st move for X = X moves + X has one strong option </div>
+        <div> + O moves + X will be blocked by O + X can force two more strong options than O</div>
+    </div>
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div style="font-weight: bold">Rule 2: </div>
+        <div>winning 2nd move for X = X moves + X has two more strong options than O</div>
+    </div>
+    <div class="column3" align="center" style="border:1px solid black;">
+        <div style="font-weight: bold">Rule 3: </div>
+        <div>winning 3rd move for X = X moves + X has three pieces in a line</div>
+    </div>
 </div>
 <div class="row">
     <div id="example_1_comment" style="font-size:1.5vw" align="left"></div>
@@ -137,8 +149,8 @@ is_board(B) :-
 value(e,1) :- !.
 value(x,2) :- !.
 value(o,3) :- !.
-next_mark(o,x) :- !.
 next_mark(x,o) :- !.
+next_mark(o,x) :- !.
 
 bvalue(b(A,B,C,D,E,F,G,H,I),b(Av,Bv,Cv,Dv,Ev,Fv,Gv,Hv,Iv)) :-
     value(A,Av), value(B,Bv), value(C,Cv), value(D,Dv), value(E,Ev), value(F,Fv),
@@ -198,95 +210,26 @@ pow_of_N(N,I,M):-
     pow_of_N(N,I1,M1),
     I is I1+1.
 
-%% Count number of weak option
-count_zero(0).
-count_one(1).
-count_two(2).
-count_three(3).
-count_four(4).
-
-empty_triangle(s(_,_,B)) :-
-    T = ([3,4,7];[1,4,8];[3,6,8];[1,6,7]),
-    findall(P, (member(I,T), line_product(I,B,P)),L),
-    sum_list(L,3).
-
-draw_pattern(s(_,_,b(P1,P2,P3,P4,x,P6,P7,P8,P9))) :-
-    findall(P,(between(7,8,I),line_product(I,b(P1,P2,P3,P4,x,P6,P7,P8,P9),P)),L),
-    member(6,L).
-
-draw_pattern(s(_,_,b(P1,P2,P3,P4,o,P6,P7,P8,P9))) :-
-    findall(P,(between(7,8,I),line_product(I,b(P1,P2,P3,P4,o,P6,P7,P8,P9),P)),L),
-    member(6,L).
-
-count_unoccupied_diags(s(_,_,B),C) :-
-    findall(P,(between(7,8,I),line_product(I,B,P)),L),
-    countall(L,1,C).
-
-count_unoccupied_cols(s(_,_,B),C) :-
-    findall(P,(between(1,3,I),line_product(I,B,P)),L),
-    countall(L,1,C).
-
-count_unoccupied_rows(s(_,_,B),C) :-
-    findall(P,(between(4,6,I),line_product(I,B,P)),L),
-    countall(L,1,C).
-
-count_weak_just_played(s(M,_,B),C) :-
-    next_mark(M,M1),value(M1,N),
-    rcd_product_list(s(M,_,B),L),
-    countall(L,N,C).
-
-count_weak_to_play(s(M,_,B),C) :-
-    value(M,N),
-    rcd_product_list(s(M,_,B),L),
-    countall(L,N,C).
-
 %% Count number of strong option
-count_strong_just_played(s(M,_,B),C) :-
-    next_mark(M,M1),value(M1,N),
-    rcd_product_list(s(M,_,B),L),
-    X is N * N,
+zero_strong_of_X(s(_,_,B)) :- count_strong_of_X(s(_,_,B), 0).
+one_strong_of_X(s(_,_,B)) :- count_strong_of_X(s(_,_,B), 1).
+two_strong_of_X(s(_,_,B)) :- count_strong_of_X(s(_,_,B), 2).
+
+zero_strong_of_O(s(_,_,B)) :- count_strong_of_O(s(_,_,B), 0).
+one_strong_of_O(s(_,_,B)) :- count_strong_of_O(s(_,_,B), 1).
+two_strong_of_O(s(_,_,B)) :- count_strong_of_O(s(_,_,B), 2).
+
+count_strong_of_X(s(_,_,B),C) :-
+    value(x,N),
+    findall(P,(between(1,8,I),line_product(I,B,P)),L),
+    X is N * N,!,
     countall(L,X,C).
 
-count_strong_to_play(s(M,_,B),C) :-
-    value(M,N),
-    rcd_product_list(s(M,_,B),L),
-    X is N * N,
+count_strong_of_O(s(_,_,B),C) :-
+    value(o,N),
+    findall(P,(between(1,8,I),line_product(I,B,P)),L),
+    X is N * N,!,
     countall(L,X,C).
-
-int(I) :-
-    count_zero(I).
-int(I) :-
-    count_one(I).
-int(I) :-
-    count_two(I).
-int(I) :-
-    count_three(I).
-int(I) :-
-    count_four(I).
-
-greater_than(N1, N2) :-
-    int(N1),
-    int(N2),
-    N2 >= 0,
-    N1 > N2.
-
-greater_equal_than(N1, N2) :-
-    int(N1),
-    int(N2),
-    N2 >= 0,
-    N1 >= N2.
-
-less_than(N1, N2) :-
-    int(N1),
-    int(N2),
-    N1 >= 0,
-    N1 < N2.
-
-less_equal_than(N1, N2) :-
-    int(N1),
-    int(N2),
-    N1 >= 0,
-    N1 =< N2.
 
 pos(1).   pos(2).   pos(3).   pos(4).   pos(5).   pos(6).   pos(7).   pos(8).    pos(9).
 
@@ -305,6 +248,8 @@ moves_left(s(_,_,B),N) :-
     length(Ps,N).
 
 % move generator
+move_X(s(x,_,B1),s(o,_,B2)) :- move(x,B1,B2).
+move_O(s(o,_,B1),s(x,_,B2)) :- move(o,B1,B2).
 move(s(M,_,B1),s(M1,_,B2)):- next_mark(M,M1), move(M,B1,B2).
 
 move(X,B1,B2) :- is_board(B1),!, pos(P), move(X,P,B1,B2).
@@ -334,17 +279,12 @@ won_(X,s(_,_,B)) :-
 
 win_1(A,B):-move(A,B),won(B).
 win_2(A,B):-move(A,B),win_2_1(B).
-win_2_1(A):-win_2_2(A),win_2_3(A).
-win_2_2(A):-count_strong_just_played(A,B),count_two(B).
-win_2_3(A):-count_strong_to_play(A,B),count_zero(B).
-win_3(A,B):- move(A,B), win_3_1(B).
-win_3_1(A):- win_3_2(A), win_3_3(A).
-win_3_2(A):- count_strong_just_played(A,B), count_one(B).
-win_3_3(A):- move(A,B), win_3_4(B).
-win_3_4(A):- win_2_3(A), win_2(A,B).
-%win_3_3(A):- win_3_4(A), \+(draw_pattern(A)).
-%win_3_3(A):- empty_triangle(A).
-%win_3_4(A):- count_unoccupied_diags(A,B), count_zero(B).
+win_2_1(A):-two_strong_of_X(A),zero_strong_of_O(A).
+win_3(A,B):-move(A,B),win_3_1(B).
+win_3_1(A):-one_strong_of_X(A),win_3_2(A).
+win_3_2(A):-move(A,B),win_3_3(B).
+win_3_3(A):-zero_strong_of_X(A),win_3_4(A).
+win_3_4(A):-win_2(A,B),win_2_1(B).
 
 </script>
 

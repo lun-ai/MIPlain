@@ -94,7 +94,7 @@ function changeIndex(pos) {
 function createButton(buttonId, parentId, text, func) {
     var button = document.getElementById(buttonId);
 
-    if (button === null) {
+    if (button == null) {
         button = document.createElement('Button');
         document.getElementById(parentId).appendChild(button)
     }
@@ -186,7 +186,6 @@ function win(board, player) {
  *  Find (AI / player) 's optimal board state.
  */
 function computeNextMove(board, player){
-    console.log(board);
     var canonicalRepre = boardRepreToCanonical[board.join('')];
     var entry = minimaxTable[canonicalRepre];
     var bestOutcomeScore = player == 1 ? Math.max(...entry[1]) : Math.min(...entry[1]);

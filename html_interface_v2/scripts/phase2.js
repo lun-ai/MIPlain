@@ -1,5 +1,11 @@
-var TWO_PLY_BOARDS_PHASE2 = [[0,0,0,0,0,1,0,2,0], [0,0,0,0,0,1,2,0,0]],
-    TWO_PLY_BOARDS_PHASE4 = [[0,2,0,0,0,1,0,0,0], [0,0,2,0,0,0,0,0,1]],
+//var TWO_PLY_BOARDS_PHASE2 = [[1,0,0,0,0,0,2,0,0]],
+//    TWO_PLY_BOARDS_PHASE4 = [[0,2,0,0,0,1,0,0,0], [0,0,2,0,0,0,0,0,1],[2,0,0,0,0,0,1,0,0]],
+var TWO_PLY_BOARDS_PHASE2 = [[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2],
+                             [0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0],
+                             [1,0,0,0,0,0,2,0,0]],
+    TWO_PLY_BOARDS_PHASE4 = [[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2],
+                             [0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1],
+                             [0,1,0,0,0,0,0,2,0]],
     TOTAL_GAMES = TWO_PLY_BOARDS_PHASE2.length,
     RESOLUTION_DEPTH = 50000,
     N_SIZE = 3,
@@ -7,12 +13,6 @@ var TWO_PLY_BOARDS_PHASE2 = [[0,0,0,0,0,1,0,2,0], [0,0,0,0,0,1,2,0,0]],
     TIMER_SLICE = 1000,
     PL_FILE_NAME = 'strategy',
     TURN = 'X';
-    //TWO_PLY_BOARDS_PHASE2 = [[0,0,0,0,0,1,0,2,0], [0,0,0,0,0,1,2,0,0], [0,0,0,0,1,0,0,2,0],
-    //                         [0,0,0,1,0,0,0,2,0], [0,0,0,0,2,0,1,0,0], [0,0,0,0,2,0,0,1,0],
-    //                         [2,0,0,0,0,0,1,0,0]];
-    // TWO_PLY_BOARDS_PHASE4 = [[0,2,0,0,0,1,0,0,0], [0,0,2,0,0,0,0,0,1], [0,0,0,1,0,0,2,0,0],
-    //                         [0,1,0,2,0,0,0,0,0], [0,2,0,0,0,0,0,0,1], [0,0,0,2,0,0,1,0,0],
-    //                         [2,0,0,0,1,0,0,0,0]];
 
 var t,
     phase = 2,
@@ -35,7 +35,7 @@ var t,
     boardRepreToCanonical = canonicalMap;
 
 var texts = String(window.location).split('=');
-var participantID = isNaN(texts[texts.length - 1]) ? 2 : Number(texts[texts.length - 1]);
+var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
 function applyStrategy(board) {
 
@@ -46,9 +46,9 @@ function applyStrategy(board) {
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
-    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
+//    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
     session.answer(x => queryWin = x);
-    console.log(queryWin);
+//    console.log(queryWin);
 
     var nextBoard = parsePrologVar(queryWin.lookup('B'));
 
@@ -76,7 +76,6 @@ function learnerPlayGame(board) {
             break;
         }
 
-        console.log(nextBoard);
         nextBoard = computeNextMove(nextBoard, 2);
         game.push(nextBoard);
 
@@ -88,30 +87,38 @@ function learnerPlayGame(board) {
     }
 
     return game;
-
 }
 
 function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
 
-    if (!ended) {
-        if (totalTime - sec < 0) {
-            timeTaken.push(totalTime);
-            regrets.push(2);
-            console.log(timeTaken);
-            stopCount();
-        } else {
-            document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
-            sec += 1;
-            t = setTimeout(startCount, TIMER_SLICE);
-        }
-    } else {
-        timeTaken.push(Math.max(0, sec - 1));
-        console.log(timeTaken);
+    if (totalTime - sec < 0) {
+        createButton('nextGameButton', 'nextGame', 'Next', stopCount);
+    } else if (!ended && sec <= totalTime){
+        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
+        sec += 1;
+        t = setTimeout(startCount, TIMER_SLICE);
     }
+
 }
 
 function stopCountPhase2() {
+
+    if (currentGame != 0) {
+        if (ended) {
+            // finished game
+            timeTaken.push(Math.max(0, sec - 1));
+        } else {
+            // unfinished game
+            games[currentGame - 1].push(prevBoard);
+            wrongMoves[currentGame - 1] = wrongMoves[currentGame - 1] == -1 ? games[currentGame - 1].length - 1
+                                                                            : wrongMoves[currentGame - 1];
+            positions[currentGame - 1] = positions[currentGame - 1] == -1 ? N_SIZE * N_SIZE
+                                                                          : positions[currentGame - 1];
+            timeTaken.push(totalTime);
+            regrets.push(2);
+        }
+    }
 
     if (t != null) {
         clearTimeout(t);
@@ -148,9 +155,9 @@ function stopCountPhase2() {
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
-        if (participantID % 3 != 0) {
-            gamesUsingStrategy.push(learnerPlayGame(test_boards[currentGame - 1]));
-        }
+//        if (participantID % 3 != 0) {
+//            gamesUsingStrategy.push(learnerPlayGame(test_boards[currentGame - 1]));
+//        }
         nextGame();
         startCount();
     }
@@ -159,6 +166,15 @@ function stopCountPhase2() {
 
 
 function stopCountPhase4() {
+
+    if (currentGame != 0) {
+        if (ended) {
+            timeTaken.push(Math.max(0, sec - 1));
+        } else {
+            timeTaken.push(totalTime);
+            regrets.push(2);
+        }
+    }
 
     if (t != null) {
         clearTimeout(t);
@@ -197,7 +213,6 @@ function boardClicked() {
     } else if (!ended) {
 
         this.innerHTML = TURN;
-        games[currentGame - 1].push(prevBoard);
 
         var currentBoard = convertBoxesTOBoard(boxes);
         games[currentGame - 1].push(currentBoard);
@@ -214,7 +229,7 @@ function boardClicked() {
             regrets.push(0);
             ended = true;
             document.getElementById('outcome').textContent += 'WIN';
-            createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
+            createButton('nextGameButton', 'nextGame', 'Next', stopCount);
 
             return;
         } else {
@@ -224,7 +239,7 @@ function boardClicked() {
                 regrets.push(1);
                 ended = true;
                 document.getElementById('outcome').textContent += 'DRAW';
-                createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
+                createButton('nextGameButton', 'nextGame', 'Next', stopCount);
 
                 return;
             }
@@ -238,12 +253,13 @@ function boardClicked() {
                 ended = true;
                 games[currentGame - 1].push(newBoard);
                 document.getElementById('outcome').textContent += 'LOSE';
-                createButton('nextGameButton', 'nextGame', 'Next Game', stopCount);
+                createButton('nextGameButton', 'nextGame', 'Next', stopCount);
 
                 return;
             }
 
             prevBoard = newBoard;
+            games[currentGame - 1].push(newBoard);
 
         }
     }
@@ -255,6 +271,8 @@ function nextGame() {
     games.push([]);
     ended = false;
     prevBoard = test_boards[currentGame - 1];
+    games[currentGame - 1].push(prevBoard);
+
     var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
     removeChild('gameBoard', 'game');
     removeChild('nextGameButton', 'nextGame');

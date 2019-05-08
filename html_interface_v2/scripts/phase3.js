@@ -1,35 +1,42 @@
+// render verbal explanations in html
 function showVerbalExpl() {
     document.getElementById('explanation' + (participantID % 3)).style.display = 'block';
 }
 
+// show good games and bad games w/o explanations
 function showVisualExpl() {
 
     var game = games[TOTAL_GAMES - currentGame];
 
-    // Neg example
     if (wrongMoves[TOTAL_GAMES - currentGame] != -1) {
 
+        // Mistake
         var wrongMoveIdx = wrongMoves[TOTAL_GAMES - currentGame];
         var pos = positions[TOTAL_GAMES - currentGame];
         var outcome = win(game[game.length - 1], 2) ? 'Lose' : game.length == 8 ? 'Draw' : 'Unfinished';
 
         showNegExample(game, wrongMoveIdx, pos);
         document.getElementById('example_1_comment').textContent = 'Game NO.' + (TOTAL_GAMES - currentGame + 1)
-                                                                    + ' played by you: ' + outcome;
-        document.getElementById('negboard' + (game.length - 1) + 'Comment').textContent = outcome;
-        if (participantID % 3 != 0) {
+                                                                 + ' played by you: ' + outcome;
 
-            game = game.slice(0, wrongMoveIdx - 1).concat(learnerPlayGame(game[wrongMoveIdx - 1]));
+        if (participantID % 3 != 0) {
+            // treatment group
+            var newGame = game.slice(0, wrongMoveIdx - 1).concat(learnerPlayGame(game[wrongMoveIdx - 1]));
             document.getElementById('example_2_comment').textContent = 'Played by strategy: Win';
-            showPosExample(game, wrongMoves[TOTAL_GAMES - currentGame]);
-            document.getElementById('posboard' + (game.length - 1) + 'Comment').textContent = 'Win';
+            showPosExample(newGame, wrongMoves[TOTAL_GAMES - currentGame]);
+            document.getElementById('posboard' + (newGame.length - 1) + 'Comment').textContent = 'Win';
+
         } else {
+            // control group
             var count = Math.floor((wrongMoveIdx + 1) / 2);
             count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
             document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Bad ' + count + ' move';
         }
+
+        document.getElementById('negboard' + (game.length - 1) + 'Comment').textContent = outcome;
+
     }
-    // Pos example
+    // No mistake
     else {
         showPosExample(game);
         document.getElementById('example_2_comment').textContent = 'Played by you: Win';
@@ -56,26 +63,26 @@ function createBoard(board, boardNum, boardId, parentId, pos, color) {
 
       for (var i = 0; i < N_SIZE; i++) {
 
-        var row = document.createElement('tr');
-        table.appendChild(row);
+          var row = document.createElement('tr');
+          table.appendChild(row);
 
-        for (var j = 0; j < N_SIZE; j++) {
+          for (var j = 0; j < N_SIZE; j++) {
 
-          var cell = document.createElement('td');
-          cell.setAttribute('height', 40);
-          cell.setAttribute('width',  40);
-          cell.setAttribute('align',  'center');
-          cell.setAttribute('valign',  'center');
+              var cell = document.createElement('td');
+              cell.setAttribute('height', 40);
+              cell.setAttribute('width',  40);
+              cell.setAttribute('align',  'center');
+              cell.setAttribute('valign',  'center');
 
-          if (i === markerRow && j === markerCol) {
-            cell.style.backgroundColor = color;
-          } else {
-            cell.style.backgroundColor = 'white';
+              if (i === markerRow && j === markerCol) {
+                  cell.style.backgroundColor = color;
+              } else {
+                  cell.style.backgroundColor = 'white';
+              }
+
+              row.appendChild(cell);
+              cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
           }
-
-          row.appendChild(cell);
-          cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
-        }
       }
 
       div.appendChild(table);
@@ -86,16 +93,17 @@ function createBoard(board, boardNum, boardId, parentId, pos, color) {
       var count = Math.floor((boardNum + 1) / 2);
       count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
 
+      // green for a good move and red for a bad move
       if (color == 'green') {
-        comment.textContent = 'Correct ' + count + ' move' ;
+          comment.textContent = 'Correct ' + count + ' move' ;
       } else if (color == 'red') {
-        comment.textContent = 'Violates ' + count + ' rule';
+          comment.textContent = 'Violates ' + count + ' rule';
       } else {
-        if (boardNum % 2 == 1) {
-            comment.textContent = count + ' move';
-        } else {
-            comment.textContent = ' => ';
-        }
+          if (boardNum % 2 == 1) {
+              comment.textContent = count + ' move';
+          } else {
+              comment.textContent = ' => ';
+          }
       }
 
       comment.classList.add('col');
@@ -132,14 +140,13 @@ function clearBoards() {
 
 
 function showPosExample(example){
-
     for (var i = 0; i < example.length; i++) {
         createBoard(example[i], 'posboard'+i, 'example_2', 0, 'white');
     }
 }
 
-function showPosExample(example, move){
 
+function showPosExample(example, move){
     for (var i = 0; i < example.length; i++) {
         if (i === move) {
             var pos = example[i].map(function(_, j) { return example[i][j] != example[i - 1][j] ? j : -1;})
@@ -151,11 +158,16 @@ function showPosExample(example, move){
     }
 }
 
+
 function showNegExample(example, move, pos){
 
     for (var i = 0; i < example.length; i++) {
         if (i === move) {
-            createBoard(example[i], i, 'negboard'+i, 'example_1', changeIndex(pos), 'red');
+            if (pos == N_SIZE * N_SIZE) {
+                createBoard(example[i], i, 'negboard'+i, 'example_1', 0, 'white');
+            } else {
+                createBoard(example[i], i, 'negboard'+i, 'example_1', changeIndex(pos), 'red');
+            }
         } else {
             createBoard(example[i], i, 'negboard'+i, 'example_1', 0, 'white');
         }
@@ -166,11 +178,11 @@ function showNegExample(example, move, pos){
 
 function stopCountPhase3() {
 
+    if (timeTaken.length <= (TOTAL_GAMES - currentGame)) {
+        timeTaken.push(Math.min(Math.max(0, sec - 1), totalTime));
+    }
+
     if (t != null) {
-        if (timeTaken.length <= (TOTAL_GAMES - currentGame)) {
-            timeTaken.push(Math.min(sec, totalTime));
-            console.log(timeTaken);
-        }
         clearTimeout(t);
         sec = 0;
     }
@@ -181,7 +193,6 @@ function stopCountPhase3() {
 
     if (currentGame < 1) {
 
-        removeChild('nextGameButton', 'nextGame');
         document.getElementById('phase').textContent = '';
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent = 'In phase 4, you will play 7'
@@ -197,8 +208,9 @@ function stopCountPhase3() {
         document.getElementById('explanation2').style.display = 'none';
         removeChild('gameBoard', 'game');
 
+        removeChild('nextGameButton', 'nextGame');
         removeChild('nextExampleButton', 'nextExample');
-        createButton('nextPhaseButton', 'nextPhase', 'Next Phase', phase4);
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase4);
 
     } else {
         nextExpl();
@@ -210,6 +222,7 @@ function stopCountPhase3() {
 
 function nextExpl() {
 
+    removeChild('nextExampleButton', 'nextExample');
     document.getElementById('example_1_comment').textContent = '';
     document.getElementById('example_2_comment').textContent = '';
 
@@ -218,7 +231,11 @@ function nextExpl() {
         showVerbalExpl();
     }
 
-    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+    if(currentGame > 1) {
+        createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+    } else {
+        createButton('nextGameButton', 'nextGame', 'Next', stopCount);
+    }
 }
 
 
@@ -229,11 +246,13 @@ function phase3 () {
     record += 'Phase 2: \n'
         + games.map(g => '[\n' + g.join('\n') + '\n]\n')
         + 'cumulative regrets: ' + regrets + '\n'
-        + 'strategy regrets:' + strategyRegrets + '\n'
+        //+ 'strategy regrets:' + strategyRegrets + '\n'
         + 'time: ' + timeTaken + '\n'
         + 'moves: ' + wrongMoves + '\n'
         + 'position played: ' + positions;
     timeTaken = [], strategyRegrets = [];
+
+    console.log(record);
 
     totalTime = 60,
     phase = 3,
