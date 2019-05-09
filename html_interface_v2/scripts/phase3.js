@@ -18,6 +18,8 @@ function showVisualExpl() {
         showNegExample(game, wrongMoveIdx, pos);
         document.getElementById('example_1_comment').textContent = 'Game NO.' + (TOTAL_GAMES - currentGame + 1)
                                                                  + ' played by you: ' + outcome;
+        var count = Math.floor((wrongMoveIdx + 1) / 2);
+        count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
 
         if (participantID % 3 != 0) {
             // treatment group
@@ -28,12 +30,14 @@ function showVisualExpl() {
 
         } else {
             // control group
-            var count = Math.floor((wrongMoveIdx + 1) / 2);
-            count = count + (count == 1 ? 'st' : count == 2 ? 'nd' : 'rd');
             document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent = 'Bad ' + count + ' move';
         }
 
         document.getElementById('negboard' + (game.length - 1) + 'Comment').textContent = outcome;
+
+        if (outcome == 'Unfinished' && wrongMoveIdx == game.length - 1) {
+            document.getElementById('negboard' + wrongMoveIdx + 'Comment').textContent += ': see ' + count + ' rule';
+        }
 
     }
     // No mistake
