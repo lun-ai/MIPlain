@@ -1,9 +1,9 @@
-var PHASE1_QUESTIONS = shuffle([[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2],
-                                [0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0],
-                                [1,0,0,0,0,0,2,0,0]]),
-    PHASE3_QUESTIONS = shuffle([[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2],
-                                [0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1],
-                                [0,1,0,0,0,0,0,2,0]]),
+var PHASE1_QUESTIONS = shuffle([[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2]]) +
+                       shuffle([[0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0]]) +
+                       shuffle([[1,0,0,0,0,0,2,0,0]]),
+    PHASE3_QUESTIONS = shuffle([[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2]]) +
+                       shuffle([[0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1]]) +
+                       shuffle([[0,1,0,0,0,0,0,2,0]]),
     TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TOTAL_EXPL = examples.length,
     RESOLUTION_DEPTH = 50000,
@@ -550,7 +550,6 @@ function createBoard(board, boardId, parentId, text, pos, color) {
   }
 }
 
-// board has row1-row2-row3 format
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
 
   var td = document.createElement('td');
