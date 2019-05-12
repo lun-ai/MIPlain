@@ -1,10 +1,4 @@
-var PHASE1_QUESTIONS = shuffle([[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2]]) +
-                       shuffle([[0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0]]) +
-                       shuffle([[1,0,0,0,0,0,2,0,0]]),
-    PHASE3_QUESTIONS = shuffle([[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2]]) +
-                       shuffle([[0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1]]) +
-                       shuffle([[0,1,0,0,0,0,0,2,0]]),
-    TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
+var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TOTAL_EXPL = examples.length,
     RESOLUTION_DEPTH = 50000,
     N_SIZE = 3,

@@ -183,9 +183,6 @@ def get_example_aux(board_repre, i, pos, neg, name):
         return nc.compute_canonical(b)[0]
 
 
-
-
-
 get_examples_from_minimax_games(100)
 # get_examples_from_valid_states()
 # get_games()
