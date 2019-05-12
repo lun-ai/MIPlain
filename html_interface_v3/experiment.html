@@ -7,61 +7,44 @@
 </head>
 <body>
 <div id='phase' style="font-size:2vw" align="left"></div>
-<div align="center">
-    <span id='timer' style="color:red; font-size:2vw"></span>
+<div class="row">
+    <div align="center">
+        <span id='timer' style="color:red; font-size:2vw"></span>
+    </div>
+    <div align="center">
+        <div id='instruction1' style="font-size:1.2vw" align="center"></div>
+        <div id='instruction2' style="font-size:1.2vw" align="center"></div>
+        <div id='instruction3' style="font-size:1.2vw" align="center"></div>
+    </div>
+    <div id='numQuestion' style="font-size:2vw" align="center"></div>
 </div>
-<div align="center">
-    <div id='instruction1' style="font-size:1.5vw" align="center"></div>
-    <div id='instruction2' style="font-size:1.5vw" align="center"></div>
-    <div id='numGame' style="font-size:2vw" align="center"></div>
-    <div id='instruction3' style="font-size:1.5vw" align="center"></div>
-</div>
-<div id='outcome' style="font-size:2vw" class='row' align="center"></div>
 <div id='game' class='row' align="center"></div>
-<div id='explanation1' class="row" style="display:none" >
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold" >Rule 1: </div>
-        <div>win in three moves for X = X moves + O cannot win in two moves </div>
-        <div> + O moves + X forces a win in two moves while O does not win</div>
-    </div>
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold">Rule 2: </div>
-        <div>win in two moves for X = X moves + O cannot win in one move + X forces win in one move</div>
-    </div>
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold">Rule 3: </div>
-        <div>win in one move for X = X moves + X has three pieces in a line</div>
-    </div>
-</div>
-<div id='explanation2' class="row" style="display:none" >
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold;" >Rule 1: </div>
-        <div>winning 1st move for X = X moves + X has one strong option </div>
-        <div> + O moves + X will be blocked by O + X can force two more strong options than O</div>
-    </div>
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold">Rule 2: </div>
-        <div>winning 2nd move for X = X moves + X has two more strong options than O</div>
-    </div>
-    <div class="column3" align="center" style="border:1px solid black;">
-        <div style="font-weight: bold">Rule 3: </div>
-        <div>winning 3rd move for X = X moves + X has three pieces in a line</div>
-    </div>
-</div>
-<div class="row">
-    <div id="example_1_comment" style="font-size:1.5vw" align="left"></div>
-    <table align="left" cellspacing="10px">
-        <tr id='example_1' class='table' align="left" ></tr>
-    </table>
-</div>
-<div class="row">
-    <div id="example_2_comment" style="font-size:1.5vw" align="left" ></div>
-    <table align="left" cellspacing="10px">
-        <tr id='example_2' class='table' align="left"></tr>
-    </table>
-</div>
-<div id="explanations"></div>
 <div id="nextQuestion" align="center"></div>
+
+<div id='explanation' class="row" style="display:none">
+    <div class="column2" >
+        <div class="column2">
+            <div align="center" style="border:1px solid black;font-size:2vw">Example</div>
+            <div id='initialState' align="center" ></div>
+        </div>
+        <div class="column2">
+            <div class="row">
+                <div align="center" style="border:1px solid black;font-size:2vw">Moves</div>
+                <div id='move1' align="center" ></div>
+            </div>
+            <div class="row">
+                <div id='move2' align="center" ></div>
+            </div>
+        </div>
+    </div>
+    <div class="column2">
+        <div id='feedbackPanel' align="center" style="border:1px solid black;font-size:2vw">Feedback & Explanation</div>
+        <table>
+            <tr id='explExample1' align="left" ></tr>
+            <tr id='explExample2' align="left"></tr>
+        </table>
+    </div>
+</div>
 <div id="nextExample" align="center"></div>
 <div id="nextPhase" align="center"></div>
 
@@ -137,7 +120,6 @@ win_2(A,B):- win_2_1_1(A,B), \+(win_2_1_1(B,C)).
 win_3_1_1(A,B):- win_2_1_1(A,B), \+(win_2(B,C)).
 win_3(A,B):- win_3_1_1(A,B), \+(win_3_1_1(B,C)).
 </script>
-
 <script id="strategy2.pl" type="text/prolog">
 % use embedding prolog script instead of loading from file
 % for reference check strategy_and_BK.pl
@@ -289,8 +271,8 @@ win_3_4(A):-win_2(A,B),win_2_1(B).
 </script>
 
 <script type="text/javascript" src="scripts/utils.js"></script>
-<script type="text/javascript" src="scripts/phase2.js"></script>
-<script type="text/javascript" src="scripts/phase3.js"></script>
+<script type="text/javascript" src="scripts/examples.js"></script>
+<script type="text/javascript" src="scripts/phase1.js"></script>
 
 </body>
 </html>

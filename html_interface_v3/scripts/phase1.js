@@ -1,10 +1,11 @@
-var PHASE1_QUESTIONS = [[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2],
-                             [0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0],
-                             [1,0,0,0,0,0,2,0,0]],
-    PHASE3_QUESTIONS = [[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2],
-                             [0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1],
-                             [0,1,0,0,0,0,0,2,0]],
-    TOTAL_GAMES = TWO_PLY_BOARDS_PHASE2.length,
+var PHASE1_QUESTIONS = shuffle([[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0,0,2],
+                                [0,0,0,1,0,0,0,2,0], [0,0,2,0,1,0,0,0,0], [0,2,0,0,1,0,0,0,0],
+                                [1,0,0,0,0,0,2,0,0]]),
+    PHASE3_QUESTIONS = shuffle([[0,1,0,0,0,0,2,0,0], [0,0,0,2,0,0,0,0,1], [1,0,0,0,0,0,0,0,2],
+                                [0,1,0,0,0,2,0,0,0], [0,1,2,0,0,0,0,0,0], [0,0,0,0,0,0,2,0,1],
+                                [0,1,0,0,0,0,0,2,0]]),
+    TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
+    TOTAL_EXPL = examples.length,
     RESOLUTION_DEPTH = 50000,
     N_SIZE = 3,
     EMPTY = '&nbsp;',
@@ -14,14 +15,17 @@ var PHASE1_QUESTIONS = [[0,0,0,2,0,1,0,0,0], [0,0,0,0,0,1,2,0,0], [0,0,0,1,0,0,0
     TOTAL_GROUP = 2;
 
 var t,
-    phase = 1,
+    phase = 0,
     sec = 0,
     boxes = [],
     totalTime = 30,
     currentQuestion = 0,
     prevBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    test_boards = TWO_PLY_BOARDS_PHASE2,
+    test_boards = PHASE1_QUESTIONS,
     difficulty = [],
+    moveChosen = false,
+    currentExpl = 0,
+    timeTakenExpl = [],
     answers = [],
     scores = [],
     timeTaken = [],
@@ -45,20 +49,17 @@ function applyStrategy(board) {
 
     var session = pl.create(RESOLUTION_DEPTH);
 
-    session.consult(PL_FILE_NAME + (participantID % 3) + '.pl');
+    session.consult(PL_FILE_NAME + (participantID % TOTAL_GROUP) + '.pl');
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
-//    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
     session.answer(x => queryWin = x);
-//    console.log(queryWin);
 
     var nextBoard = parsePrologVar(queryWin.lookup('B'));
 
     return nextBoard;
 }
-
 
 function learnerPlayGame(board) {
 
@@ -67,24 +68,25 @@ function learnerPlayGame(board) {
 
     while(true) {
 
-        nextBoard = applyStrategy(nextBoard);
-        game.push(nextBoard);
+        if (nextBoard.filter(x=>x==0).length % 2 == 1) {
+            nextBoard = applyStrategy(nextBoard);
+            game.push(nextBoard);
+        }
 
         if (win(nextBoard, 1)) {
-            strategyRegrets.push(0);
             break;
         }
 
         if (nextBoard.filter(mark => mark == 0).length == 0) {
-            strategyRegrets.push(1);
             break;
         }
 
-        nextBoard = computeNextMove(nextBoard, 2);
-        game.push(nextBoard);
+        if (nextBoard.filter(x=>x==0).length % 2 == 0) {
+            nextBoard = computeNextMove(nextBoard, 2);
+            game.push(nextBoard);
+        }
 
         if (win(nextBoard, 2)){
-            strategyRegrets.push(2);
             break;
         }
 
@@ -124,32 +126,31 @@ function stopCountPhase1() {
 
     currentQuestion += 1;
 
-    if (currentQuestion > TOTAL_GAMES) {
+    if (currentQuestion > TOTAL_QUESTIONS) {
 
         removeChild('nextQuestionButton', 'nextQuestion');
-        document.getElementById('phase').textContent = '';
+        document.getElementById('phase').textContent = 'Instruction:';
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'In phase 3, you are given chances to look at the games '
-                            + 'you just played and learn from them.';
+        document.getElementById('instruction1').textContent =
+                'In phase 2, you will be given one initial board and '
+                + 'you need choose between two potential moves for what '
+                + 'you think to be the best move to win against an OPTIMAL O opponent.';
         if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction2').textContent = 'For each GAME ' +
-                        'you WON, think about a strategy which led you to win. ';
+            document.getElementById('instruction2').textContent =
+                    'You will see which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                'For each other GAME you played, the first non-optimal move will is marked' +
-                ' and you should think about a strategy which could make you win.';
+                    'You have 30 SECs to make you choice and 60 SECs to think about your choice.'
         } else {
-            document.getElementById('instruction2').textContent = 'For each GAME ' +
-                        'you WON, you can compare the strategy you played against the provided strategy. ';
+            document.getElementById('instruction2').textContent =
+                'You will receive feedback and explanations on which move is the right and which move is not.';
             document.getElementById('instruction3').textContent =
-                'For each other GAME you played, the first non-optimal move is marked and ' +
-                'you should try to understand the provided strategy to apply it.';
-        //document.getElementById('instruction3').textContent = 'Press \'Next\' to continue.';
+                    'You have 30 SECs to make you choice and 60 SECs to study the explanation.'
         }
-        document.getElementById('numGame').textContent = '';
-        document.getElementById('outcome').textContent = '';
+
+        document.getElementById('numQuestion').textContent = '';
         removeChild('gameBoard', 'game');
 
-        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
 
     } else {
         nextQuestion();
@@ -160,19 +161,13 @@ function stopCountPhase1() {
 
 function stopCountPhase2() {
 
-    if (currentQuestion != 0) {
-        if (ended) {
+    if (currentExpl != 0) {
+        if (!moveChosen) {
             // finished game
-            timeTaken.push(Math.max(0, sec - 1));
-        } else {
-            // unfinished game
-            games[currentQuestion - 1].push(prevBoard);
-            wrongMoves[currentQuestion - 1] = wrongMoves[currentQuestion - 1] == -1 ? games[currentQuestion - 1].length - 1
-                                                                            : wrongMoves[currentQuestion - 1];
-            positions[currentQuestion - 1] = positions[currentQuestion - 1] == -1 ? N_SIZE * N_SIZE
-                                                                          : positions[currentQuestion - 1];
+            answers[currentExpl - 1].push(boardRepreToBoardRotated(wrongMoves[currentExpl - 1]));
             timeTaken.push(totalTime);
-            regrets.push(2);
+            wrongMoveChosen();
+            return;
         }
     }
 
@@ -181,40 +176,24 @@ function stopCountPhase2() {
         sec = 0;
     }
 
-    currentQuestion += 1;
+    currentExpl += 1;
 
-    if (currentQuestion > TOTAL_GAMES) {
+    if (currentExpl > TOTAL_EXPL) {
 
-        removeChild('nextQuestionButton', 'nextQuestion');
-        document.getElementById('phase').textContent = '';
+        clearBoards();
+        removeChild('nextExampleButton', 'nextExample');
+        document.getElementById('explanation').style.display = 'none';
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'In phase 3, you are given chances to look at the games '
-                            + 'you just played and learn from them.';
-        if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction2').textContent = 'For each GAME ' +
-                        'you WON, think about a strategy which led you to win. ';
-        document.getElementById('instruction3').textContent =
-            'For each other GAME you played, the first non-optimal move will is marked' +
-            ' and you should think about a strategy which could make you win.';
-    } else {
-        document.getElementById('instruction2').textContent = 'For each GAME ' +
-                        'you WON, you can compare the strategy you played against the provided strategy. ';
-        document.getElementById('instruction3').textContent =
-            'For each other GAME you played, the first non-optimal move is marked and ' +
-            'you should try to understand the provided strategy to apply it.';
-        //document.getElementById('instruction3').textContent = 'Press \'Next\' to continue.';
-    }
-        document.getElementById('numGame').textContent = '';
-        document.getElementById('outcome').textContent = '';
-        removeChild('gameBoard', 'game');
+        document.getElementById('phase').textContent = 'Instruction: ';
+        document.getElementById('instruction1').textContent = 'In phase 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+                                                    + 'For each question, you are given a board and you will play X.'
+        document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
 
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
-//        if (participantID % 3 != 0) {
-//            gamesUsingStrategy.push(learnerPlayGame(test_boards[currentQuestion - 1]));
-//        }
-        nextQuestion();
+        nextExample();
         startCount();
     }
 
@@ -223,11 +202,10 @@ function stopCountPhase2() {
 function stopCountPhase3() {
 
     if (currentQuestion != 0) {
-        if (ended) {
-            timeTaken.push(Math.max(0, sec - 1));
-        } else {
+        if (!ended) {
+            answers[currentQuestion - 1].push(prevBoard);
+            scores.push(-10);
             timeTaken.push(totalTime);
-            regrets.push(2);
         }
     }
 
@@ -238,9 +216,9 @@ function stopCountPhase3() {
 
     currentQuestion += 1;
 
-    if (currentQuestion > TOTAL_GAMES) {
+    if (currentQuestion > TOTAL_QUESTIONS) {
 
-       endExpr();
+        endExpr();
 
     } else {
         nextQuestion();
@@ -270,23 +248,22 @@ function boardClicked() {
     }
 }
 
-
 function nextQuestion() {
 
     ended = false;
     prevBoard = test_boards[currentQuestion - 1];
     // 1 / num of winning moves
-    difficulty.push(1 / (minimaxTable[boardRepreToCanonical[prevBoard.join('')]][1]
+    difficulty.push((prevBoard.filter(x => x == 0).length) / (minimaxTable[boardRepreToCanonical[prevBoard.join('')]][1]
                           .filter(x => x == 10)
                           .length));
-    answers[currentQuestion - 1]
+    answers.push([]);
+    answers[currentQuestion - 1].push(prevBoard);
 
     var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
     removeChild('gameBoard', 'game');
     removeChild('nextQuestionButton', 'nextQuestion');
     boxes = [];
-    document.getElementById('numGame').textContent = 'Game NO.' + currentQuestion;
-    document.getElementById('outcome').textContent = 'Outcome: ';
+    document.getElementById('numQuestion').textContent = 'Question NO.' + currentQuestion;
 
     var board = document.createElement('table');
     board.setAttribute('id', 'gameBoard');
@@ -321,14 +298,14 @@ function nextQuestion() {
 
 }
 
+
 function endExpr() {
 
-    record += '\n\nPhase 4: \n'
-        + games.map(g => '[\n' + g.join('\n') + '\n]\n')
-        + 'cumulative regrets: ' + regrets + '\n'
-        + 'time: ' + timeTaken + '\n'
-        + 'moves: ' + wrongMoves + '\n'
-        + 'position played: ' + positions;
+    record += '\n\nPhase 3: \n'
+        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+        + 'difficulty: ' + difficulty + '\n',
+        + 'scores: ' + scores + '\n'
+        + 'time: ' + timeTaken + '\n';
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(record));
@@ -342,34 +319,91 @@ function endExpr() {
     window.location.href = 'submission.html';
 }
 
-function phase4() {
+
+function phase1() {
 
     removeChild('nextPhaseButton', 'nextPhase');
 
-    record += '\n\nPhase 3: \n'
-        + 'time: ' + timeTaken + '\n';
-
-    games = [],
-    timeTaken = [],
-    wrongMoves = [-1, -1, -1, -1, -1, -1, -1],
-    positions = [-1, -1, -1, -1, -1, -1, -1];
-
-    phase = 4,
+    phase = 1;
     totalTime = 30;
 
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = 'You play X, and for every move you can press corresponding cell' +
-                        ' for what you think is an optimal move. ';
-    document.getElementById('instruction2').textContent = 'You have only one shot for each of your move. ' +
-                        ' The outcome of the game is either you WIN, LOSE or DRAW with O. ';
-    //document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
-
-    test_boards = TWO_PLY_BOARDS_PHASE4;
+    document.getElementById('instruction1').textContent = 'You play X, and you can press corresponding cell' +
+                        ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
+    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
+                        'You have ' + totalTime + ' SECs for each question. ';
     stopCount();
 }
 
-function stopCount() {
+function phase2() {
 
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    record += '\n\nPhase 1: \n'
+        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+        + 'difficulty: ' + difficulty + '\n',
+        + 'scores: ' + scores + '\n'
+        + 'time: ' + timeTaken + '\n';
+
+    console.log(record);
+
+    answers = [],
+    difficulty = [],
+    scores = [],
+    timeTaken = [];
+
+    phase = 2,
+    totalTime = 30;
+
+    document.getElementById('explanation').style.display = 'block';
+
+    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('instruction1').textContent = 'You play X. Given an initial board, you need choose between two potential moves for what '
+                + 'you think to be the best move to win against an OPTIMAL O opponent.'
+
+        if (participantID % TOTAL_GROUP == 0) {
+            document.getElementById('instruction2').textContent =
+                    'You will see which one is the right move and which is not.';
+            document.getElementById('feedbackPanel').style.display = 'none';
+        } else {
+            document.getElementById('instruction2').textContent =
+                'You will receive feedback and explanations on which move is the right and which move is not.';
+        }
+    stopCount();
+}
+
+function phase3() {
+
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    record += '\n\nPhase 2: \n'
+        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+        + 'scores: ' + scores + '\n'
+        + 'time: ' + timeTaken + '\n'
+        + 'time on expl: ' + timeTakenExpl + '\n';
+
+    console.log(record);
+
+    answers = [],
+    scores = [],
+    timeTaken = [],
+    timeTakenExpl = [];
+
+    phase = 3,
+    totalTime = 30;
+
+    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('instruction1').textContent = 'You play X, and you can press corresponding cell' +
+                        ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
+    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
+                        'You have ' + totalTime + ' SECs for each question. ';
+
+    test_boards = PHASE3_QUESTIONS;
+    stopCount();
+}
+
+
+function stopCount() {
     if (phase == 1) {
         stopCountPhase1();
     } else if (phase == 2) {
@@ -379,11 +413,262 @@ function stopCount() {
     }
 }
 
+function nextExample() {
 
-document.getElementById('phase').textContent = 'Phase No.' + phase;
-document.getElementById('instruction1').textContent = 'You play X, and for every move you can press corresponding cell' +
-                        ' for what you think is an optimal move. ';
-document.getElementById('instruction2').textContent = 'You have only one shot for each of your move. ' +
-                        ' The outcome of the game is either you WIN, LOSE or DRAW with O. ';
-//document.getElementById('instruction3').textContent = 'Press \'Next Game\' to continue to the next game.';
-stopCount();
+    clearBoards();
+    ended = false;
+    removeChild('nextExampleButton', 'nextExample');
+    answers.push([]);
+    answers[currentExpl - 1].push(boardRepreToBoardRotated(examples[currentExpl - 1]));
+    showExample();
+
+}
+
+function showExample() {
+
+    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',10);
+    if (Math.random() > 0.5) {
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [0], 'white', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [0], 'white', 10);
+        createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
+        createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
+    } else {
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [0], 'white', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [0], 'white', 10);
+        createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
+        createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
+    }
+}
+
+function showExpl() {
+
+    timeTaken.push(Math.max(0, sec - 1));
+    console.log(timeTaken);
+
+    removeChild('wrongMoveButton', 'wrongMoveComment');
+    removeChild('rightMoveButton', 'rightMoveComment');
+
+    document.getElementById('wrongMoveComment').textContent = 'This is a wrong move';
+    document.getElementById('rightMoveComment').textContent = 'This is a right move';
+
+    var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
+    var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
+    var wrong = changeLabelsOnBoard(wrongMoves[currentExpl - 1]);
+
+    var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
+    var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
+
+    document.getElementById('wrongMove' + wrongIdx).style.backgroundColor = 'red';
+    document.getElementById('rightMove' + rightIdx).style.backgroundColor = 'green';
+
+    moveChosen = true;
+    totalTime = 60;
+    sec = 0;
+
+    if (participantID % 2 != 0) {
+
+        var game = learnerPlayGame(inverseLabelsOnBoard(right));
+        if (document.getElementById('rightMove').parentElement.id == 'move1') {
+            showPosExamples(game, 'explExample1', rightIdx);
+            showNegExample(inverseLabelsOnBoard(wrong), 'explExample2', wrongIdx);
+        } else {
+            showNegExample(inverseLabelsOnBoard(wrong), 'explExample1', wrongIdx);
+            showPosExamples(game, 'explExample2', rightIdx);
+        }
+    }
+
+}
+
+function rightMoveChosen() {
+
+    answers[currentExpl - 1].push(boardRepreToBoardRotated(rightMoves[currentExpl - 1]));
+    showExpl();
+    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+    
+}
+
+function wrongMoveChosen() {
+
+    answers[currentExpl - 1].push(boardRepreToBoardRotated(wrongMoves[currentExpl - 1]));
+    showExpl();
+    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+
+}
+
+
+function createBoard(board, boardId, parentId, text, pos, color) {
+
+  var td = document.createElement('td');
+  td.setAttribute('id', boardId);
+  td.align = 'center';
+
+  if (board.length !== 0) {
+
+      var newBoard = changeLabelsOnBoard(board);
+      var table = document.createElement('table');
+      table.setAttribute('border', 1);
+      table.setAttribute('cellspacing', 0);
+      table.classList.add('table2');
+      var markerRow = Math.floor(pos / N_SIZE);
+      var markerCol = pos % N_SIZE;
+
+      for (var i = 0; i < N_SIZE; i++) {
+
+          var row = document.createElement('tr');
+          table.appendChild(row);
+
+          for (var j = 0; j < N_SIZE; j++) {
+
+              var cell = document.createElement('td');
+              cell.setAttribute('id', boardId + (i * 3 + j));
+              cell.setAttribute('height', 50);
+              cell.setAttribute('width',  50);
+              cell.setAttribute('align',  'center');
+              cell.setAttribute('valign',  'center');
+
+              if (i === markerRow && j === markerCol) {
+                  cell.style.backgroundColor = color;
+              } else {
+                  cell.style.backgroundColor = 'white';
+              }
+
+              row.appendChild(cell);
+              cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
+          }
+      }
+
+      td.appendChild(table);
+
+      var comment = document.createElement('div');
+      comment.setAttribute('id', boardId+'Comment');
+      comment.textContent = text;
+      comment.classList.add('col');
+      comment.align = 'center';
+
+      td.appendChild(comment);
+      document.getElementById(parentId).appendChild(td);
+  }
+}
+
+// board has row1-row2-row3 format
+function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
+
+  var td = document.createElement('td');
+  td.setAttribute('id', boardId);
+  td.style.border = borderWidth + "px solid white";
+  td.align = 'center';
+
+  if (board.length !== 0) {
+
+      var newBoard = changeLabelsOnBoard(board);
+      var table = document.createElement('table');
+      table.setAttribute('border', 1);
+      table.setAttribute('cellspacing', 0);
+      table.classList.add('table2');
+
+      for (var i = 0; i < N_SIZE; i++) {
+
+          var row = document.createElement('tr');
+          table.appendChild(row);
+
+          for (var j = 0; j < N_SIZE; j++) {
+
+              var cell = document.createElement('td');
+              cell.setAttribute('id', boardId + (i * 3 + j));
+              cell.setAttribute('height', 45);
+              cell.setAttribute('width',  45);
+              cell.setAttribute('align',  'center');
+              cell.setAttribute('valign',  'center');
+              cell.style.backgroundColor = 'white';
+
+              row.appendChild(cell);
+              cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
+          }
+      }
+
+      td.appendChild(table);
+
+      var comment = document.createElement('div');
+      comment.setAttribute('id', boardId+'Comment');
+      comment.textContent = text;
+      comment.classList.add('col');
+      comment.align = 'center';
+
+      td.appendChild(comment);
+      document.getElementById(parentId).appendChild(td);
+  }
+
+  for (var i = 0; i < positions.length; i++) {
+      document.getElementById(boardId+positions[i]).style.backgroundColor = color;
+  }
+
+}
+
+function clearBoards() {
+    removeChild('initialBoard', 'initialState');
+    removeChild('rightMove', 'move1');
+    removeChild('wrongMove', 'move1');
+    removeChild('rightMove', 'move2');
+    removeChild('wrongMove', 'move2');
+    removeChild('posboard0', 'explExample1');
+    removeChild('posboard1', 'explExample1');
+    removeChild('posboard2', 'explExample1');
+    removeChild('negboard0', 'explExample1');
+    removeChild('negboard1', 'explExample1');
+    removeChild('negboard2', 'explExample1');
+    removeChild('posboard0', 'explExample2');
+    removeChild('posboard1', 'explExample2');
+    removeChild('posboard2', 'explExample2');
+    removeChild('negboard0', 'explExample2');
+    removeChild('negboard1', 'explExample2');
+    removeChild('negboard2', 'explExample2');
+}
+
+function showPosExamples(game, parentId, pos){
+
+    if (game[0].filter(x=>x==0).length == 4) {
+        console.log('Depth 2');
+        createBoard(game[0], 'posboard'+0, parentId, 'X moves', [pos], 'green', 7.5);
+
+        createBoard(game[1], 'posboard'+1, parentId, 'O cannot win',
+                    game[1].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
+                    'grey', 5);
+
+        createBoard(game[2], 'posboard'+2, parentId, 'X can force a win',
+                    winLine(game[2],1).map(changeIndex), 'green', 5);
+    } else if (game[0].filter(x=>x==0).length == 2) {
+        createBoard(game[0], 'posboard'+0, parentId, 'X moves + three pieces in a line',
+                    winLine(game[0],1).map(changeIndex), 'green', 7.5);
+    }
+}
+
+
+function showNegExample(board, parentId, pos){
+    if (board.filter(x=>x==0).length == 4) {
+        createBoard(board, 'negboard'+0, parentId, 'X moves', [pos], 'red', 7.5);
+        var nextBoard = computeNextMove(board, 2);
+        if (win(nextBoard, 2)) {
+            createBoard(nextBoard,'negboard'+1, parentId, 'O wins',
+                        winLine(nextBoard, 2).map(changeIndex), 'red', 5);
+        } else {
+            createBoard(nextBoard,'negboard'+1, parentId, 'O cannot win',
+                        nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
+                        'grey', 5);
+            nextBoard = computeNextMove(nextBoard, 1);
+            createBoard(nextBoard,'negboard'+2, parentId, 'X cannot force a win',
+            nextBoard.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 5);
+        }
+    } else if (board.filter(x=>x==0).length == 2) {
+        createBoard(board, 'negboard'+0, parentId, 'Three pieces not in a line',
+        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 7.5);
+    }
+}
+
+
+//phase2();
+document.getElementById('phase').textContent = 'Instruction: ';
+document.getElementById('instruction1').textContent = 'In phase 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+                                                    + 'For each question, you are given a board and you will play X.'
+document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
+createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);

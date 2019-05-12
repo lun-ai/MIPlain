@@ -1,22 +1,43 @@
 function win(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
-        return true
+        return true;
     } else if (board[0] === board[3] && board[3] === board[7] && board[7] === player) {
-        return true
+        return true;
     } else if (board[1] === board[2] && board[2] === board[3] && board[3] === player) {
-        return true
+        return true;
     } else if (board[3] === board[4] && board[4] === board[5] && board[5] === player) {
-        return true
+        return true;
     } else if (board[7] === board[6] && board[6] === board[5] && board[5] === player) {
-        return true
+        return true;
     } else if (board[7] === board[8] && board[8] === board[1] && board[1] === player) {
-        return true
+        return true;
     } else if (board[8] === board[0] && board[0] === board[4] && board[4] === player) {
-        return true
+        return true;
     } else if (board[2] === board[0] && board[0] === board[6] && board[6] === player) {
-        return true
+        return true;
     }
     return false
+}
+
+function winLine(board, player) {
+    if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
+        return [0,1,5];
+    } else if (board[0] === board[3] && board[3] === board[7] && board[7] === player) {
+        return [0,3,7];
+    } else if (board[1] === board[2] && board[2] === board[3] && board[3] === player) {
+        return [1,2,3];
+    } else if (board[3] === board[4] && board[4] === board[5] && board[5] === player) {
+        return [3,4,5];
+    } else if (board[7] === board[6] && board[6] === board[5] && board[5] === player) {
+        return [5,6,7];
+    } else if (board[7] === board[8] && board[8] === board[1] && board[1] === player) {
+        return [1,7,8];
+    } else if (board[8] === board[0] && board[0] === board[4] && board[4] === player) {
+        return [0,4,8];
+    } else if (board[2] === board[0] && board[0] === board[6] && board[6] === player) {
+        return [0,2,6];
+    }
+    return [];
 }
 
 
@@ -96,7 +117,7 @@ function createButton(buttonId, parentId, text, func) {
 
     if (button == null) {
         button = document.createElement('Button');
-        document.getElementById(parentId).appendChild(button)
+        document.getElementById(parentId).appendChild(button);
     }
 
     button.type = 'button';
@@ -107,9 +128,24 @@ function createButton(buttonId, parentId, text, func) {
     button.onclick = func;
 }
 
+function createImage(imageId, parentId, text, src) {
+    var img = document.getElementById(imageId);
+
+    if (img == null) {
+        img = document.createElement('IMG');
+        document.getElementById(parentId).appendChild(img);
+    }
+
+    img.type = 'img';
+    img.style.width = '45px';
+    img.style.height = '45px';
+    img.style.border = "5px solid white";
+    img.src = src;
+}
+
 function removeChild(childId, parentId) {
     var child = document.getElementById(childId);
-    if (child != null){
+    if (child != null && child.parentElement.id == parentId){
        document.getElementById(parentId).removeChild(child);
     }
 }
@@ -224,11 +260,7 @@ function computeNextMove(board, player){
             score = Math.max(...scores);
             optimalRepre = canonicalNextRepre;
         }
-
-
     }
-
-
     return board.map(function(_, i){
                         var copyBoard = board.slice();
                         copyBoard[i] = copyBoard[i] === 0  ?  player : copyBoard[i];
@@ -263,5 +295,9 @@ function wrapTime(time) {
     }
 
     return time;
+}
+
+function shuffle(array) {
+    return array.sort(()=> Math.random() - 0.5);
 }
 
