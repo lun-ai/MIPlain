@@ -252,6 +252,6 @@ def count_terminals():
     print('Terminals after two moves: ' + str(two_moves) + 'positions: ' + str(two_position))
     print('Terminals after three moves: ' + str(three_moves) + 'positions: ' + str(three_position))
 
-#generate_board_configs()
+generate_board_configs()
 #binary_to_JS()
 #print(visualize_board([1,0,1,1,2,2,0,2,1]))

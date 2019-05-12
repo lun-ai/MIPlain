@@ -126,8 +126,7 @@ function stopCountPhase1() {
         document.getElementById('phase').textContent = 'Instruction:';
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent =
-                'In phase 2, you will be given one initial board and '
-                + 'you need choose between two potential moves for what '
+                'In phase 2, you need choose between two potential moves for what '
                 + 'you think to be the best move to win against an OPTIMAL O opponent.';
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction2').textContent =
@@ -158,7 +157,7 @@ function stopCountPhase2() {
     if (currentExpl != 0) {
         if (!moveChosen) {
             // finished game
-            answers[currentExpl - 1].push(boardRepreToBoardRotated(wrongMoves[currentExpl - 1]));
+            answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
             timeTaken.push(totalTime);
             wrongMoveChosen();
             return;
@@ -182,7 +181,7 @@ function stopCountPhase2() {
         document.getElementById('instruction1').textContent = 'In phase 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
         document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and 30 SECs for each question.';
 
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
@@ -357,11 +356,11 @@ function phase2() {
 
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction2').textContent =
-                    'You will see which one is the right move and which is not.';
+                    'You see which one is the right move and which is not.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
             document.getElementById('instruction2').textContent =
-                'You will receive feedback and explanations on which move is the right and which move is not.';
+                'You receive feedback and explanations on which move is the right and which move is not.';
         }
     stopCount();
 }
@@ -413,7 +412,7 @@ function nextExample() {
     ended = false;
     removeChild('nextExampleButton', 'nextExample');
     answers.push([]);
-    answers[currentExpl - 1].push(boardRepreToBoardRotated(examples[currentExpl - 1]));
+    answers[currentExpl - 1].push(examples[currentExpl - 1]);
     showExample();
 
 }
@@ -475,7 +474,7 @@ function showExpl() {
 
 function rightMoveChosen() {
 
-    answers[currentExpl - 1].push(boardRepreToBoardRotated(rightMoves[currentExpl - 1]));
+    answers[currentExpl - 1].push(rightMoves[currentExpl - 1]);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
     
@@ -483,7 +482,7 @@ function rightMoveChosen() {
 
 function wrongMoveChosen() {
 
-    answers[currentExpl - 1].push(boardRepreToBoardRotated(wrongMoves[currentExpl - 1]));
+    answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 
@@ -658,10 +657,10 @@ function showNegExample(board, parentId, pos){
 }
 
 
-//phase2();
-document.getElementById('phase').textContent = 'Instruction: ';
-document.getElementById('instruction1').textContent = 'In phase 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                                    + 'For each question, you are given a board and you will play X.'
-document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
-createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+phase2();
+//document.getElementById('phase').textContent = 'Instruction: ';
+//document.getElementById('instruction1').textContent = 'In phase 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+//                                                    + 'For each question, you are given a board and you will play X.'
+//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
+//                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and 30 SECs for each question.';
+//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
