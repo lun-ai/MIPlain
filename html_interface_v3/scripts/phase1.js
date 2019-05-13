@@ -91,7 +91,6 @@ function learnerPlayGame(board) {
 
 function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
-
     if (totalTime - sec < 0) {
         stopCount();
     } else if (!ended && sec <= totalTime){
@@ -99,7 +98,6 @@ function startCount() {
         sec += 1;
         t = setTimeout(startCount, TIMER_SLICE);
     }
-
 }
 
 function stopCountPhase1() {
@@ -156,11 +154,15 @@ function stopCountPhase2() {
 
     if (currentExpl != 0) {
         if (!moveChosen) {
-            // finished game
             answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
             timeTaken.push(totalTime);
             wrongMoveChosen();
+            startCount();
             return;
+        } else if (moveChosen && sec > 60){
+            timeTakenExpl.push(totalTime);
+        } else {
+            timeTakenExpl.push(Math.max(0, sec - 1));
         }
     }
 
@@ -210,16 +212,13 @@ function stopCountPhase3() {
     currentQuestion += 1;
 
     if (currentQuestion > TOTAL_QUESTIONS) {
-
         endExpr();
-
     } else {
         nextQuestion();
         startCount();
     }
 
 }
-
 
 function boardClicked() {
 
@@ -245,7 +244,7 @@ function nextQuestion() {
 
     ended = false;
     prevBoard = test_boards[currentQuestion - 1];
-    // 1 / num of winning moves
+    // available moves / num of winning moves
     difficulty.push((prevBoard.filter(x => x == 0).length) / (minimaxTable[boardRepreToCanonical[prevBoard.join('')]][1]
                           .filter(x => x == 10)
                           .length));
@@ -291,7 +290,6 @@ function nextQuestion() {
 
 }
 
-
 function endExpr() {
 
     record += '\n\nPhase 3: \n'
@@ -311,7 +309,6 @@ function endExpr() {
 
     window.location.href = 'submission.html';
 }
-
 
 function phase1() {
 
@@ -351,7 +348,7 @@ function phase2() {
     document.getElementById('explanation').style.display = 'block';
 
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = 'You play X. Given an initial board, you need choose between two potential moves for what '
+    document.getElementById('instruction1').textContent = 'You are playing X. Given an initial board, you need choose between two potential moves for what '
                 + 'you think to be the best move to win against an OPTIMAL O opponent.'
 
         if (participantID % TOTAL_GROUP == 0) {
@@ -395,7 +392,6 @@ function phase3() {
     stopCount();
 }
 
-
 function stopCount() {
     if (phase == 1) {
         stopCountPhase1();
@@ -409,7 +405,8 @@ function stopCount() {
 function nextExample() {
 
     clearBoards();
-    ended = false;
+    moveChosen = false;
+    totalTime = 30;
     removeChild('nextExampleButton', 'nextExample');
     answers.push([]);
     answers[currentExpl - 1].push(examples[currentExpl - 1]);
@@ -475,6 +472,7 @@ function showExpl() {
 function rightMoveChosen() {
 
     answers[currentExpl - 1].push(rightMoves[currentExpl - 1]);
+    scores.push(10);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
     
@@ -483,11 +481,11 @@ function rightMoveChosen() {
 function wrongMoveChosen() {
 
     answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
+    scores.push(-10);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 
 }
-
 
 function createBoard(board, boardId, parentId, text, pos, color) {
 
@@ -634,7 +632,6 @@ function showPosExamples(game, parentId, pos){
     }
 }
 
-
 function showNegExample(board, parentId, pos){
     if (board.filter(x=>x==0).length == 4) {
         createBoard(board, 'negboard'+0, parentId, 'X moves', [pos], 'red', 7.5);
@@ -651,16 +648,16 @@ function showNegExample(board, parentId, pos){
             nextBoard.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 5);
         }
     } else if (board.filter(x=>x==0).length == 2) {
-        createBoard(board, 'negboard'+0, parentId, 'Three pieces not in a line',
+        createBoard(board, 'negboard'+0, parentId, 'No three pieces in a line',
         board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 7.5);
     }
 }
 
 
-phase2();
 //document.getElementById('phase').textContent = 'Instruction: ';
 //document.getElementById('instruction1').textContent = 'In phase 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
 //                                                    + 'For each question, you are given a board and you will play X.'
 //document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
 //                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and 30 SECs for each question.';
 //createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+phase2();
