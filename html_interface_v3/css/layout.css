@@ -30,16 +30,24 @@ table.table2 td {
 .column {
   float: left;
   width: 50%;
+  height:100%;
 }
 
 .column3 {
   float: left;
   width: 33%;
+  height:100%;
 }
 
 .column2 {
   float: left;
   width: 50%;
+  height:100%;
+}
+
+.vmiddle{
+    top:50%;
+    left:50%;
 }
 
 .row:after {

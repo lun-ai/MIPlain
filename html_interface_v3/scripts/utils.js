@@ -1,3 +1,7 @@
+var minimaxTable = canonicalData,
+    boardRepreToCanonical = canonicalMap;
+
+
 function win(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
         return true;
@@ -301,3 +305,63 @@ function shuffle(array) {
     return array.sort(()=> Math.random() - 0.5);
 }
 
+function computeBoardDifficulty(board) {
+    return Math.round(((board.filter(x => x == 0).length) / (minimaxTable[boardRepreToCanonical[board.join('')]][1]
+                          .filter(x => x == 10)
+                          .length)) * 100) / 100;
+}
+
+function sortTestBoardsAscend(a,b){
+    return computeBoardDifficulty(boardRepreToBoardRotated(a)) - computeBoardDifficulty(boardRepreToBoardRotated(b));
+}
+
+
+function findPosStrongOption(board, player) {
+    var p = [];
+    var v = player == 1 ? 2 : 6;
+    var newBoard = [...board].map(x=> x == 2 ? 3 : x);
+
+    if ((newBoard[0] + newBoard[1] + newBoard[5]) == v) {
+        p = p.concat([0,1,5]);
+    }
+    if ((newBoard[0] + newBoard[3] + newBoard[7]) == v) {
+        p = p.concat([0,3,7]);
+    }
+    if ((newBoard[1] + newBoard[2] + newBoard[3]) == v) {
+        p = p.concat([1,2,3]);
+    }
+    if ((newBoard[3] + newBoard[4] + newBoard[5]) == v) {
+        p = p.concat([3,4,5]);
+    }
+    if ((newBoard[5] + newBoard[6] + newBoard[7]) == v) {
+        p = p.concat([5,6,7]);
+    }
+    if ((newBoard[1] + newBoard[7] + newBoard[8]) == v) {
+        p = p.concat([1,7,8]);
+    }
+    if ((newBoard[0] + newBoard[4] + newBoard[8]) == v) {
+        p = p.concat([0,4,8]);
+    }
+    if ((newBoard[0] + newBoard[2] + newBoard[6]) == v) {
+        p = p.concat([0,2,6]);
+    }
+    return [...new Set(p)];
+}
+
+function formattedDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    var today = dd + '_' + mm + '_' + yyyy + '-' + hours + '_' + minutes;
+    return today;
+}

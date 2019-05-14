@@ -8,28 +8,96 @@
 <body>
     <div align="center">
         <scan style="font-size:3vw">Introduction</scan>
-        <p> Tic-tac-toe, or Noughts and Crosses, is a two-players game for X and O, <br />
-            who take turns marking the spaces in a 3×3 grid. The player who succeeds in placing <br />
-            three of their marks in a horizontal, vertical, or diagonal row wins the game. <br />
-            <br />
+        <p> This experiment includes 3 phases. You will learn to win Noughts and Crosses by answering some questions <br />
+            You will pick 4th, 3rd and 2nd moves on chosen boards and reflect on your choices while being provided with some feedback <br />
+            <br /> Noughts and Crosses or Tic-tac-toe, is a two-players game for X and O, <br />
+            who take turns marking the spaces in a 3×3 grid. <br />
+            You can make a move in a untaken cell when the game has not terminated. <br />
+            <br /> The player who succeeds in placing
+            three of their marks in a HORIZONTAL, VERTICAL, or DIAGONAL line wins the game. <br />
             The following board states are examples of winning states. <br />
         </p>
+
 
         <div class="row">
             <div class="column3">
                 <table border="1" cellspacing="0" class="table2" align="right">
                     <tr>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="center">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">O</td>
                         <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
                     </tr>
                     <tr>
                         <td height="70" width="70" align="center" valign="center">O</td>
                         <td height="70" width="70" align="center" valign="center">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="left">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
                         <td height="70" width="70" align="center" valign="center">&nbsp;</td>
                     </tr>
                     <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <p> A STRONG option is an alignment of two of the same mark. There can be multiple STRONG options for a player.<br />
+            Each highlighted line of cells is a STRONG option.
+        </p>
+        <div class="row">
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="right">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
                         <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
                         <td height="70" width="70" align="center" valign="center">&nbsp;</td>
                         <td height="70" width="70" align="center" valign="center">O</td>
                     </tr>
@@ -38,56 +106,110 @@
             <div class="column3">
                 <table border="1" cellspacing="0" class="table2" align="center">
                     <tr>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
                     </tr>
                     <tr>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
-                    </tr>
-                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
                         <td height="70" width="70" align="center" valign="center">O</td>
                         <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">O</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">O</td>
                     </tr>
                 </table>
             </div>
             <div class="column3">
                 <table border="1" cellspacing="0" class="table2" align="left">
                     <tr>
-                        <td height="70" width="70" align="center" valign="center">O</td>
-                        <td height="70" width="70" align="center" valign="center">O</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
                     </tr>
                     <tr>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
                         <td height="70" width="70" align="center" valign="center">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:green">X</td>
-                        <td height="70" width="70" align="center" valign="center">O</td>
-                        <td height="70" width="70" align="center" valign="center">O</td>
+                        <td height="70" width="70" align="center" valign="center">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
                     </tr>
                 </table>
             </div>
+        </div>
 
+        <br> A WEAK option is an alignment of one of the same mark. There can be multiple WEAK options for a player. <br />
+             Each highlighted line of cells is a WEAK option.
+        </p>
+        <div class="row">
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="right">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="center">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column3">
+                <table border="1" cellspacing="0" class="table2" align="left">
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center">O</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center">O</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
+                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">&nbsp;</td>
+                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div align="center">
-        <p> In this experiment you will show your ability to play and learn the game, in particular by picking your <br />
-            4th, 3rd and 2nd move on a randomly chosen board and reflect on your choices while being provided with some feedback.
-        </p>
-
-            <p> This experiment includes 3 stages, you will answer some questions in different phases.</p>
-            <p> For each QUESTION, you should submit what you think to be the optimal move by clicking <br /></p>
-                on the board and pressing 'Next'.
             <p> NOTE: Each question is timed. When time runs out, you will be forced to proceed.<br />
                 At the end of your session, you will download a record file. Please follow the instructions given.</p>
             <p style="color: red;"> If you need help on using this interface, please ask the instructor. </p>
-
     </div>
     <div align="center">
         <p> Please enter your participant ID below and continue below whenever you feel ready.</p>

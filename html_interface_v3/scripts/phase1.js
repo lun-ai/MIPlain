@@ -6,7 +6,9 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TIMER_SLICE = 1000,
     PL_FILE_NAME = 'strategy',
     TURN = 'X',
-    TOTAL_GROUP = 2;
+    TOTAL_GROUP = 2,
+    QUESTION_TIME = 45,
+    EXPL_TIME = 90;
 
 var t,
     phase = 0,
@@ -24,19 +26,28 @@ var t,
     scores = [],
     timeTaken = [],
     ended = false,
-    minimaxTable = canonicalData,
-    record = '',
-    boardRepreToCanonical = canonicalMap;
+    record = '';
 
 var texts = String(window.location).split('=');
 var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
-function flushRecords() {
-    prevBoard = [0,0,0,0,0,0,0,0,0];
-    difficulty = [];
-    answers = [];
-    scores = [];
-    timeTaken = [];
+function flushLocalCache() {
+    prevBoard = [0,0,0,0,0,0,0,0,0],
+    difficulty = [],
+    answers = [],
+    scores = [],
+    timeTaken = [],
+    timeTakenExpl = [],
+    ended = false,
+    moveChosen = false,
+    currentExpl = 0,
+    currentQuestion = 0;
+
+    document.getElementById('phase').textContent = '';
+    document.getElementById('timer').textContent = '';
+    document.getElementById('instruction1').textContent = '';
+    document.getElementById('instruction2').textContent = '';
+    document.getElementById('instruction3').textContent = '';
 }
 
 function applyStrategy(board) {
@@ -94,7 +105,7 @@ function startCount() {
     if (totalTime - sec < 0) {
         stopCount();
     } else if (!ended && sec <= totalTime){
-        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
+//        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
         sec += 1;
         t = setTimeout(startCount, TIMER_SLICE);
     }
@@ -106,7 +117,7 @@ function stopCountPhase1() {
         if (!ended) {
             // unfinished game
             answers[currentQuestion - 1].push(prevBoard);
-            scores.push(-10);
+            scores.push(-1);
             timeTaken.push(totalTime);
         }
     }
@@ -124,18 +135,18 @@ function stopCountPhase1() {
         document.getElementById('phase').textContent = 'Instruction:';
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent =
-                'In phase 2, you need choose between two potential moves for what '
+                'In Part 2, you need choose between two potential moves for what '
                 + 'you think to be the best move to win against an OPTIMAL O opponent.';
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction2').textContent =
                     'You will see which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You have 30 SECs to make you choice and 60 SECs to think about your choice.'
+                    'You have '+ QUESTION_TIME + ' SECs to make you choice and ' + EXPL_TIME + ' SECs to think about your choice.'
         } else {
             document.getElementById('instruction2').textContent =
-                'You will receive feedback and explanations on which move is the right and which move is not.';
+                'Machine learner MIGO comments on which move is the right and which move is not.';
             document.getElementById('instruction3').textContent =
-                    'You have 30 SECs to make you choice and 60 SECs to study the explanation.'
+                    'You have '+ QUESTION_TIME + ' SECs to make you choice and ' + EXPL_TIME + ' SECs to study the explanation by MIGO.'
         }
 
         document.getElementById('numQuestion').textContent = '';
@@ -159,7 +170,7 @@ function stopCountPhase2() {
             wrongMoveChosen();
             startCount();
             return;
-        } else if (moveChosen && sec > 60){
+        } else if (moveChosen && sec > EXPL_TIME){
             timeTakenExpl.push(totalTime);
         } else {
             timeTakenExpl.push(Math.max(0, sec - 1));
@@ -180,11 +191,11 @@ function stopCountPhase2() {
         document.getElementById('explanation').style.display = 'none';
         document.getElementById('timer').textContent = '';
         document.getElementById('phase').textContent = 'Instruction: ';
-        document.getElementById('instruction1').textContent = 'In phase 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+        document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
         document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and 30 SECs for each question.';
-
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and ' + QUESTION_TIME + ' SECs for each question.';
+        document.getElementById('instruction3').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
@@ -199,7 +210,7 @@ function stopCountPhase3() {
     if (currentQuestion != 0) {
         if (!ended) {
             answers[currentQuestion - 1].push(prevBoard);
-            scores.push(-10);
+            scores.push(-1);
             timeTaken.push(totalTime);
         }
     }
@@ -245,9 +256,7 @@ function nextQuestion() {
     ended = false;
     prevBoard = test_boards[currentQuestion - 1];
     // available moves / num of winning moves
-    difficulty.push((prevBoard.filter(x => x == 0).length) / (minimaxTable[boardRepreToCanonical[prevBoard.join('')]][1]
-                          .filter(x => x == 10)
-                          .length));
+    difficulty.push(computeBoardDifficulty(prevBoard));
     answers.push([]);
     answers[currentQuestion - 1].push(prevBoard);
 
@@ -292,15 +301,15 @@ function nextQuestion() {
 
 function endExpr() {
 
-    record += '\n\nPhase 3: \n'
-        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+    record += '\n\nPart 3: \n'
+        + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'difficulty: ' + difficulty + '\n',
         + 'scores: ' + scores + '\n'
         + 'time: ' + timeTaken + '\n';
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(record));
-    element.setAttribute('download', participantID + '#' + Date.now() + '.txt');
+    element.setAttribute('download', participantID + '#' + formattedDate() + '.txt');
 
     element.style.display = 'none';
     document.body.appendChild(element);
@@ -315,9 +324,9 @@ function phase1() {
     removeChild('nextPhaseButton', 'nextPhase');
 
     phase = 1;
-    totalTime = 30;
+    totalTime = QUESTION_TIME;
 
-    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('phase').textContent = 'Part No.' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
                         ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
@@ -329,35 +338,38 @@ function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
 
-    record += '\n\nPhase 1: \n'
-        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+    record += '\n\nPart 1: \n'
+        + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'difficulty: ' + difficulty + '\n',
         + 'scores: ' + scores + '\n'
         + 'time: ' + timeTaken + '\n';
 
     console.log(record);
 
-    answers = [],
-    difficulty = [],
-    scores = [],
-    timeTaken = [];
+    flushLocalCache();
 
     phase = 2,
-    totalTime = 30;
+    totalTime = QUESTION_TIME;
 
     document.getElementById('explanation').style.display = 'block';
 
-    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('phase').textContent = 'Part No.' + phase;
     document.getElementById('instruction1').textContent = 'You are playing X. Given an initial board, choose between two potential moves for what '
                 + 'you think to be the best move to win against an OPTIMAL O opponent.'
 
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction2').textContent =
-                    'You are informed which one is the right move and which is not.';
+                    'You will be informed which one is the right move and which is not.';
+            document.getElementById('instruction3').textContent =
+                    'You have '+ QUESTION_TIME + ' SECs to make you choice and '
+                    + EXPL_TIME + ' SECs to think about your choice.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
             document.getElementById('instruction2').textContent =
-                'You receive feedback and explanations on which move is the right and which move is not.';
+                'You will receive comments from machine learner MIGO on which move is the right and which move is not.';
+            document.getElementById('instruction3').textContent =
+                    'You have '+ QUESTION_TIME + ' SECs to make you choice and '
+                    + EXPL_TIME + ' SECs to study the comments by MIGO.'
         }
     stopCount();
 }
@@ -366,23 +378,20 @@ function phase3() {
 
     removeChild('nextPhaseButton', 'nextPhase');
 
-    record += '\n\nPhase 2: \n'
-        + answers.map(g => '[\n' + g.join('\n') + '\n]\n')
+    record += '\n\nPart 2: \n'
+        + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'scores: ' + scores + '\n'
         + 'time: ' + timeTaken + '\n'
         + 'time on expl: ' + timeTakenExpl + '\n';
 
     console.log(record);
 
-    answers = [],
-    scores = [],
-    timeTaken = [],
-    timeTakenExpl = [];
+    flushLocalCache();
 
     phase = 3,
-    totalTime = 30;
+    totalTime = QUESTION_TIME;
 
-    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('phase').textContent = 'Part No.' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
                         ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
@@ -406,7 +415,7 @@ function nextExample() {
 
     clearBoards();
     moveChosen = false;
-    totalTime = 30;
+    totalTime = QUESTION_TIME;
     removeChild('nextExampleButton', 'nextExample');
     answers.push([]);
     answers[currentExpl - 1].push(examples[currentExpl - 1]);
@@ -417,14 +426,22 @@ function nextExample() {
 function showExample() {
 
     createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',10);
+
+    var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
+    var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
+    var wrong = changeLabelsOnBoard(wrongMoves[currentExpl - 1]);
+
+    var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
+    var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
+
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [0], 'white', 10);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [0], 'white', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [rightIdx], 'grey', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [wrongIdx], 'grey', 10);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [0], 'white', 10);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [0], 'white', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [wrongIdx], 'grey', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [rightIdx], 'grey', 10);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
@@ -452,10 +469,10 @@ function showExpl() {
     document.getElementById('rightMove' + rightIdx).style.backgroundColor = 'green';
 
     moveChosen = true;
-    totalTime = 60;
+    totalTime = EXPL_TIME;
     sec = 0;
 
-    if (participantID % 2 != 0) {
+    if (participantID % TOTAL_GROUP != 0) {
 
         var game = learnerPlayGame(inverseLabelsOnBoard(right));
         if (document.getElementById('rightMove').parentElement.id == 'move1') {
@@ -481,7 +498,16 @@ function rightMoveChosen() {
 function wrongMoveChosen() {
 
     answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
-    scores.push(-10);
+    scores.push(getMiniMaxScore(answers[currentExpl - 1][0], answers[currentExpl - 1][1], 1));
+    showExpl();
+    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+
+}
+
+function noMoveChosen() {
+
+    answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
+    scores.push(-1);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 
@@ -580,7 +606,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
       var comment = document.createElement('div');
       comment.setAttribute('id', boardId+'Comment');
-      comment.textContent = text;
+      comment.innerHTML = text;
       comment.classList.add('col');
       comment.align = 'center';
 
@@ -615,48 +641,53 @@ function clearBoards() {
 }
 
 function showPosExamples(game, parentId, pos){
-
     if (game[0].filter(x=>x==0).length == 4) {
         console.log('Depth 2');
-        createBoard(game[0], 'posboard'+0, parentId, 'X moves', [pos], 'green', 7.5);
-
-        createBoard(game[1], 'posboard'+1, parentId, 'O cannot win',
-                    game[1].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
+        createBoard(game[0], 'posboard'+0, parentId, 'X moves + X should have 2 strong options + ',
+                    findPosStrongOption(game[0], 1).map(changeIndex), 'green', 7.5);
+        createBoard(game[0], 'posboard'+1, parentId, 'O should have no strong option',
+                    game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
                     'grey', 5);
-
-        createBoard(game[2], 'posboard'+2, parentId, 'X can force a win',
-                    winLine(game[2],1).map(changeIndex), 'green', 5);
+//        createBoard(game[2], 'posboard'+2, parentId, 'X can force a win',
+//                    winLine(game[2],1).map(changeIndex), 'green', 5);
     } else if (game[0].filter(x=>x==0).length == 2) {
-        createBoard(game[0], 'posboard'+0, parentId, 'X moves + three pieces in a line',
+        createBoard(game[0], 'posboard'+0, parentId, 'X moves + should have three pieces in a line',
                     winLine(game[0],1).map(changeIndex), 'green', 7.5);
     }
 }
 
 function showNegExample(board, parentId, pos){
     if (board.filter(x=>x==0).length == 4) {
-        createBoard(board, 'negboard'+0, parentId, 'X moves', [pos], 'red', 7.5);
-        var nextBoard = computeNextMove(board, 2);
-        if (win(nextBoard, 2)) {
-            createBoard(nextBoard,'negboard'+1, parentId, 'O wins',
-                        winLine(nextBoard, 2).map(changeIndex), 'red', 5);
-        } else {
-            createBoard(nextBoard,'negboard'+1, parentId, 'O cannot win',
-                        nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
-                        'grey', 5);
-            nextBoard = computeNextMove(nextBoard, 1);
-            createBoard(nextBoard,'negboard'+2, parentId, 'X cannot force a win',
-            nextBoard.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 5);
+        createBoard(board, 'negboard'+0, parentId, EMPTY,
+                    findPosStrongOption(board, 1).map(changeIndex), 'grey', 7.5);
+//        var nextBoard = computeNextMove(board, 2);
+//        if (win(nextBoard, 2)) {
+//            createBoard(nextBoard,'negboard'+1, parentId, EMPTY,
+//                        winLine(nextBoard, 2).map(changeIndex), 'red', 5);
+//        } else {
+//            createBoard(nextBoard,'negboard'+1, parentId, EMPTY,
+//                        nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
+//                        'grey', 5);
+//            nextBoard = computeNextMove(nextBoard, 1);
+//            createBoard(nextBoard,'negboard'+2, parentId, EMPTY,
+//            nextBoard.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 5);
+//        }
+        var p = findPosStrongOption(board, 2).map(changeIndex);
+        if(p.length != 0) {
+            createBoard(board,'negboard'+1, parentId, EMPTY,
+                        p, 'red', 5);
         }
     } else if (board.filter(x=>x==0).length == 2) {
-        createBoard(board, 'negboard'+0, parentId, 'No three pieces in a line',
+        createBoard(board, 'negboard'+0, parentId, EMPTY,
         board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 7.5);
     }
+    document.getElementById('negboard0' + pos).style.backgroundColor = 'red';
 }
 
 
 document.getElementById('phase').textContent = 'Instruction: ';
-document.getElementById('instruction1').textContent = 'In phase 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
 document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and 30 SECs for each question.';
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and ' + QUESTION_TIME + ' SECs for each question.';
 createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
