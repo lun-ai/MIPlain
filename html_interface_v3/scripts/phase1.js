@@ -7,14 +7,14 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     PL_FILE_NAME = 'strategy',
     TURN = 'X',
     TOTAL_GROUP = 2,
-    QUESTION_TIME = 45,
-    EXPL_TIME = 90;
+    QUESTION_TIME = 60 * 60 * 24,
+    EXPL_TIME = 120;
 
 var t,
     phase = 0,
     sec = 0,
     boxes = [],
-    totalTime = 30,
+    totalTime = QUESTION_TIME,
     currentQuestion = 0,
     prevBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
     test_boards = PHASE1_QUESTIONS,
@@ -106,6 +106,9 @@ function startCount() {
         stopCount();
     } else if (!ended && sec <= totalTime){
 //        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
+        if(phase == 2 && sec == totalTime - 10) {
+            document.getElementById("timer").textContent = 'We will be forced to move on in 10 secs';
+        }
         sec += 1;
         t = setTimeout(startCount, TIMER_SLICE);
     }
@@ -141,12 +144,12 @@ function stopCountPhase1() {
             document.getElementById('instruction2').textContent =
                     'You will see which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You have '+ QUESTION_TIME + ' SECs to make you choice and ' + EXPL_TIME + ' SECs to think about your choice.'
+                    'You will pick your choice and have ' + EXPL_TIME + ' SECs to think about your choice.'
         } else {
             document.getElementById('instruction2').textContent =
                 'Machine learner MIGO comments on which move is the right and which move is not.';
             document.getElementById('instruction3').textContent =
-                    'You have '+ QUESTION_TIME + ' SECs to make you choice and ' + EXPL_TIME + ' SECs to study the explanation by MIGO.'
+                    'You will pick your choice and have ' + EXPL_TIME + ' SECs to study the explanation by MIGO.'
         }
 
         document.getElementById('numQuestion').textContent = '';
@@ -194,11 +197,12 @@ function stopCountPhase2() {
         document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
         document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and ' + QUESTION_TIME + ' SECs for each question.';
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
         document.getElementById('instruction3').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
+        document.getElementById('timer').textContent = '';
         nextExample();
         startCount();
     }
@@ -246,7 +250,7 @@ function boardClicked() {
         scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
         timeTaken.push(Math.max(0, sec - 1));
 
-        createButton('nextQuestionButton', 'nextQuestion', 'Next', stopCount);
+        createButton('nextQuestionButton', 'nextQuestion', 'Next Question', stopCount);
 
     }
 }
@@ -329,8 +333,7 @@ function phase1() {
     document.getElementById('phase').textContent = 'Part No.' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
                         ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
-    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
-                        'You have ' + totalTime + ' SECs for each question. ';
+    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question.';
     stopCount();
 }
 
@@ -361,14 +364,14 @@ function phase2() {
             document.getElementById('instruction2').textContent =
                     'You will be informed which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You have '+ QUESTION_TIME + ' SECs to make you choice and '
+                    'You will pick your choice and '
                     + EXPL_TIME + ' SECs to think about your choice.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
             document.getElementById('instruction2').textContent =
                 'You will receive comments from machine learner MIGO on which move is the right and which move is not.';
             document.getElementById('instruction3').textContent =
-                    'You have '+ QUESTION_TIME + ' SECs to make you choice and '
+                    'You can pick your choice and '
                     + EXPL_TIME + ' SECs to study the comments by MIGO.'
         }
     stopCount();
@@ -394,8 +397,7 @@ function phase3() {
     document.getElementById('phase').textContent = 'Part No.' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
                         ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
-    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ' +
-                        'You have ' + totalTime + ' SECs for each question. ';
+    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
     stopCount();
@@ -425,7 +427,7 @@ function nextExample() {
 
 function showExample() {
 
-    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',10);
+    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',20);
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -435,13 +437,13 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [rightIdx], 'grey', 10);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [wrongIdx], 'grey', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [rightIdx], 'grey', 20);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [wrongIdx], 'grey', 20);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [wrongIdx], 'grey', 10);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [rightIdx], 'grey', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [wrongIdx], 'grey', 20);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [rightIdx], 'grey', 20);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
@@ -477,9 +479,9 @@ function showExpl() {
         var game = learnerPlayGame(inverseLabelsOnBoard(right));
         if (document.getElementById('rightMove').parentElement.id == 'move1') {
             showPosExamples(game, 'explExample1', rightIdx);
-            showNegExample(inverseLabelsOnBoard(wrong), 'explExample2', wrongIdx);
+            showNegExamples(inverseLabelsOnBoard(wrong), 'explExample2', wrongIdx);
         } else {
-            showNegExample(inverseLabelsOnBoard(wrong), 'explExample1', wrongIdx);
+            showNegExamples(inverseLabelsOnBoard(wrong), 'explExample1', wrongIdx);
             showPosExamples(game, 'explExample2', rightIdx);
         }
     }
@@ -492,7 +494,7 @@ function rightMoveChosen() {
     scores.push(10);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
-    
+
 }
 
 function wrongMoveChosen() {
@@ -504,14 +506,6 @@ function wrongMoveChosen() {
 
 }
 
-function noMoveChosen() {
-
-    answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
-    scores.push(-1);
-    showExpl();
-    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
-
-}
 
 function createBoard(board, boardId, parentId, text, pos, color) {
 
@@ -629,57 +623,79 @@ function clearBoards() {
     removeChild('posboard0', 'explExample1');
     removeChild('posboard1', 'explExample1');
     removeChild('posboard2', 'explExample1');
+    removeChild('posboard3', 'explExample1');
     removeChild('negboard0', 'explExample1');
     removeChild('negboard1', 'explExample1');
     removeChild('negboard2', 'explExample1');
     removeChild('posboard0', 'explExample2');
     removeChild('posboard1', 'explExample2');
     removeChild('posboard2', 'explExample2');
+    removeChild('posboard3', 'explExample2');
     removeChild('negboard0', 'explExample2');
     removeChild('negboard1', 'explExample2');
     removeChild('negboard2', 'explExample2');
 }
 
 function showPosExamples(game, parentId, pos){
-    if (game[0].filter(x=>x==0).length == 4) {
-        console.log('Depth 2');
-        createBoard(game[0], 'posboard'+0, parentId, 'X moves + X should have 2 strong options + ',
-                    findPosStrongOption(game[0], 1).map(changeIndex), 'green', 7.5);
-        createBoard(game[0], 'posboard'+1, parentId, 'O should have no strong option',
+    if (game[0].filter(x=>x==0).length == 6) {
+        // Depth 3
+        var strongPos = findPosStrongOption(game[0], 1).map(changeIndex);
+        createBoard(game[0], 'posboard0', parentId, 'X moves + X should have 1 strong option',
+                    strongPos , 'green', 17.5);
+        createBoard(game[1], 'posboard1', parentId, 'O blocks X\'s strong option',
+                    strongPos, 'grey', 5);
+        createBoard(game[2], 'posboard2', parentId, 'X has 2 strong options + O has no strong option',
+                    findPosStrongOption(game[2], 1).map(changeIndex), 'green', 5);
+
+        var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
+        for (var i = 0; i < opponentPos.length; i++) {
+            document.getElementById('posboard2' + opponentPos[i]).style.backgroundColor = 'grey';
+        }
+
+    }else if (game[0].filter(x=>x==0).length == 4) {
+        // Depth 2
+        createBoard(game[0], 'posboard0', parentId, 'X moves + X should have 2 strong options + ',
+                    findPosStrongOption(game[0], 1).map(changeIndex), 'green', 17.5);
+        createBoard(game[0], 'posboard1', parentId, 'O should have no strong option',
                     game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
                     'grey', 5);
-//        createBoard(game[2], 'posboard'+2, parentId, 'X can force a win',
-//                    winLine(game[2],1).map(changeIndex), 'green', 5);
     } else if (game[0].filter(x=>x==0).length == 2) {
-        createBoard(game[0], 'posboard'+0, parentId, 'X moves + should have three pieces in a line',
-                    winLine(game[0],1).map(changeIndex), 'green', 7.5);
+        // Depth 1
+        createBoard(game[0], 'posboard0', parentId, 'X moves + should have three pieces in a line',
+                    winLine(game[0],1).map(changeIndex), 'green', 17.5);
     }
 }
 
-function showNegExample(board, parentId, pos){
-    if (board.filter(x=>x==0).length == 4) {
-        createBoard(board, 'negboard'+0, parentId, EMPTY,
-                    findPosStrongOption(board, 1).map(changeIndex), 'grey', 7.5);
-//        var nextBoard = computeNextMove(board, 2);
-//        if (win(nextBoard, 2)) {
-//            createBoard(nextBoard,'negboard'+1, parentId, EMPTY,
-//                        winLine(nextBoard, 2).map(changeIndex), 'red', 5);
-//        } else {
-//            createBoard(nextBoard,'negboard'+1, parentId, EMPTY,
-//                        nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
-//                        'grey', 5);
-//            nextBoard = computeNextMove(nextBoard, 1);
-//            createBoard(nextBoard,'negboard'+2, parentId, EMPTY,
-//            nextBoard.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 5);
-//        }
-        var p = findPosStrongOption(board, 2).map(changeIndex);
-        if(p.length != 0) {
-            createBoard(board,'negboard'+1, parentId, EMPTY,
-                        p, 'red', 5);
+function showNegExamples(board, parentId, pos){
+
+    if (board.filter(x=>x==0).length == 6) {
+        var strong = findPosStrongOption(board, 1).map(changeIndex);
+        createBoard(board, 'negboard0', parentId, EMPTY,
+                    board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1).concat(strong),
+                    'grey', 17.5);
+        if (strong.length != 0) {
+            var nextBoard = computeNextMove(board, 2);
+            var opponentStrong = findPosStrongOption(nextBoard, 2).map(changeIndex);
+            createBoard(nextBoard,'negboard1', parentId, EMPTY,
+                            opponentStrong, 'red', 5);
+
+            nextBoard = computeNextMove(nextBoard, 1);
+            strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
+            createBoard(nextBoard,'negboard2', parentId, EMPTY,
+                        strong, 'grey', 5);
+        }
+
+    } else if (board.filter(x=>x==0).length == 4) {
+        createBoard(board, 'negboard0', parentId, EMPTY,
+                    findPosStrongOption(board, 1).map(changeIndex), 'grey', 17.5);
+        var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
+        if(opponentStrong.length != 0) {
+            createBoard(board,'negboard1', parentId, EMPTY,
+                        opponentStrong, 'red', 5);
         }
     } else if (board.filter(x=>x==0).length == 2) {
-        createBoard(board, 'negboard'+0, parentId, EMPTY,
-        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 7.5);
+        createBoard(board, 'negboard0', parentId, EMPTY,
+        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 17.5);
     }
     document.getElementById('negboard0' + pos).style.backgroundColor = 'red';
 }
@@ -689,5 +705,5 @@ document.getElementById('phase').textContent = 'Instruction: ';
 document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
 document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE and ' + QUESTION_TIME + ' SECs for each question.';
+                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
 createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
