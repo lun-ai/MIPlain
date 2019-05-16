@@ -565,7 +565,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
   var td = document.createElement('td');
   td.setAttribute('id', boardId);
-  td.style.border = borderWidth + "px solid white";
+  td.style.border = borderWidth + "px solid transparent";
   td.align = 'center';
 
   if (board.length !== 0) {
