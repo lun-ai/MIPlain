@@ -8,7 +8,12 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TURN = 'X',
     TOTAL_GROUP = 2,
     QUESTION_TIME = 60 * 60 * 24,
-    EXPL_TIME = 120;
+    EXPL_TIME = 120,
+    YELLOW = '#ffcc00',
+    RED = 'red',
+    GREEN = 'green',
+    WHITE = 'white',
+    GREY = 'grey';
 
 var t,
     phase = 0,
@@ -107,7 +112,11 @@ function startCount() {
     } else if (!ended && sec <= totalTime){
 //        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
         if(phase == 2 && sec == totalTime - 10) {
-            document.getElementById("timer").textContent = 'We will be forced to move on in 10 secs';
+            if (currentExpl == TOTAL_EXPL) {
+                document.getElementById("timer").textContent = 'Will move onto the next part in 10 secs';
+            } else {
+                document.getElementById("timer").textContent = 'Will move onto the next example in 10 secs';
+            }
         }
         sec += 1;
         t = setTimeout(startCount, TIMER_SLICE);
@@ -135,21 +144,23 @@ function stopCountPhase1() {
     if (currentQuestion > TOTAL_QUESTIONS) {
 
         removeChild('nextQuestionButton', 'nextQuestion');
-        document.getElementById('phase').textContent = 'Instruction:';
+        document.getElementById('phase').textContent = 'Well done for completing Part 1!';
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent =
-                'In Part 2, you need choose between two potential moves for what '
-                + 'you think to be the best move to win against an OPTIMAL O opponent.';
+                'In Part 2, examples are given by the Oracle'
+                + ' and you need choose between two potential moves for what '
+                + 'you think to be the best move to WIN.';
+        document.getElementById('instruction2').textContent =
+                    'The Oracle tells you which one is the right move and which is not.';
+        document.getElementById('Oracle').style.display = 'block';
+
         if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction2').textContent =
-                    'You will see which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You will pick your choice and have ' + EXPL_TIME + ' SECs to think about your choice.'
+                    'Then, you are given 2 minutes to think about your choice.'
         } else {
-            document.getElementById('instruction2').textContent =
-                'Machine learner MIGO comments on which move is the right and which move is not.';
             document.getElementById('instruction3').textContent =
-                    'You will pick your choice and have ' + EXPL_TIME + ' SECs to study the explanation by MIGO.'
+                'Then, you are given 2 minutes to study the explanation from MIGO.'
+            document.getElementById('MIGO_intro').style.display = 'block';
         }
 
         document.getElementById('numQuestion').textContent = '';
@@ -193,11 +204,11 @@ function stopCountPhase2() {
         removeChild('nextExampleButton', 'nextExample');
         document.getElementById('explanation').style.display = 'none';
         document.getElementById('timer').textContent = '';
-        document.getElementById('phase').textContent = 'Instruction: ';
+        document.getElementById('phase').textContent = 'Well done for completing Part 2!';
         document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
                                                     + 'For each question, you are given a board and you will play X.'
-        document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
+        document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+                                                    + ' You have ONE CHANCE for each question.';
         document.getElementById('instruction3').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
@@ -330,9 +341,9 @@ function phase1() {
     phase = 1;
     totalTime = QUESTION_TIME;
 
-    document.getElementById('phase').textContent = 'Part No.' + phase;
+    document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
-                        ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
+                        ' for what you think to be the best move to WIN';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question.';
     stopCount();
 }
@@ -355,24 +366,24 @@ function phase2() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('explanation').style.display = 'block';
+    document.getElementById('MIGO_intro').style.display = 'none';
+    document.getElementById('Oracle').style.display = 'none';
 
-    document.getElementById('phase').textContent = 'Part No.' + phase;
+    document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').textContent = 'You are playing X. Given an initial board, choose between two potential moves for what '
-                + 'you think to be the best move to win against an OPTIMAL O opponent.'
+                + 'you think to be the best move to WIN.'
 
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction2').textContent =
-                    'You will be informed which one is the right move and which is not.';
+                    'The Oracle tells you which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You will pick your choice and '
-                    + EXPL_TIME + ' SECs to think about your choice.';
+                    'You are given time to think about your choice.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
             document.getElementById('instruction2').textContent =
-                'You will receive comments from machine learner MIGO on which move is the right and which move is not.';
+                    'The Oracle tells you which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
-                    'You can pick your choice and '
-                    + EXPL_TIME + ' SECs to study the comments by MIGO.'
+                    'You are given time to study the comments from MIGO AI.'
         }
     stopCount();
 }
@@ -394,9 +405,9 @@ function phase3() {
     phase = 3,
     totalTime = QUESTION_TIME;
 
-    document.getElementById('phase').textContent = 'Part No.' + phase;
+    document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
-                        ' for what you think to be the best move to WIN against an OPTIMAL O opponent';
+                        ' for what you think to be the best move to WIN';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
@@ -437,16 +448,18 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [rightIdx], 'grey', 20);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [wrongIdx], 'grey', 20);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], 'white', 20);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], 'white', 20);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [wrongIdx], 'grey', 20);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [rightIdx], 'grey', 20);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], 'grey', 20);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], 'grey', 20);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
+    document.getElementById("rightMove"+rightIdx).style.color = YELLOW;
+    document.getElementById("wrongMove"+wrongIdx).style.color = YELLOW;
 }
 
 function showExpl() {
@@ -457,8 +470,8 @@ function showExpl() {
     removeChild('wrongMoveButton', 'wrongMoveComment');
     removeChild('rightMoveButton', 'rightMoveComment');
 
-    document.getElementById('wrongMoveComment').textContent = 'This is a wrong move';
-    document.getElementById('rightMoveComment').textContent = 'This is a right move';
+    document.getElementById('wrongMoveComment').textContent = 'Oracle: this is a wrong move';
+    document.getElementById('rightMoveComment').textContent = 'Oracle: this is a right move';
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -467,8 +480,8 @@ function showExpl() {
     var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
-    document.getElementById('wrongMove' + wrongIdx).style.backgroundColor = 'red';
-    document.getElementById('rightMove' + rightIdx).style.backgroundColor = 'green';
+    document.getElementById('wrongMove' + wrongIdx).style.color = 'red';
+    document.getElementById('rightMove' + rightIdx).style.color = 'green';
 
     moveChosen = true;
     totalTime = EXPL_TIME;
@@ -481,8 +494,8 @@ function showExpl() {
             showPosExamples(game, 'explExample1', rightIdx);
             showNegExamples(inverseLabelsOnBoard(wrong), 'explExample2', wrongIdx);
         } else {
-            showNegExamples(inverseLabelsOnBoard(wrong), 'explExample1', wrongIdx);
             showPosExamples(game, 'explExample2', rightIdx);
+            showNegExamples(inverseLabelsOnBoard(wrong), 'explExample1', wrongIdx);
         }
     }
 
@@ -640,29 +653,37 @@ function showPosExamples(game, parentId, pos){
     if (game[0].filter(x=>x==0).length == 6) {
         // Depth 3
         var strongPos = findPosStrongOption(game[0], 1).map(changeIndex);
-        createBoard(game[0], 'posboard0', parentId, 'X moves + X should have 1 strong option',
-                    strongPos , 'green', 17.5);
-        createBoard(game[1], 'posboard1', parentId, 'O blocks X\'s strong option',
-                    strongPos, 'grey', 5);
-        createBoard(game[2], 'posboard2', parentId, 'X has 2 strong options + O has no strong option',
-                    findPosStrongOption(game[2], 1).map(changeIndex), 'green', 5);
+        createBoard(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
+                    strongPos , YELLOW, 17.5);
+        createBoard(game[1], 'posboard1', parentId, 'O blocks your double-line',
+                    strongPos, GREY, 5);
+        createBoard(game[2], 'posboard2', parentId, 'you then make 2 double-line and O has no double-line',
+                    findPosStrongOption(game[2], 1).map(changeIndex), YELLOW, 5);
 
         var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
         for (var i = 0; i < opponentPos.length; i++) {
-            document.getElementById('posboard2' + opponentPos[i]).style.backgroundColor = 'grey';
+            document.getElementById('posboard2' + opponentPos[i]).style.backgroundColor = GREY;
         }
+
+        document.getElementById('posboard0'+pos).style.color = GREEN;
+        document.getElementById('posboard1'+pos).style.color = GREEN;
+        document.getElementById('posboard2'+pos).style.color = GREEN;
 
     }else if (game[0].filter(x=>x==0).length == 4) {
         // Depth 2
-        createBoard(game[0], 'posboard0', parentId, 'X moves + X should have 2 strong options + ',
-                    findPosStrongOption(game[0], 1).map(changeIndex), 'green', 17.5);
-        createBoard(game[0], 'posboard1', parentId, 'O should have no strong option',
-                    game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
-                    'grey', 5);
+        createBoard(game[0], 'posboard0', parentId, 'you move and make 2 double-lines',
+                    findPosStrongOption(game[0], 1).map(changeIndex), YELLOW, 17.5);
+        createBoard(game[0], 'posboard1', parentId, 'O has no double-line',
+                        game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
+                        GREY, 5);
+        document.getElementById('posboard0'+pos).style.color = GREEN;
+        document.getElementById('posboard1'+pos).style.color = GREEN;
+
     } else if (game[0].filter(x=>x==0).length == 2) {
         // Depth 1
-        createBoard(game[0], 'posboard0', parentId, 'X moves + should have three pieces in a line',
-                    winLine(game[0],1).map(changeIndex), 'green', 17.5);
+        createBoard(game[0], 'posboard0', parentId, 'you move and make a triple-line',
+                    winLine(game[0],1).map(changeIndex), YELLOW, 17.5);
+        document.getElementById('posboard0'+pos).style.color = GREEN;
     }
 }
 
@@ -670,40 +691,60 @@ function showNegExamples(board, parentId, pos){
 
     if (board.filter(x=>x==0).length == 6) {
         var strong = findPosStrongOption(board, 1).map(changeIndex);
-        createBoard(board, 'negboard0', parentId, EMPTY,
-                    board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1).concat(strong),
-                    'grey', 17.5);
-        if (strong.length != 0) {
+        if (strong.length == 0 ) {
+            createBoard(board, 'negboard0', parentId, EMPTY,
+                    board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1),
+                    GREY, 17.5);
+            document.getElementById('posboard1').style.display = 'none';
+            document.getElementById('posboard2').style.display = 'none';
+        } else {
+            createBoard(board, 'negboard0', parentId, EMPTY,
+                    strong, YELLOW, 17.5);
             var nextBoard = computeNextMove(board, 2);
-            var opponentStrong = findPosStrongOption(nextBoard, 2).map(changeIndex);
             createBoard(nextBoard,'negboard1', parentId, EMPTY,
-                            opponentStrong, 'red', 5);
+                        strong, GREY, 5);
 
             nextBoard = computeNextMove(nextBoard, 1);
             strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
+            var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
             createBoard(nextBoard,'negboard2', parentId, EMPTY,
-                        strong, 'grey', 5);
+                        strong, YELLOW, 5);
+
+            for (var i = 0; i < opponentPos.length; i++) {
+                document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
+            }
+
+            document.getElementById('negboard1' + pos).style.color = RED;
+            document.getElementById('negboard2' + pos).style.color = RED;
         }
 
+        document.getElementById('negboard0' + pos).style.color = RED;
     } else if (board.filter(x=>x==0).length == 4) {
         createBoard(board, 'negboard0', parentId, EMPTY,
-                    findPosStrongOption(board, 1).map(changeIndex), 'grey', 17.5);
+                    findPosStrongOption(board, 1).map(changeIndex), YELLOW, 17.5);
         var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
         if(opponentStrong.length != 0) {
             createBoard(board,'negboard1', parentId, EMPTY,
-                        opponentStrong, 'red', 5);
+                        opponentStrong, YELLOW, 5);
+            document.getElementById('negboard1' + pos).style.color = RED;
+        } else {
+            document.getElementById('posboard1').style.display = 'none';
         }
+
+        document.getElementById('negboard0' + pos).style.color = RED;
+
     } else if (board.filter(x=>x==0).length == 2) {
         createBoard(board, 'negboard0', parentId, EMPTY,
-        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), 'grey', 17.5);
+        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 17.5);
+        document.getElementById('negboard0' + pos).style.color = RED;
     }
-    document.getElementById('negboard0' + pos).style.backgroundColor = 'red';
 }
 
 
-document.getElementById('phase').textContent = 'Instruction: ';
-document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                                    + 'For each question, you are given a board and you will play X.'
-document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN '
-                                                    + 'against an OPTIMAL O opponent. You have ONE CHANCE for each question.';
-createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+//document.getElementById('phase').textContent = '';
+//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+//                                                    + 'For each question, you are given a board and you will play X.'
+//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+//                                                    + ' You have ONE CHANCE for each question and try your best.';
+//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+phase2();

@@ -365,3 +365,6 @@ function formattedDate() {
     var today = dd + '_' + mm + '_' + yyyy + '-' + hours + '_' + minutes;
     return today;
 }
+
+function lineDrawer() {
+}
