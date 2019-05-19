@@ -741,10 +741,9 @@ function showNegExamples(board, parentId, pos){
 }
 
 
-//document.getElementById('phase').textContent = '';
-//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-//                                                    + 'For each question, you are given a board and you will play X.'
-//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-//                                                    + ' You have ONE CHANCE for each question and try your best.';
-//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
-phase2();
+document.getElementById('phase').textContent = '';
+document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+                                                    + 'For each question, you are given a board and you will play X.'
+document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+                                                    + ' You have ONE CHANCE for each question and try your best.';
+createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
