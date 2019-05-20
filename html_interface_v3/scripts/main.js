@@ -12,7 +12,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     YELLOW = '#ffcc00',
     RED = 'red',
     GREEN = 'green',
-    WHITE = 'white',
+    WHITE = 'transparent',
     GREY = 'grey';
 
 var t,
@@ -519,22 +519,23 @@ function wrongMoveChosen() {
 
 }
 
-
-function createBoard(board, boardId, parentId, text, pos, color) {
+function createBoardWithLine(board, boardId, parentId, text, positions, borderWidth) {
 
   var td = document.createElement('td');
   td.setAttribute('id', boardId);
+  td.style.border = borderWidth + "px solid transparent";
   td.align = 'center';
 
   if (board.length !== 0) {
 
       var newBoard = changeLabelsOnBoard(board);
       var table = document.createElement('table');
+      table.style.backgroundImage = "url('imgs/246.png')";
+      table.style.backgroundSize = 'contain';
+      table.style.backgroundRepeat = 'no-repeat'
       table.setAttribute('border', 1);
       table.setAttribute('cellspacing', 0);
       table.classList.add('table2');
-      var markerRow = Math.floor(pos / N_SIZE);
-      var markerCol = pos % N_SIZE;
 
       for (var i = 0; i < N_SIZE; i++) {
 
@@ -545,16 +546,11 @@ function createBoard(board, boardId, parentId, text, pos, color) {
 
               var cell = document.createElement('td');
               cell.setAttribute('id', boardId + (i * 3 + j));
-              cell.setAttribute('height', 50);
-              cell.setAttribute('width',  50);
+              cell.setAttribute('height', 45);
+              cell.setAttribute('width',  45);
               cell.setAttribute('align',  'center');
               cell.setAttribute('valign',  'center');
-
-              if (i === markerRow && j === markerCol) {
-                  cell.style.backgroundColor = color;
-              } else {
-                  cell.style.backgroundColor = 'white';
-              }
+              cell.style.backgroundColor = WHITE;
 
               row.appendChild(cell);
               cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
@@ -565,13 +561,18 @@ function createBoard(board, boardId, parentId, text, pos, color) {
 
       var comment = document.createElement('div');
       comment.setAttribute('id', boardId+'Comment');
-      comment.textContent = text;
+      comment.innerHTML = text;
       comment.classList.add('col');
       comment.align = 'center';
 
       td.appendChild(comment);
       document.getElementById(parentId).appendChild(td);
   }
+
+  imgName = 'imgs/' + positions.sort().join('') + '.png';
+  table.style.backgroundImage = "url('" + imgName + "')";
+  table.style.backgroundSize = 'contain';
+  table.style.backgroundRepeat = 'no-repeat';
 }
 
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
@@ -602,7 +603,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
               cell.setAttribute('width',  45);
               cell.setAttribute('align',  'center');
               cell.setAttribute('valign',  'center');
-              cell.style.backgroundColor = 'white';
+              cell.style.backgroundColor = WHITE;
 
               row.appendChild(cell);
               cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
@@ -624,7 +625,6 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
   for (var i = 0; i < positions.length; i++) {
       document.getElementById(boardId+positions[i]).style.backgroundColor = color;
   }
-
 }
 
 function clearBoards() {
@@ -653,12 +653,12 @@ function showPosExamples(game, parentId, pos){
     if (game[0].filter(x=>x==0).length == 6) {
         // Depth 3
         var strongPos = findPosStrongOption(game[0], 1).map(changeIndex);
-        createBoard(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
-                    strongPos , YELLOW, 17.5);
+        createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
+                    strongPos, 17.5);
         createBoard(game[1], 'posboard1', parentId, 'O blocks your double-line',
                     strongPos, GREY, 5);
-        createBoard(game[2], 'posboard2', parentId, 'you then make 2 double-line and O has no double-line',
-                    findPosStrongOption(game[2], 1).map(changeIndex), YELLOW, 5);
+        createBoardWithLine(game[2], 'posboard2', parentId, 'you then make 2 double-line and O has no double-line',
+                    findPosStrongOption(game[2], 1).map(changeIndex), 5);
 
         var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
         for (var i = 0; i < opponentPos.length; i++) {
@@ -671,8 +671,8 @@ function showPosExamples(game, parentId, pos){
 
     }else if (game[0].filter(x=>x==0).length == 4) {
         // Depth 2
-        createBoard(game[0], 'posboard0', parentId, 'you move and make 2 double-lines',
-                    findPosStrongOption(game[0], 1).map(changeIndex), YELLOW, 17.5);
+        createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make 2 double-lines',
+                    findPosStrongOption(game[0], 1).map(changeIndex), 17.5);
         createBoard(game[0], 'posboard1', parentId, 'O has no double-line',
                         game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
                         GREY, 5);
@@ -681,8 +681,8 @@ function showPosExamples(game, parentId, pos){
 
     } else if (game[0].filter(x=>x==0).length == 2) {
         // Depth 1
-        createBoard(game[0], 'posboard0', parentId, 'you move and make a triple-line',
-                    winLine(game[0],1).map(changeIndex), YELLOW, 17.5);
+        createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make a triple-line',
+                    winLine(game[0],1).map(changeIndex), 17.5);
         document.getElementById('posboard0'+pos).style.color = GREEN;
     }
 }
@@ -698,17 +698,15 @@ function showNegExamples(board, parentId, pos){
             document.getElementById('posboard1').style.display = 'none';
             document.getElementById('posboard2').style.display = 'none';
         } else {
-            createBoard(board, 'negboard0', parentId, EMPTY,
-                    strong, YELLOW, 17.5);
+            createBoardWithLine(board, 'negboard0', parentId, EMPTY,
+                    strong, 17.5);
             var nextBoard = computeNextMove(board, 2);
-            createBoard(nextBoard,'negboard1', parentId, EMPTY,
-                        strong, GREY, 5);
+            createBoard(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 5);
 
             nextBoard = computeNextMove(nextBoard, 1);
             strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
             var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-            createBoard(nextBoard,'negboard2', parentId, EMPTY,
-                        strong, YELLOW, 5);
+            createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 5);
 
             for (var i = 0; i < opponentPos.length; i++) {
                 document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
@@ -717,20 +715,18 @@ function showNegExamples(board, parentId, pos){
             document.getElementById('negboard1' + pos).style.color = RED;
             document.getElementById('negboard2' + pos).style.color = RED;
         }
-
         document.getElementById('negboard0' + pos).style.color = RED;
+
     } else if (board.filter(x=>x==0).length == 4) {
-        createBoard(board, 'negboard0', parentId, EMPTY,
-                    findPosStrongOption(board, 1).map(changeIndex), YELLOW, 17.5);
+        createBoardWithLine(board, 'negboard0', parentId, EMPTY,
+                    findPosStrongOption(board, 1).map(changeIndex), 17.5);
         var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
         if(opponentStrong.length != 0) {
-            createBoard(board,'negboard1', parentId, EMPTY,
-                        opponentStrong, YELLOW, 5);
+            createBoardWithLine(board,'negboard1', parentId, EMPTY, opponentStrong, 5);
             document.getElementById('negboard1' + pos).style.color = RED;
         } else {
             document.getElementById('posboard1').style.display = 'none';
         }
-
         document.getElementById('negboard0' + pos).style.color = RED;
 
     } else if (board.filter(x=>x==0).length == 2) {
