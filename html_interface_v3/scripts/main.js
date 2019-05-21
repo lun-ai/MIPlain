@@ -147,12 +147,12 @@ function stopCountPhase1() {
         document.getElementById('phase').textContent = 'Well done for completing Part 1!';
         document.getElementById('timer').textContent = '';
         document.getElementById('instruction1').textContent =
-                'In Part 2, examples are given by the Oracle'
+                'In Part 2, examples are given by the Great Wizard'
                 + ' and you need choose between two potential moves for what '
-                + 'you think to be the best move to WIN.';
+                + 'you think to be the best move to WIN the Great Wizard.';
         document.getElementById('instruction2').textContent =
-                    'The Oracle tells you which one is the right move and which is not.';
-        document.getElementById('Oracle').style.display = 'block';
+                    'The Great Wizard tells you which one is the right move and which is not.';
+        document.getElementById('Great Wizard').style.display = 'block';
 
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction3').textContent =
@@ -367,21 +367,20 @@ function phase2() {
 
     document.getElementById('explanation').style.display = 'block';
     document.getElementById('MIGO_intro').style.display = 'none';
-    document.getElementById('Oracle').style.display = 'none';
+    document.getElementById('Great Wizard').style.display = 'none';
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').textContent = 'You are playing X. Given an initial board, choose between two potential moves for what '
-                + 'you think to be the best move to WIN.'
+    document.getElementById('instruction1').textContent = 'You are playing X and the Great Wizard plays O. '
+                + 'Given an initial board, choose between two potential moves for what '
+                + 'you think to be the best move to WIN the Great Wizard.'
+    document.getElementById('instruction2').textContent =
+                    'The Great Wizard then tells you which one is the right move and which is not.';
 
         if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction2').textContent =
-                    'The Oracle tells you which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
                     'You are given time to think about your choice.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
-            document.getElementById('instruction2').textContent =
-                    'The Oracle tells you which one is the right move and which is not.';
             document.getElementById('instruction3').textContent =
                     'You are given time to study the comments from MIGO AI.'
         }
@@ -470,8 +469,8 @@ function showExpl() {
     removeChild('wrongMoveButton', 'wrongMoveComment');
     removeChild('rightMoveButton', 'rightMoveComment');
 
-    document.getElementById('wrongMoveComment').textContent = 'Oracle: this is a wrong move';
-    document.getElementById('rightMoveComment').textContent = 'Oracle: this is a right move';
+    document.getElementById('wrongMoveComment').textContent = 'Great Wizard: this is a wrong move';
+    document.getElementById('rightMoveComment').textContent = 'Great Wizard: this is a right move';
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -655,9 +654,9 @@ function showPosExamples(game, parentId, pos){
         var strongPos = findPosStrongOption(game[0], 1).map(changeIndex);
         createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
                     strongPos, 17.5);
-        createBoard(game[1], 'posboard1', parentId, 'O blocks your double-line',
+        createBoard(game[1], 'posboard1', parentId, 'Great Wizard(O) blocks your double-line',
                     strongPos, GREY, 5);
-        createBoardWithLine(game[2], 'posboard2', parentId, 'you then make 2 double-line and O has no double-line',
+        createBoardWithLine(game[2], 'posboard2', parentId, 'you make 2 double-line and Great Wizard(O) has no double-line',
                     findPosStrongOption(game[2], 1).map(changeIndex), 5);
 
         var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
@@ -673,7 +672,7 @@ function showPosExamples(game, parentId, pos){
         // Depth 2
         createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make 2 double-lines',
                     findPosStrongOption(game[0], 1).map(changeIndex), 17.5);
-        createBoard(game[0], 'posboard1', parentId, 'O has no double-line',
+        createBoard(game[0], 'posboard1', parentId, 'Great Wizard(O) has no double-line',
                         game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
                         GREY, 5);
         document.getElementById('posboard0'+pos).style.color = GREEN;
