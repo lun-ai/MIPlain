@@ -152,7 +152,7 @@ function stopCountPhase1() {
                 + 'you think to be the best move to WIN the Great Wizard.';
         document.getElementById('instruction2').textContent =
                     'The Great Wizard tells you which one is the right move and which is not.';
-        document.getElementById('Great Wizard').style.display = 'block';
+        document.getElementById('Great_Wizard_intro').style.display = 'block';
 
         if (participantID % TOTAL_GROUP == 0) {
             document.getElementById('instruction3').textContent =
@@ -367,7 +367,7 @@ function phase2() {
 
     document.getElementById('explanation').style.display = 'block';
     document.getElementById('MIGO_intro').style.display = 'none';
-    document.getElementById('Great Wizard').style.display = 'none';
+    document.getElementById('Great_Wizard_intro').style.display = 'none';
 
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').textContent = 'You are playing X and the Great Wizard plays O. '
