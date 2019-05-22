@@ -22,8 +22,9 @@ table.table2 tr{
 
 table.table2 td {
 	border: 2px solid black;
-	font-size:40px;
+	font-size:20px;
 	color:black;
+	margin-top:20px;
 	border-radius: 5px 5px 5px 5px;
 }
 

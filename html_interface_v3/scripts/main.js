@@ -437,7 +437,7 @@ function nextExample() {
 
 function showExample() {
 
-    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',20);
+    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',10);
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -447,13 +447,13 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], 'white', 20);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], 'white', 20);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], 'white', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], 'white', 10);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], 'grey', 20);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], 'grey', 20);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], 'grey', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], 'grey', 10);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
@@ -529,9 +529,6 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
 
       var newBoard = changeLabelsOnBoard(board);
       var table = document.createElement('table');
-      table.style.backgroundImage = "url('imgs/246.png')";
-      table.style.backgroundSize = 'contain';
-      table.style.backgroundRepeat = 'no-repeat'
       table.setAttribute('border', 1);
       table.setAttribute('cellspacing', 0);
       table.classList.add('table2');
@@ -545,8 +542,8 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
 
               var cell = document.createElement('td');
               cell.setAttribute('id', boardId + (i * 3 + j));
-              cell.setAttribute('height', 45);
-              cell.setAttribute('width',  45);
+              cell.setAttribute('width',  30);
+              cell.setAttribute('height', 30);
               cell.setAttribute('align',  'center');
               cell.setAttribute('valign',  'center');
               cell.style.backgroundColor = WHITE;
@@ -563,6 +560,8 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
       comment.innerHTML = text;
       comment.classList.add('col');
       comment.align = 'center';
+      comment.style.fontSize = 'small';
+      comment.style.whiteSpace = 'pre-wrap';
 
       td.appendChild(comment);
       document.getElementById(parentId).appendChild(td);
@@ -570,7 +569,7 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
 
   imgName = 'imgs/' + positions.sort().join('') + '.png';
   table.style.backgroundImage = "url('" + imgName + "')";
-  table.style.backgroundSize = 'contain';
+  table.style.backgroundSize = '100% 100%';
   table.style.backgroundRepeat = 'no-repeat';
 }
 
@@ -598,8 +597,8 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
               var cell = document.createElement('td');
               cell.setAttribute('id', boardId + (i * 3 + j));
-              cell.setAttribute('height', 45);
-              cell.setAttribute('width',  45);
+              cell.setAttribute('height', 30);
+              cell.setAttribute('width',  30);
               cell.setAttribute('align',  'center');
               cell.setAttribute('valign',  'center');
               cell.style.backgroundColor = WHITE;
@@ -616,7 +615,8 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
       comment.innerHTML = text;
       comment.classList.add('col');
       comment.align = 'center';
-      comment.style.textSize = '5px';
+      comment.style.fontSize = 'small';
+      comment.style.whiteSpace = 'pre-wrap';
 
       td.appendChild(comment);
       document.getElementById(parentId).appendChild(td);
@@ -657,7 +657,7 @@ function showPosExamples(game, parentId, pos){
                     strongPos, 17.5);
         createBoard(game[1], 'posboard1', parentId, 'Great Wizard(O) blocks your double-line',
                     strongPos, GREY, 0);
-        createBoardWithLine(game[2], 'posboard2', parentId, 'you make 2 double-line and Great Wizard(O) has no double-line',
+        createBoardWithLine(game[2], 'posboard2', parentId, 'you make 2 double-line and\nGreat Wizard(O) has no double-line',
                     findPosStrongOption(game[2], 1).map(changeIndex), 0);
 
         var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
@@ -675,7 +675,7 @@ function showPosExamples(game, parentId, pos){
                     findPosStrongOption(game[0], 1).map(changeIndex), 17.5);
         createBoard(game[0], 'posboard1', parentId, 'Great Wizard(O) has no double-line',
                         game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
-                        GREY, 5);
+                        GREY, 10);
         document.getElementById('posboard0'+pos).style.color = GREEN;
         document.getElementById('posboard1'+pos).style.color = GREEN;
 
@@ -701,12 +701,12 @@ function showNegExamples(board, parentId, pos){
             createBoardWithLine(board, 'negboard0', parentId, EMPTY,
                     strong, 17.5);
             var nextBoard = computeNextMove(board, 2);
-            createBoard(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 5);
+            createBoard(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 10);
 
             nextBoard = computeNextMove(nextBoard, 1);
             strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
             var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-            createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 5);
+            createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
 
             for (var i = 0; i < opponentPos.length; i++) {
                 document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
@@ -722,7 +722,7 @@ function showNegExamples(board, parentId, pos){
                     findPosStrongOption(board, 1).map(changeIndex), 17.5);
         var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
         if(opponentStrong.length != 0) {
-            createBoardWithLine(board,'negboard1', parentId, EMPTY, opponentStrong, 5);
+            createBoardWithLine(board,'negboard1', parentId, EMPTY, opponentStrong, 10);
             document.getElementById('negboard1' + pos).style.color = RED;
         } else {
             document.getElementById('posboard1').style.display = 'none';
@@ -737,10 +737,9 @@ function showNegExamples(board, parentId, pos){
 }
 
 
-//document.getElementById('phase').textContent = '';
-//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-//                                                    + 'For each question, you are given a board and you will play X.'
-//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-//                                                    + ' You have ONE CHANCE for each question and try your best.';
-//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
-phase2();
+document.getElementById('phase').textContent = '';
+document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+                                                    + 'For each question, you are given a board and you will play X.'
+document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+                                                    + ' You have ONE CHANCE for each question and try your best.';
+createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
