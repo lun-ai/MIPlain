@@ -371,17 +371,17 @@ function phase2() {
 
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').textContent = 'You are playing X and the Great Wizard plays O. '
-                + 'Given an initial board, choose between two potential moves for what '
+    document.getElementById('instruction2').textContent = 'Given an initial board, choose between two potential moves for what '
                 + 'you think to be the best move to WIN the Great Wizard.'
-    document.getElementById('instruction2').textContent =
-                    'The Great Wizard then tells you which one is the right move and which is not.';
+    document.getElementById('instruction3').textContent =
+                    'The Great Wizard then tells you which one is the right move and which is not. ';
 
         if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction3').textContent =
+            document.getElementById('instruction3').textContent +=
                     'You are given time to think about your choice.';
             document.getElementById('feedbackPanel').style.display = 'none';
         } else {
-            document.getElementById('instruction3').textContent =
+            document.getElementById('instruction3').textContent +=
                     'You are given time to study the comments from MIGO AI.'
         }
     stopCount();
@@ -616,6 +616,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
       comment.innerHTML = text;
       comment.classList.add('col');
       comment.align = 'center';
+      comment.style.textSize = '5px';
 
       td.appendChild(comment);
       document.getElementById(parentId).appendChild(td);
@@ -655,9 +656,9 @@ function showPosExamples(game, parentId, pos){
         createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
                     strongPos, 17.5);
         createBoard(game[1], 'posboard1', parentId, 'Great Wizard(O) blocks your double-line',
-                    strongPos, GREY, 5);
+                    strongPos, GREY, 0);
         createBoardWithLine(game[2], 'posboard2', parentId, 'you make 2 double-line and Great Wizard(O) has no double-line',
-                    findPosStrongOption(game[2], 1).map(changeIndex), 5);
+                    findPosStrongOption(game[2], 1).map(changeIndex), 0);
 
         var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
         for (var i = 0; i < opponentPos.length; i++) {
@@ -736,9 +737,10 @@ function showNegExamples(board, parentId, pos){
 }
 
 
-document.getElementById('phase').textContent = '';
-document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                                    + 'For each question, you are given a board and you will play X.'
-document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-                                                    + ' You have ONE CHANCE for each question and try your best.';
-createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+//document.getElementById('phase').textContent = '';
+//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+//                                                    + 'For each question, you are given a board and you will play X.'
+//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+//                                                    + ' You have ONE CHANCE for each question and try your best.';
+//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+phase2();
