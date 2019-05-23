@@ -3,7 +3,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     RESOLUTION_DEPTH = 50000,
     N_SIZE = 3,
     EMPTY = '&nbsp;',
-    TIMER_SLICE = 1000,
+    TIMER_SLICE = 200,
     PL_FILE_NAME = 'strategy',
     TURN = 'X',
     TOTAL_GROUP = 2,
@@ -118,21 +118,12 @@ function startCount() {
                 document.getElementById("timer").textContent = 'Will move onto the next example in 10 secs';
             }
         }
-        sec += 1;
+        sec += 0.2;
         t = setTimeout(startCount, TIMER_SLICE);
     }
 }
 
 function stopCountPhase1() {
-
-    if (currentQuestion != 0) {
-        if (!ended) {
-            // unfinished game
-            answers[currentQuestion - 1].push(prevBoard);
-            scores.push(-1);
-            timeTaken.push(totalTime);
-        }
-    }
 
     if (t != null) {
         clearTimeout(t);
@@ -187,7 +178,7 @@ function stopCountPhase2() {
         } else if (moveChosen && sec > EXPL_TIME){
             timeTakenExpl.push(totalTime);
         } else {
-            timeTakenExpl.push(Math.max(0, sec - 1));
+            timeTakenExpl.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
         }
     }
 
@@ -222,14 +213,6 @@ function stopCountPhase2() {
 
 function stopCountPhase3() {
 
-    if (currentQuestion != 0) {
-        if (!ended) {
-            answers[currentQuestion - 1].push(prevBoard);
-            scores.push(-1);
-            timeTaken.push(totalTime);
-        }
-    }
-
     if (t != null) {
         clearTimeout(t);
         sec = 0;
@@ -259,7 +242,9 @@ function boardClicked() {
         answers[currentQuestion - 1].push(currentBoard);
 
         scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
-        timeTaken.push(Math.max(0, sec - 1));
+        timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
+        console.log(timeTaken);
+        console.log(scores);
 
         createButton('nextQuestionButton', 'nextQuestion', 'Next Question', stopCount);
 
@@ -318,9 +303,9 @@ function endExpr() {
 
     record += '\n\nPart 3: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: ' + difficulty + '\n',
-        + 'scores: ' + scores + '\n'
-        + 'time: ' + timeTaken + '\n';
+        + 'difficulty: [' + difficulty + ']\n'
+        + 'scores: [' + scores + ']\n'
+        + 'time: [' + timeTaken + ']\n';
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(record));
@@ -354,9 +339,9 @@ function phase2() {
 
     record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: ' + difficulty + '\n',
-        + 'scores: ' + scores + '\n'
-        + 'time: ' + timeTaken + '\n';
+        + 'difficulty: [' + difficulty + ']\n'
+        + 'scores: [' + scores + ']\n'
+        + 'time: [' + timeTaken + ']\n';
 
     console.log(record);
 
@@ -376,14 +361,15 @@ function phase2() {
     document.getElementById('instruction3').textContent =
                     'The Great Wizard then tells you which one is the right move and which is not. ';
 
-        if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction3').textContent +=
+    if (participantID % TOTAL_GROUP == 0) {
+        document.getElementById('instruction3').textContent +=
                     'You are given time to think about your choice.';
-            document.getElementById('feedbackPanel').style.display = 'none';
-        } else {
-            document.getElementById('instruction3').textContent +=
+        document.getElementById('feedbackPanel').style.display = 'none';
+    } else {
+        document.getElementById('instruction3').textContent +=
                     'You are given time to study the comments from MIGO AI.'
-        }
+    }
+
     stopCount();
 }
 
@@ -393,9 +379,9 @@ function phase3() {
 
     record += '\n\nPart 2: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'scores: ' + scores + '\n'
-        + 'time: ' + timeTaken + '\n'
-        + 'time on expl: ' + timeTakenExpl + '\n';
+        + 'scores: [' + scores + ']\n'
+        + 'time: [' + timeTaken + ']\n'
+        + 'time on expl: [' + timeTakenExpl + ']\n';
 
     console.log(record);
 
@@ -463,7 +449,7 @@ function showExample() {
 
 function showExpl() {
 
-    timeTaken.push(Math.max(0, sec - 1));
+    timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
     console.log(timeTaken);
 
     removeChild('wrongMoveButton', 'wrongMoveComment');

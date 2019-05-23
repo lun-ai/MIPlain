@@ -28,6 +28,23 @@ table.table2 td {
 	border-radius: 5px 5px 5px 5px;
 }
 
+table.table3 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table3 tr{
+    height:33.3%;
+}
+
+table.table3 td {
+	border: 2px solid black;
+	font-size:40px;
+	color:black;
+	margin-top:40px;
+	border-radius: 5px 5px 5px 5px;
+}
+
 .column {
   float: left;
   width: 50%;
