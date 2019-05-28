@@ -423,7 +423,7 @@ function nextExample() {
 
 function showExample() {
 
-    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [0], 'white',10);
+    createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [], WHITE,10);
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -433,13 +433,13 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], 'white', 10);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], 'white', 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], WHITE, 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], WHITE, 10);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], 'grey', 10);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], 'grey', 10);
+        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], GREY, 10);
+        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], GREY, 10);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
