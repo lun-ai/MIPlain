@@ -284,14 +284,14 @@ function showExplanation(prevBoard) {
 
     if (wrongType === 'win_1') {
 
-        rule_1 = ansSubmitted ? 'Bad Move. ' : 'No Move.'
+        rule_1 = (ansSubmitted ? 'Bad Move. ' : 'No Move.')
             + 'There is move B from A (Initial) and B has one three-pieces line.';
         document.getElementById('expl1').textContent = rule_1;
         console.log('Win_1 violated');
 
     } else if (wrongType === 'win_2') {
 
-        rule_2 = ansSubmitted ? 'Bad Move. ' : 'No Move.'
+        rule_2 = (ansSubmitted ? 'Bad Move. ' : 'No Move.')
             + 'There is move B from A (Initial) and such that no C (opponent\'s) '
             + 'is won in one move from B and for move C (opponent\'s) from B, '
             + 'D is won in one move from C (opponent\'s).';
@@ -300,7 +300,7 @@ function showExplanation(prevBoard) {
 
     } else if (wrongType === 'win_3') {
 
-        rule_3 = ansSubmitted ? 'Bad Move. ' : 'No Move.'
+        rule_3 = (ansSubmitted ? 'Bad Move. ' : 'No Move.')
             + 'There is move B from A (Initial) and such that no C (opponent\'s) '
             + 'is won in one move from B and such that no C (opponent\'s) is won '
             + 'in two moves from B and for move C (opponent\'s) from B, D is won '
