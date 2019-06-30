@@ -11,7 +11,7 @@
 
 -minimax_DB.py (functions for creating database, visualization and conversion to JS)
 
-## Interface V1
+## Interface V1 (Test Experiment)
 ### Using database with html via js
 Run Python binary_to_JS() in ./minimax_DB.py to generate js usable minimax database
 
@@ -51,7 +51,7 @@ Instructions on submission are on html_interface/submission.html
 
 Collector of records needs to have a google account with a usable google drive dir.
 
-## Interface V2
+## Interface V2 & V3 (Second Experiment)
 ### Experiment session interface and control
 -html_interface_v2/index.html
 
@@ -63,25 +63,31 @@ Collector of records needs to have a google account with a usable google drive d
 
 -html_interface_v2/scripts/~
 
-### Strategy program explanation
-**Requirement: SWI prolog V8.0**
-
---html_interface_v2/explanation
-
---html_interface_v2/explanation/MIGO
-
 #### Generating explanation
-1.locate to 'html_interface_v2/explanation'
+1.locate to 'explanation'
 
 2.Start SWI Prolog session in terminal
 
 3.Consult in interactive Prolog mode, `consult(loader).`
 
-4.Examples are given in html_interface_v2/explanation/sl_background_features 
-and html_interface_v2/explanation/sl_migo
+4.Examples are given in explanation/sl_background_features 
+and explanation/sl_migo
 
 5.To add targets, `add_target(rule_name).`
 
 6.To start generating explanation, `interpret_program.`
 
+## MIGOc
+### Backtrack algorithm
+- MIGOc/backtrack.pl
+### MIGOc meta-rules and feature primitives
+- MIGOc/learning.pl
+### MIGOc game playing enviroment
+- MIGOc/environment.pl
+### MIGOc learning (Metaopt and episode learning)
+- MIGOc/MIGO/episode_learning.pl
+- MIGOc/MIGO/assign_labels.pl
+- MIGOc/MIGO/execute_strategy.pl
+- MIGOc/MIGO/METAOPT/metaopt.pl
+- MIGOc/MIGO/METAOPT/tree-costs.pl
 

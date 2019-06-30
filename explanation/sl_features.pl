@@ -13,7 +13,7 @@ prim(won/1).
 
 %target(win_1).
 %target(win_2).
-target(win_3).
+%target(win_3).
 
 primitive_explanation(move, 'move').
 primitive_explanation(won, 'won').

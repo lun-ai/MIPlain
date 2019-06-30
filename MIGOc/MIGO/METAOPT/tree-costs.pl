@@ -1,19 +1,21 @@
 pos_cost(Goal,Cost):-
-  (functor(Goal,_,0) -> pos_cost_monadic(Goal,Cost); pos_cost_general(Goal,Cost)).
+  (functor(Goal,_,1) -> pos_cost_monadic(Goal,Cost); pos_cost_general(Goal,Cost)).
+  %format('% Pos Goal: ~w - Cost:~w\n',[Goal,Cost]).
 neg_cost(Goal,Cost):-
-  (functor(Goal,_,0) -> neg_cost_monadic(Goal,Cost); neg_cost_general(Goal,Cost)).
+  (functor(Goal,_,1) -> neg_cost_monadic(Goal,Cost); neg_cost_general(Goal,Cost)).
+  %format('% Neg Goal: ~w - Cost:~w\n',[Goal,Cost]).
 
 pos_cost_monadic(Goal,Cost):-
+  Goal=.. [P|Args],
   statistics(inferences,I1),
-  call(Goal),
+  (user:primcall(P,Args) -> true; true),
   statistics(inferences,I2),
   Cost is I2-I1.
 
 pos_cost_general(Goal,Cost):-
-  Goal=..[P,A,B|Rest],
-  NewGoal=..[P,A,C|Rest],
+  Goal=.. [P|Args],
   statistics(inferences,I1),
-  call(NewGoal),B=C,
+  (user:primcall(P,Args) -> true; true),
   statistics(inferences,I2),
   Cost is I2-I1.
 
@@ -24,9 +26,7 @@ neg_cost_monadic(Goal,Cost):-
   Cost is I2-I1.
 
 neg_cost_general(Goal,Cost):-
-  Goal=..[P,A,B],
-  NewGoal=..[P,A,C],
   statistics(inferences,I1),
-  (call(NewGoal) -> B=C; true),
+  (call(Goal) -> true; true),
   statistics(inferences,I2),
   Cost is I2-I1.

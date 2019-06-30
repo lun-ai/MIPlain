@@ -4,29 +4,18 @@
 
 %% generate an example for Metagol by executing the current strategy
 get_example(K,Sw,Sd,B,O,E):-
-    learn_from_play,
     board(K,B),
-    assert_prog_and_prims(Sw),assert_win,
-    assert_prog_and_prims(Sd),assert_draw,
-    game(B,learned_strategy,minimax,G,_,O),!,
+    asserta(example(K)),
+    assert_program(Sw),assert_win,
+    assert_program(Sd),assert_draw,
+    game(B,learned_strategy,minimax,G,O),!,
     retract_win, retract_draw,
-    retract_prog_and_prims(Sw),
-    retract_prog_and_prims(Sd),
+    retract_program(Sw),
+    retract_program(Sd),
     update_exs(G,O,Sw,Sd),
     ((learning(mixed) -> update_draw_moves(Sw,E));
-    true).
-
-get_example(K,Sw,Sd,E) :-
-    \+ learn_from_play,
-    assert_prog_and_prims(Sw),assert_win,
-    assert_prog_and_prims(Sd),assert_draw,
-    game(K,G,O),
-    retract_win, retract_draw,
-    retract_prog_and_prims(Sw),
-    retract_prog_and_prims(Sd),
-    update_exs(G,O,Sw,Sd),
-    ((learning(mixed) -> update_draw_moves(Sw,E));
-    true).
+    true),
+    retract(example(K)).
 
 assert_prog_and_prims(LP):-
     assert_prog_prims(LP),

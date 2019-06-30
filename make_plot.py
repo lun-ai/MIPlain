@@ -49,7 +49,7 @@ def bar_graph(axis, data, t, total_participants):
               len(list(filter(lambda x: x == 10, data))) / total_participants)
     axis.set_title(t)
     axis.set_xticks(np.arange(0, 3))
-    axis.set_ylabel('Mean Count')
+    axis.set_ylabel('No. Answer')
     axis.set_ylim(0, 5.5)
     axis.set_xticklabels(('Loss', 'Draw', 'Win'))
     axis.bar(np.arange(0, 3), counts)
@@ -71,7 +71,7 @@ def population_pie_chart():
                         autopct=lambda pct: "{:.1f}%\n({:d})".format(pct, int(pct / 100. * np.sum([6, 2, 4])),
                                                                      textprops=dict(color="w")))
     ax1.legend(w1, ['5th grader', '6th grader', '7th grader'])
-    ax1.set_title('Control group')
+    ax1.set_title('Control (O1) group')
     fig.add_subplot(ax1)
 
     ax2 = plt.subplot(gs[0, 1])
@@ -79,7 +79,7 @@ def population_pie_chart():
                         autopct=lambda pct: "{:.1f}%\n({:d})".format(pct, int(pct / 100. * np.sum([7, 3, 4])),
                                                                      textprops=dict(color="w")))
     ax2.legend(w1, ['5th grader', '6th grader', '7th grader'])
-    ax2.set_title('Treatment group')
+    ax2.set_title('Treatment (O2) group')
     fig.add_subplot(ax2)
 
     plt.show()
@@ -133,13 +133,13 @@ def create_bar_graph_all(f):
 
     fig, ax = plt.subplots()
     ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
-           label='Control Pre-test', ecolor='black', capsize=4)
+           label='Control (O1) Pre-test', ecolor='black', capsize=4)
     ax.bar(np.arange(0, 3) + width / 2, control_post_mean, width,
-           label='Control Post-test', ecolor='black', capsize=4)
+           label='Control (O1) Post-test', ecolor='black', capsize=4)
     ax.bar(np.arange(3, 6) - width / 2, treatment_pre_mean, width,
-           label='Treatment Pre-test', ecolor='black', capsize=4)
+           label='Treatment (O2) Pre-test', ecolor='black', capsize=4)
     ax.bar(np.arange(3, 6) + width / 2, treatment_post_mean, width,
-           label='Treatment Post-test', ecolor='black', capsize=4)
+           label='Treatment (O2) Post-test', ecolor='black', capsize=4)
 
     ax.text(0 - 0.3, np.array(control_pre_mean)[0] + 0.05, control_pre_mean[0], fontweight='bold')
     ax.text(1 - 0.3, np.array(control_pre_mean)[1] + 0.05, control_pre_mean[1], fontweight='bold')
@@ -158,7 +158,8 @@ def create_bar_graph_all(f):
     # ax.set_title('Mean No. Correct Answer for control and treatment, between Pre-test and Post-test')
     ax.set_ylabel('Mean No. Correct Answer')
     ax.set_xticks(np.arange(6))
-    ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
+    ax.set_xticklabels(('6-ply (Depth 1)', '4-ply (Depth 2)', '2-ply (Depth 3)', '6-ply (Depth 1)', '4-ply (Depth 2)',
+                        '2-ply (Depth 3)'))
     ax.legend()
 
     print(control_pre_std)
@@ -226,13 +227,13 @@ def create_bar_graph_all3(f):
     width = 0.35
     fig, ax = plt.subplots()
     ax.bar(np.arange(0, 3) - width / 2, control_diff, width,
-           label='Control Group', ecolor='black', capsize=4)
+           label='Control (O1) Group', ecolor='black', capsize=4)
     ax.bar(np.arange(0, 3) + width / 2, treatment_diff, width,
-           label='Treatment Group', ecolor='black', capsize=4)
+           label='Treatment (O2) Group', ecolor='black', capsize=4)
     ax.axhline(color='black')
     ax.set_ylabel('% Wrong Answer Diff')
     ax.set_xticks(np.arange(3))
-    ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3'))
+    ax.set_xticklabels(('6-ply (Depth 1)', '4-ply (Depth 2)', '2-ply (Depth 3)'))
     ax.legend()
 
     ax.text(0 - 0.25, np.array(control_diff)[0] + 0.05, str(round(control_diff[0], 2)) + '%', fontweight='bold')
@@ -281,17 +282,18 @@ def create_time_bar_graph():
     width = 0.35
     fig, ax = plt.subplots()
     ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
-           label='Control Pre-test', ecolor='black', capsize=4)
+           label='Control (O1) Pre-test', ecolor='black', capsize=4)
     ax.bar(np.arange(0, 3) + width / 2, control_post_mean, width,
-           label='Control Post-test', ecolor='black', capsize=4)
+           label='Control (O1) Post-test', ecolor='black', capsize=4)
     ax.bar(np.arange(3, 6) - width / 2, treatment_pre_mean, width,
-           label='Treatment Pre-test', ecolor='black', capsize=4)
+           label='Treatment (O2) Pre-test', ecolor='black', capsize=4)
     ax.bar(np.arange(3, 6) + width / 2, treatment_post_mean, width,
-           label='Treatment Post-test', ecolor='black', capsize=4)
+           label='Treatment (O2) Post-test', ecolor='black', capsize=4)
     ax.axhline(color='black')
     ax.set_ylabel('Mean Question Response Time (sec)')
     ax.set_xticks(np.arange(6))
-    ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3','Depth 1', 'Depth 2', 'Depth 3'))
+    ax.set_xticklabels(('6-ply (Depth 1)', '4-ply (Depth 2)', '2-ply (Depth 3)', '6-ply (Depth 1)', '4-ply (Depth 2)',
+                        '2-ply (Depth 3)'))
     ax.legend()
 
     ax.text(0 - 0.3, np.array(control_pre_mean)[0] + 0.05, control_pre_mean[0], fontweight='bold')
@@ -312,9 +314,9 @@ def create_time_bar_graph():
     print(list(map(lambda x: round(x, 2), list(map(lambda x: np.average(x), time_after[:, 10:15])))))
     # print(list(map(lambda x: round(x, 2), list(map(lambda x: np.average(x), t_time_before[:, 10:15])))))
     print(list(map(lambda x: round(x, 2), list(map(lambda x: np.average(x), t_time_after[:, 10:15])))))
-    # plt.show()
+    plt.show()
 
-
+''' Parse collected data '''
 for i in [502, 504, 506, 508, 510, 512]:
     with open('./records/Grade-5/' + str(i) + '.txt', 'r') as file:
         grade_5.append(strip_arr_text('scores', read_nth_line(file, 20)))
@@ -377,14 +379,15 @@ t_time_before = np.array(t_time_before)
 t_time_exp = np.array(t_time_exp)
 t_time_after = np.array(t_time_after)
 
-# create_bar_graph_all2(grade_5, grade_5_after, 'Control 5th Grader')
-# create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 5th Grader')
-# create_bar_graph_all2(grade_6, grade_6_after, 'Control 6th Grader')
-# create_bar_graph_all2(t_grade_6, t_grade_6_after, 'Treatment 6th Grader')
-# create_bar_graph_all2(grade_7, grade_7_after, 'Control 7th Grader')
-# create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 7th Grader')
+# create_bar_graph_all2(grade_5, grade_5_after, 'Control (O1) 5th Grader')
+# create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment (O2) 5th Grader')
+# create_bar_graph_all2(grade_6, grade_6_after, 'Control 6th (O1) Grader')
+# create_bar_graph_all2(t_grade_6, t_grade_6_after, 'Treatment (O2) 6th Grader')
+# create_bar_graph_all2(grade_7, grade_7_after, 'Control 7th (O1) Grader')
+create_bar_graph_all2(t_grade_7, t_grade_7_after, 'Treatment (O2) 7th Grader')
+# create_bar_graph_all2(t_grade_5 + t_grade_7, t_grade_5_after + t_grade_7_after, 'Treatment (O2) 5,7th Grader')
 #
 # create_bar_graph_all((lambda x: x == 10))
 # create_bar_graph_all3((lambda x: x != 10))
 # population_pie_chart()
-create_time_bar_graph()
+# create_time_bar_graph()

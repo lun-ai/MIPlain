@@ -1,7 +1,5 @@
 %% This is a copyrighted file under the BSD 3-clause licence, details of which can be found in the root directory.
 
-:- module(metagol,[metagol/2,metaopt/2,metagolo/2,pprint/1,op(950,fx,'@')]).
-
 :- user:use_module(library(lists)).
 
 :- use_module(library(lists)).
@@ -10,6 +8,7 @@
 
 :- dynamic
     functional/0,
+    unfold_program/0,
     print_ordering/0,
     min_clauses/1,
     max_clauses/1,
@@ -30,79 +29,107 @@ default(max_clauses(6)).
 default(metarule_next_id(1)).
 default(max_inv_preds(10)).
 
-learn(Pos1,Neg1,Prog,AllCosts):-
+learn(Pos1,Neg1):-
+    learn(Pos1,Neg1,Prog),
+    pprint(Prog).
+
+learn(Pos1,Neg1,Prog):-
     maplist(atom_to_list,Pos1,Pos2),
     maplist(atom_to_list,Neg1,Neg2),
-    proveall(Pos2,Sig,Prog,AllCosts),
+    proveall(Pos2,Sig,Prog),
+    write('Proved:'),
+    pprint(Prog),
     nproveall(Neg2,Sig,Prog),
     is_functional(Pos2,Sig,Prog).
 
 learn_seq(Seq,Prog):-
     maplist(learn_task,Seq,Progs),
-    flatten(Progs,Prog).
+    flatten(Progs,Prog),
+    retract_program(Prog).
 
+learn_task([]/_,[]) :- !.
 learn_task(Pos/Neg,Prog):-
     learn(Pos,Neg,Prog),!,
     maplist(assert_clause,Prog),
-    assert_prims(Prog).
+    assert_prog_prims(Prog),!.
 
-proveall(Atoms,Sig,Prog,AllCosts):-
+proveall(Atoms,Sig,Prog):-
     target_predicate(Atoms,P/A),
     format('% learning ~w\n',[P/A]),
     iterator(MaxN),
     format('% clauses: ~d\n',[MaxN]),
     invented_symbols(MaxN,P/A,Sig),
-    prove_examples(Atoms,Sig,_Sig,MaxN,0,_N,[],Prog,AllCosts).
+    prove_examples(Atoms,Sig,_Sig,MaxN,0,_N,[],Prog).
 
-prove_examples([],_FullSig,_Sig,_MaxN,N,N,Prog,Prog,[]).
-prove_examples([Atom|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2,[C|AllCosts]):-
-    prove_deduce([Atom],FullSig,Prog1,C),!,
+prove_examples([],_FullSig,_Sig,_MaxN,N,N,Prog,Prog).
+prove_examples([Atom|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2):-
+    prove_deduce([Atom],FullSig,Prog1),!,
     is_functional([Atom],Sig,Prog1),
-    prove_examples(Atoms,FullSig,Sig,MaxN,N1,N2,Prog1,Prog2,AllCosts).
-prove_examples([Atom1|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2,[C|AllCosts]):-
+    prove_examples(Atoms,FullSig,Sig,MaxN,N1,N2,Prog1,Prog2).
+prove_examples([Atom1|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2):-
     add_empty_path(Atom1,Atom2),
-    prove([Atom2],FullSig,Sig,MaxN,N1,N3,Prog1,Prog3,0,C),
-    prove_examples(Atoms,FullSig,Sig,MaxN,N3,N2,Prog3,Prog2,AllCosts).
+    prove([Atom2],FullSig,Sig,MaxN,N1,N3,Prog1,Prog3),
+    prove_examples(Atoms,FullSig,Sig,MaxN,N3,N2,Prog3,Prog2).
 
-prove_deduce(Atoms1,Sig,Prog,C):-
+prove_deduce(Atom,Prog):-
+    maplist(atom_to_list,Atom,Atom2),
+    target_predicate(Atom2,P/A),
+    get_option(max_clauses(MaxN)),
+    invented_symbols(MaxN,P/A,Sig),
+    prove_deduce(Atom2,Sig,Prog).
+
+prove_deduce(Atoms1,Sig,Prog):-
     maplist(add_empty_path,Atoms1,Atoms2),
     length(Prog,N),
-    prove(Atoms2,Sig,_,N,N,N,Prog,Prog,0,C).
+    prove(Atoms2,Sig,_,N,N,N,Prog,Prog).
 
-prove([],_FullSig,_Sig,_MaxN,N,N,Prog,Prog,C,C).
-prove([Atom|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2,C1,C2):-
-    prove_aux(Atom,FullSig,Sig,MaxN,N1,N3,Prog1,Prog3,C1,C3),
-    prove(Atoms,FullSig,Sig,MaxN,N3,N2,Prog3,Prog2,C3,C2).
+prove([],_FullSig,_Sig,_MaxN,N,N,Prog,Prog).
+prove([Atom|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2):-
+    prove_aux(Atom,FullSig,Sig,MaxN,N1,N3,Prog1,Prog3),
+    prove(Atoms,FullSig,Sig,MaxN,N3,N2,Prog3,Prog2).
 
-
-%% %% prove order constraint
-prove_aux('@'(Atom),_FullSig,_Sig,_MaxN,N,N,Prog,Prog,C,C):-!,
+prove_aux('@'(Atom),_FullSig,_Sig,_MaxN,N,N,Prog,Prog):-!,
     user:call(Atom).
 
+
+prove_aux(p(prim,P,_A,_Args,[not,[P2|Args2]],_Path),_FullSig,_Sig1,_,N,N,Prog,Prog):-
+    \+(var(P)), P = not,
+    length(Args2,A),!,
+    user:prim(P2/A), \+(user:primcall(P2,Args2)).
+
 %% prove primitive atom
-prove_aux(p(prim,P,_A,Args,_,_Path),_FullSig,_Sig,_MaxN,N,N,Prog,Prog,C1,C2):-
-    prim_cost_call(P,Args,C),
-    C2 is C1+C,
-    is_better(C2).
+prove_aux(p(prim,P,_A,Args,_,_Path),_FullSig,_Sig,_MaxN,N,N,Prog,Prog):-
+    user:primcall(P,Args).
+
+%% use interpreted BK - can we skip this if no interpreted_bk?
+%% only works if interpreted/2 is below the corresponding definition
+prove_aux(p(inv,_P,_A,_Args,Atom,Path),FullSig,Sig,MaxN,N1,N2,Prog1,Prog2):-
+    interpreted_bk(Atom,Body1),
+    add_path_to_body(Body1,[Atom|Path],Body2,_),
+    prove(Body2,FullSig,Sig,MaxN,N1,N2,Prog1,Prog2).
 
 %% use existing abduction
-prove_aux(p(inv,P,A,_Args,Atom,Path),FullSig,Sig1,MaxN,N1,N2,Prog1,Prog2,C1,C2):-
+prove_aux(p(inv,P,A,_Args,Atom,Path),FullSig,Sig1,MaxN,N1,N2,Prog1,Prog2):-
     select_lower(P,A,FullSig,Sig1,Sig2),
     member(sub(Name,P,A,MetaSub,PredTypes),Prog1),
     user:metarule_init(Name,MetaSub,PredTypes,(Atom:-Body1),Recursive,[Atom|Path]),
     (Recursive==true -> \+memberchk(Atom,Path); true),
-    prove(Body1,FullSig,Sig2,MaxN,N1,N2,Prog1,Prog2,C1,C2).
+    prove(Body1,FullSig,Sig2,MaxN,N1,N2,Prog1,Prog2).
 
 %% new abduction
-prove_aux(p(inv,P,A,_Args,Atom,Path),FullSig,Sig1,MaxN,N1,N2,Prog1,Prog2,C1,C2):-
+prove_aux(p(inv,P,A,_Args,Atom,Path),FullSig,Sig1,MaxN,N1,N2,Prog1,Prog2):-
     (N1 == MaxN -> fail; true),
     bind_lower(P,A,FullSig,Sig1,Sig2),
     user:metarule(Name,MetaSub,PredTypes,(Atom:-Body1),FullSig,Recursive,[Atom|Path]),
     (Recursive==true -> \+memberchk(Atom,Path); true),
     check_new_metasub(Name,P,A,MetaSub,Prog1),
-    succ(N1,N3),
-    prove(Body1,FullSig,Sig2,MaxN,N3,N2,[sub(Name,P,A,MetaSub,PredTypes)|Prog1],Prog2,C1,C2).
+    succ(N1,N3), %write([sub(Name,P,A,MetaSub,PredTypes)|Prog1]),nl,
+    prove(Body1,FullSig,Sig2,MaxN,N3,N2,[sub(Name,P,A,MetaSub,PredTypes)|Prog1],Prog2).
 
+add_empty_path([win|Args],p(prim,win,A,Args,[win|Args],[])):-
+    size(Args,A),!.
+add_empty_path([draw|Args],p(prim,draw,A,Args,[draw|Args],[])):-
+    size(Args,A),!.
 add_empty_path([P|Args],p(inv,P,A,Args,[P|Args],[])):-
     size(Args,A).
 
@@ -125,7 +152,7 @@ bind_lower(P,A,_FullSig,Sig1,Sig2):-
 check_new_metasub(Name,P,A,MetaSub,Prog):-
     memberchk(sub(Name,P,A,_,_),Prog),!,
     last(MetaSub,X),
-    when(nonvar(X),\+memberchk(sub(Name,P,A,MetaSub,_),Prog)).
+    when(ground(X),\+memberchk(sub(Name,P,A,MetaSub,_),Prog)).
 check_new_metasub(_Name,_P,_A,_MetaSub,_Prog).
 
 size([],0) :-!.
@@ -137,7 +164,7 @@ size(L,N):- !,
 
 nproveall([],_PS,_Prog):- !.
 nproveall([Atom|Atoms],PS,Prog):-
-    \+ prove_deduce([Atom],PS,Prog,_),
+    \+ prove_deduce([Atom],PS,Prog),
     nproveall(Atoms,PS,Prog).
 
 iterator(N):-
@@ -158,36 +185,42 @@ pprint(Prog1):-
     map_list_to_pairs(arg(2),Prog1,Pairs),
     keysort(Pairs,Sorted),
     pairs_values(Sorted,Prog2),
-    maplist(pprint_clause,Prog2).
+    maplist(metasub_to_clause_list,Prog2,Prog3),
+    (get_option(unfold_program) -> unfold_program(Prog3,Prog4); Prog3=Prog4),
+    maplist(remove_orderings,Prog4,Prog5),
+    maplist(clause_list_to_clause,Prog5,Prog6),
+    maplist(pprint_clause,Prog6).
 
-pprint_clause(Sub):-
-    construct_clause(Sub,Clause),
+remove_orderings([],[]).
+remove_orderings(['@'(_H)|T],Out):-!,
+    remove_orderings(T,Out).
+remove_orderings([H|T],[H|Out]):-
+    remove_orderings(T,Out).
+
+pprint_clause(Clause):-
     numbervars(Clause,0,_),
     format('~q.~n',[Clause]).
 
+clause_list_to_clause([H|B1],Clause):-
+    list_to_atom(H,Head),
+    (B1 = [] ->Clause=Head;(
+        maplist(list_to_atom,B1,B2),
+        list_to_clause(B2,B3),
+        Clause = (Head:-B3))).
+
+
 %% construct clause is horrible and needs refactoring
-construct_clause(sub(Name,_,_,MetaSub,_),Clause):-
+metasub_to_clause_list(sub(Name,_,_,MetaSub,_),[HeadList|BodyAsList2]):-
     user:metarule_init(Name,MetaSub,_,(HeadList:-BodyAsList1),_,_),
-    add_path_to_body(BodyAsList2,_,BodyAsList1,_),
-    atom_to_list(Head,HeadList),
-    (BodyAsList2 == [] ->Clause=Head;(pprint_list_to_clause(BodyAsList2,Body),Clause = (Head:-Body))).
-
-pprint_list_to_clause(List1,Clause):-
-    atomsaslists_to_atoms(List1,List2),
-    list_to_clause(List2,Clause).
-
-atomsaslists_to_atoms([],[]).
-atomsaslists_to_atoms(['@'(Atom)|T1],Out):- !,
-    (get_option(print_ordering) -> Out=[Atom|T2]; Out=T2),
-    atomsaslists_to_atoms(T1,T2).
-atomsaslists_to_atoms([AtomAsList|T1],[Atom|T2]):-
-    atom_to_list(Atom,AtomAsList),
-    atomsaslists_to_atoms(T1,T2).
+    add_path_to_body(BodyAsList2,_,BodyAsList1,_).
 
 list_to_clause([Atom],Atom):-!.
 list_to_clause([Atom|T1],(Atom,T2)):-!,
     list_to_clause(T1,T2).
 
+list_to_atom([not,AtomList],Atom2):-
+    Atom =.. AtomList,
+    Atom2 =.. [not,Atom].
 list_to_atom(AtomList,Atom):-
     Atom =..AtomList.
 atom_to_list(Atom,AtomList):-
@@ -197,11 +230,11 @@ is_functional(Atoms,Sig,Prog):-
     (get_option(functional) -> is_functional_aux(Atoms,Sig,Prog); true).
 is_functional_aux([],_Sig,_Prog).
 is_functional_aux([Atom|Atoms],Sig,Prog):-
-    func_test(Atom,Sig,Prog),
+    user:func_test(Atom,Sig,Prog),
     is_functional_aux(Atoms,Sig,Prog).
 
-get_option(Option):-call(Option), !.
-get_option(Option):-default(Option).
+get_option(Option):- call(Option), !.
+get_option(Option):- default(Option).
 
 set_option(Option):-
     functor(Option,Name,Arity),
@@ -268,18 +301,40 @@ add_path_to_body([[P|Args]|Atoms],Path,[p(PType,P,A,Args,[P|Args],Path)|Rest],[P
 assert_program(Prog):-
     maplist(assert_clause,Prog).
 
+retract_program(Prog):-
+    maplist(retract_clause,Prog).
+
 assert_clause(Sub):-
-    construct_clause(Sub,Clause),
+    metasub_to_clause_list(Sub,ClauseAsList),
+    clause_list_to_clause(ClauseAsList,Clause),
     assert(user:Clause).
 
-assert_prims(Prog):-
-    findall(P/A,(member(sub(_Name,P,A,_MetaSub),Prog)),Prims),!,
+retract_clause(Sub):-
+    metasub_to_clause_list(Sub,ClauseAsList),
+    clause_list_to_clause(ClauseAsList,Clause),
+    retract(user:Clause).
+
+assert_prog_prims(Prog):-
+    findall(P/A,(member(sub(_Name,P,A,_MetaSub,_PredTypes),Prog)),Prims),!,
     list_to_set(Prims,PrimSet),
     maplist(assert_prim,PrimSet).
 
+retract_prog_prims(Prog):-
+    findall(P/A,(member(sub(_Name,P,A,_MetaSub,_PredTypes),Prog)),Prims),!,
+    list_to_set(Prims,PrimSet),
+    maplist(retract_prim,PrimSet).
+
 assert_prim(Prim):-
     prim_asserts(Prim,Asserts),
-    maplist(assertz,Asserts).
+    maplist(asserta,Asserts).
+
+retractall_prim(Prims):-
+    maplist(retract_prim,Prims).
+
+retract_prim(Prim):-
+    Prim = P/_,
+    retractall(user:prim(Prim)),
+    retractall(user:primcall(P,_)).
 
 prim_asserts(P/A,[user:prim(P/A), user:(primcall(P,Args):-user:Call)]):-
     functor(Call,P,A),
@@ -295,93 +350,44 @@ ho_atom_to_list(Atom,T):-
 ho_atom_to_list(Atom,AtomList):-
     Atom=..AtomList.
 
+unique_body_pred([[P|_]|B1],Q):-
+    select([Q|_],B1,B2),
+    P\=Q,
+    \+ memberchk([Q|_],B2).
+unique_head_pred([[P|_]|B],P):-
+    \+ memberchk([P|_],B).
 
-%% ==================================================
-%% REPLICATING METAGOL
-%% ==================================================
-metagol(Pos,Neg):-
-    set_best_cost(inf),
-    set_best_program(false),
-    learn(Pos,Neg,Prog,_AllCosts),
-    pprint(Prog).
+unfold_clause(C1,[[P|Args]|C2],P,D):-
+    append(Pre,[[P|Args]|Post],C1),
+    append(Pre,C2,C_),
+    append(C_,Post,D).
 
-%% ==================================================
-%% REPLICATING METAGOLO
-%% ==================================================
-metagolo(Pos,Neg):-
-    set_best_cost(inf),
-    set_best_program(false),
-    learn(Pos,Neg,Prog,AllCosts),
-    max_list(AllCosts,Cost),
-    is_better(Cost),
-    format('% is better: ~d\n',[Cost]),
-    set_best_cost(Cost),
-    set_best_program(Prog),
-    false.
-metagolo(_,_):-
-    get_best_program(Prog),
-    pprint(Prog).
+head([H|_],H).
+head_pred([[P|_]|_],P).
+body_preds([_|T],Ps):-
+    findall(P,(member(X,T),head(X,P)),Ps).
 
-%% ==================================================
-%% METAOPT
-%% ==================================================
+does_not_appear_twice(P,Prog):-
+    findall(Q,(
+        member(C,Prog),
+        body_preds(C,Cs),
+        member(Q,Cs)),Qs1),
+    select(P,Qs1,Qs2),
+    \+ member(P,Qs2).
 
-metaopt(Pos,Neg):-
-    set_best_cost(inf),
-    set_best_program(false),
-    learn(Pos,Neg,Prog,_),
-    program_cost(Pos,Neg,Prog,Cost),
-    is_better(Cost),
-    format('% is better: ~d\n',[Cost]),
-    set_best_cost(Cost),
-    set_best_program(Prog),
-    false.
-metaopt(_,_):-
-    get_best_program(Prog),
-    pprint(Prog).
 
-%% ==================================================
-%% GENERAL METAOPT UTILITY FUNCTIONS
-%% ==================================================
-prim_cost_call(P,Args,C):-
-    user:primcall(P,Args),
-    Goal=..[P|Args],
-    user:pos_cost(Goal,C).
-
-set_best_cost(C):-
-  nb_setval(best_cost,C).
-get_best_cost(C):-
-  nb_getval(best_cost,C).
-is_better(C):-
-  get_best_cost(Best),
-  C< Best.
-
-set_best_program(G):-
-  nb_setval(best_program,G).
-get_best_program(G):-
-  nb_getval(best_program,G).
-
-func_test(Atom,PS,G):-
-    Atom = [P,A,B],
-    Actual = [P,A,Z],
-    \+ (prove_deduce([Actual],PS,G,_),Z \= B).
-
-program_cost(Pos,Neg,Prog,NewBound):-
-  retract_old,
-  metagol:assert_program(Prog),
-  maplist(pos_cost,Pos,PosCosts),
-  maplist(neg_cost,Neg,NegCosts),
-  retract_old,
-  append(PosCosts,NegCosts,Costs),
-  max_list(Costs,NewBound).
-
-% TODO: fix this hack
-retract_old:-
-  retractall(user:f(_,_)),
-  retractall(user:f_1(_,_)),
-  retractall(user:f_2(_,_)),
-  retractall(user:f_3(_,_)),
-  retractall(user:f_4(_,_)),
-  retractall(user:f_5(_,_)),
-  retractall(user:f_6(_,_)),
-  retractall(user:f_7(_,_)).
+unfold_program(Prog1,Prog2):-
+    select(C1,Prog1,Prog3),
+    head_pred(C1,P),
+    % check that the head pred does not appear in a head elsewhere in the program
+    \+ (member(X,Prog3),head_pred(X,P)),
+    % check that the head pred does not appear in the body
+    \+ (body_preds(C1,Ps),member(P,Ps)),
+    % check that that head pred does not appear twice in the program
+    does_not_appear_twice(P,Prog3),
+    select(C2,Prog3,Prog4),
+    body_preds(C2,C2Body),
+    member(P,C2Body),
+    unfold_clause(C2,C1,P,D),
+    unfold_program([D|Prog4],Prog2).
+unfold_program(Prog,Prog):-!.

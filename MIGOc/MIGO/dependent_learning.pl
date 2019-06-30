@@ -3,7 +3,6 @@
 %%  adapated implementation of D. Lin, E. Dechter, K. Ellis, J.B. Tenenbaum, and S.H. Muggleton. Bias reformulation for one-shot function induction. In Proceedings of the 23rd European Conference on Artificial Intelligence (ECAI 2014), pages 525-530, Amsterdam, 2014. IOS Press.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 %% first learn win/2 then learn draw/2
 dependent_learning(Sw,Sd):-
     tasks(K1,K2),
@@ -37,8 +36,8 @@ one_shot_learning_(_,[],_,_,[],[]) :-!.
 one_shot_learning_(Name,All,K,M,[Prim|Prims],[Prog|Prog1]):-
     one_shot_learning1(Name,All,K,Rest,M,Progs,Prim),
     flatten(Progs,Prog),
-    maplist(assert_clause,Prog),
-    assert_prog_prims(Prog),
+    maplist(metagol:assert_clause,Prog),
+    metagol:assert_prog_prims(Prog),
     M1 is M+1,
     one_shot_learning_(Name,Rest,K,M1,Prims,Prog1).
 
@@ -48,7 +47,7 @@ one_shot_learning1(_,[],_,[],_,[],[]) :-!.
 one_shot_learning1(Name,[Ex|All],K,Rest,M,[Prog|Prog2],[PrimSet|Prims]):-
     Ex =.. [_|Args], length([Ex|All],L),
     newpred(Name,P,K,M,L), Ex2 =.. [P|Args],
-    learn([Ex2],[],Prog),!,
+    metagol:metagol([Ex2],[],Prog),!,
     find_prims(Prog,PrimSet),
     check_coverage(P,[Ex|All],All2,Prog),
     one_shot_learning1(Name,All2,K,Rest,M,Prog2,Prims).
@@ -60,7 +59,7 @@ find_prims(Prog,PrimSet):-
 
 check_coverage(_,[],[],_) :- !.
 check_coverage(P,Exs,Exs2,G) :-
-    findall(Atom1,(member(Atom1,Exs),Atom1 =.. [_|Args],Atom2 =.. [P|Args], prove_deduce([Atom2],G)),Covered),!,
+    findall(Atom1,(member(Atom1,Exs),Atom1 =.. [_|Args],Atom2 =.. [P|Args], metagol:prove_deduce([Atom2],G)),Covered),!,
     subtract(Exs,Covered,Exs2).
 
 newpred(F,P,K,N,L) :-

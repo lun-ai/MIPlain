@@ -35,6 +35,7 @@ learn(Pos1,Neg1,Prog,AllCosts):-
     maplist(atom_to_list,Neg1,Neg2),
     proveall(Pos2,Sig,Prog,AllCosts),
     nproveall(Neg2,Sig,Prog),
+    %format('% Sig:~w, Prog:~w\n',[Sig,Prog]),
     is_functional(Pos2,Sig,Prog).
 
 learn_seq(Seq,Prog):-
@@ -63,6 +64,13 @@ prove_examples([Atom1|Atoms],FullSig,Sig,MaxN,N1,N2,Prog1,Prog2,[C|AllCosts]):-
     add_empty_path(Atom1,Atom2),
     prove([Atom2],FullSig,Sig,MaxN,N1,N3,Prog1,Prog3,0,C),
     prove_examples(Atoms,FullSig,Sig,MaxN,N3,N2,Prog3,Prog2,AllCosts).
+
+prove_deduce(Atom,Prog):-
+    maplist(atom_to_list,Atom,Atom2),
+    target_predicate(Atom2,P/A),
+    get_option(max_clauses(MaxN)),
+    invented_symbols(MaxN,P/A,Sig),
+    prove_deduce(Atom2,Sig,Prog,_).
 
 prove_deduce(Atoms1,Sig,Prog,C):-
     maplist(add_empty_path,Atoms1,Atoms2),
@@ -101,8 +109,13 @@ prove_aux(p(inv,P,A,_Args,Atom,Path),FullSig,Sig1,MaxN,N1,N2,Prog1,Prog2,C1,C2):
     (Recursive==true -> \+memberchk(Atom,Path); true),
     check_new_metasub(Name,P,A,MetaSub,Prog1),
     succ(N1,N3),
+    %format('% invented:~w\n',[sub(Name,P,A,MetaSub,PredTypes)|Prog1]),nl,
     prove(Body1,FullSig,Sig2,MaxN,N3,N2,[sub(Name,P,A,MetaSub,PredTypes)|Prog1],Prog2,C1,C2).
 
+add_empty_path([win|Args],p(prim,win,A,Args,[win|Args],[])):-
+    size(Args,A),!.
+add_empty_path([draw|Args],p(prim,draw,A,Args,[draw|Args],[])):-
+    size(Args,A),!.
 add_empty_path([P|Args],p(inv,P,A,Args,[P|Args],[])):-
     size(Args,A).
 
@@ -137,7 +150,9 @@ size(L,N):- !,
 
 nproveall([],_PS,_Prog):- !.
 nproveall([Atom|Atoms],PS,Prog):-
+    %format('nprove:~w, Prog:~w\n',[Atom,Prog]),
     \+ prove_deduce([Atom],PS,Prog,_),
+    %format('Neg example ~w not proven\n',[Atom]),
     nproveall(Atoms,PS,Prog).
 
 iterator(N):-
@@ -268,9 +283,21 @@ add_path_to_body([[P|Args]|Atoms],Path,[p(PType,P,A,Args,[P|Args],Path)|Rest],[P
 assert_program(Prog):-
     maplist(assert_clause,Prog).
 
+assert_prog_prims(Prog):-
+    findall(P/A,(member(sub(_Name,P,A,_MetaSub,_PredTypes),Prog)),Prims),!,
+    list_to_set(Prims,PrimSet),
+    maplist(assert_prim,PrimSet).
+
+retract_program(Prog) :-
+    maplist(retract_clause,Prog).
+
 assert_clause(Sub):-
     construct_clause(Sub,Clause),
     assert(user:Clause).
+
+retract_clause(Sub) :-
+    construct_clause(Sub,Clause),
+    retract(user:Clause).
 
 assert_prims(Prog):-
     findall(P/A,(member(sub(_Name,P,A,_MetaSub),Prog)),Prims),!,
@@ -304,6 +331,10 @@ metagol(Pos,Neg):-
     set_best_program(false),
     learn(Pos,Neg,Prog,_AllCosts),
     pprint(Prog).
+metagol(Pos,Neg,Prog) :-
+    set_best_cost(inf),
+    set_best_program(false),
+    learn(Pos,Neg,Prog,_).
 
 %% ==================================================
 %% REPLICATING METAGOLO
@@ -328,17 +359,21 @@ metagolo(_,_):-
 
 metaopt(Pos,Neg):-
     set_best_cost(inf),
-    set_best_program(false),
+    set_best_program([]),
     learn(Pos,Neg,Prog,_),
+    %write('Trying rule:'),
+    pprint(Prog),nl,
     program_cost(Pos,Neg,Prog,Cost),
     is_better(Cost),
-    format('% is better: ~d\n',[Cost]),
+    %format('% is better: ~d\n',[Cost]),
     set_best_cost(Cost),
     set_best_program(Prog),
     false.
 metaopt(_,_):-
+    write('Search Completed\n'),
     get_best_program(Prog),
-    pprint(Prog).
+    write('Learned:'),
+    pprint(Prog),nl.
 
 %% ==================================================
 %% GENERAL METAOPT UTILITY FUNCTIONS
@@ -366,22 +401,38 @@ func_test(Atom,PS,G):-
     Actual = [P,A,Z],
     \+ (prove_deduce([Actual],PS,G,_),Z \= B).
 
+%program_cost(Pos,Neg,Prog,NewBound):-
+%  retract_win, retract_draw,
+%  metagol:assert_program(Prog),
+%  %trace,
+%  maplist(pos_cost,Pos,PosCosts),
+%  maplist(neg_cost,Neg,NegCosts),
+%  retract_win, retract_draw,
+%  append(PosCosts,NegCosts,Costs),
+%  max_list(Costs,NewBound).
+
 program_cost(Pos,Neg,Prog,NewBound):-
-  retract_old,
+  retract_win, retract_draw,
   metagol:assert_program(Prog),
+  %trace,
   maplist(pos_cost,Pos,PosCosts),
-  maplist(neg_cost,Neg,NegCosts),
-  retract_old,
-  append(PosCosts,NegCosts,Costs),
+  %maplist(neg_cost,Neg,NegCosts),
+  retract_win, retract_draw,
+  append(PosCosts,[],Costs),
   max_list(Costs,NewBound).
 
-% TODO: fix this hack
-retract_old:-
-  retractall(user:f(_,_)),
-  retractall(user:f_1(_,_)),
-  retractall(user:f_2(_,_)),
-  retractall(user:f_3(_,_)),
-  retractall(user:f_4(_,_)),
-  retractall(user:f_5(_,_)),
-  retractall(user:f_6(_,_)),
-  retractall(user:f_7(_,_)).
+assert_win :-
+    depth_game(N),
+    forall(between(1,N,X),(U is N-X, assert_win(U))).
+
+assert_win(X) :-
+    newpred(win,P,X),
+    (current_predicate(P/2) -> asserta((win(A,B) :- call(P,A,B))));true.
+
+retract_win :-
+    depth_game(N),
+    forall(between(1,N,X),retract_win(X)).
+
+retract_win(X):-
+    newpred(win,P,X),
+    (retract((win(A,B) :- call(user:P,A,B)))); true.

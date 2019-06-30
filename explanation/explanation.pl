@@ -1,11 +1,12 @@
-:- ['./MIGO/metagol'].
+:- ['../MIGO/metagol'].
+:- [sl_migo].
 
 explanation_operator(or, ' / ').
 explanation_operator(and,' + ').
 explanation_operator(not,'not').
 
 info :-
-    write('*** Please press ENTER key\"\" for submitting explanations ***\n\n').
+    write('*** Please press ENTER key for submitting explanations ***\n\n').
 
 interpret_program :-
     \+ current_predicate(target/1),

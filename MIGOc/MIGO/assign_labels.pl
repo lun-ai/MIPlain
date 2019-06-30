@@ -3,6 +3,7 @@
 
 :- dynamic(episode/4).
 :- discontiguous update_exs/4.
+:- discontiguous update_backtrack/3.
 
 episode(win_1,[],[],[]). episode(win_2,[],[],[]).
 episode(win_3,[],[],[]). episode(win_4,[],[],[]).
@@ -14,22 +15,31 @@ episode(draw_3,[],[],[]). episode(draw_4,[],[],[]).
 episode(draw_5,[],[],[]). episode(draw_6,[],[],[]).
 episode(draw_7,[],[],[]). episode(draw_8,[],[],[]).
 
-%% if won for the learner, every move of the learner can be a positive example for the task of winning
-%% practically, all moves that fail a call to win/2 are added to the training set
-%% only valid if the counter is smaller than ref_counter for separated learning
+
+%% win. Produce positive winning example & backtrack points
 update_exs([B1|Seq],M,Sw,_) :-
-    ((learning(mixed));(counter(C),ref_counter(C1),C<C1)),
     mark(learner,M),
+    %((learning(mixed));(counter(C),ref_counter(C1),C<C1)),
+    write('Win game\n'),
     depth([B1|Seq],Depth),
-    assert_prog_and_prims(Sw),assert_win,
-    ((\+(win_pos(Depth,Sw,s(M,M,B1))))->
-    (retract_prog_and_prims(Sw),retract_win,
-    update_exs_pos([B1|Seq]));
-    (retract_prog_and_prims(Sw),retract_win)).
+    assert_program(Sw),assert_win,
+    (\+ win_pos(Depth,Sw,s(M,M,B1))
+        ->
+            retract_program(Sw),retract_win,
+            update_exs_pos([B1|Seq])
+        ;
+            retract_program(Sw),retract_win).
 
-update_exs(_,M,_Sw,_Sd) :- mark(learner,M).
-
-%% else if won for the opponent, throw any move
+%% else if won for the opponent, add backtrack records but no example yet
+update_exs([B1|Seq],M,Sw,Sd) :-
+    mark(opponent,M),
+    %((learning(mixed));(counter(C), ref_counter(C1), C>=C1)),
+    write('Lose game\n'),
+    assert_program(Sw),assert_win,
+    assert_program(Sd),assert_draw,
+    depth([B1|Seq],Depth),
+    retract_program(Sw),retract_win,
+    update_backtrack(negative,[B1|Seq],[B1|Seq]).
 update_exs(_,M,_Sw,_Sd) :- mark(opponent,M).
 
 update_exs_pos([]).
@@ -43,8 +53,16 @@ update_exs_pos([B1,B2|Game]):-
     update_ex(Ex2,positive,P),
     update_exs_pos(Game).
 
-%% if drawn, every move is a positive example for the task of drawing if the initial position is not won for o if an accurate strategy for winning has been learned
-%% only valid if the counter is greater than ref_counter for separated learning
+% else drawn, add backtrack records but no example yet
+update_exs([B1|Seq],d,Sw,Sd) :-
+    %((learning(mixed));(counter(C), ref_counter(C1), C>=C1)),
+    write('Draw game\n'),
+    assert_program(Sw),assert_win,
+    assert_program(Sd),assert_draw,
+    depth([B1|Seq],Depth),
+    retract_program(Sw),retract_win,
+    update_backtrack(negative,[B1|Seq],[B1|Seq]).
+update_exs(_,d,_,_).
 update_exs([B1|Seq],d,Sw,Sd) :-
     ((learning(mixed));(counter(C), ref_counter(C1), C>=C1)),
     assert_prog_and_prims(Sw),assert_win,
@@ -58,7 +76,6 @@ update_exs([B1|Seq],d,Sw,Sd) :-
     update_exs_draw([B1|Seq],M));
     (retract_prog_and_prims(Sw),retract_win,
     retract_prog_and_prims(Sd),retract_draw)).
-update_exs(_,d,_,_).
 
 update_exs_draw([],_).
 update_exs_draw([_],_).
@@ -72,12 +89,39 @@ update_exs_draw([B1,B2|Game],M):-
 
 update_ex(Ex,positive,P) :-
     episode(P,Pos,Neg,BK),
-    \+(member(Ex,Pos)),!,
+    \+ member(Ex,Pos),!,
     retract(episode(P,Pos,Neg,BK)),
     assert(episode(P,[Ex|Pos],Neg,BK)),!.
 update_ex(Ex,positive,P) :-
     episode(P,Pos,_,_),
     member(Ex,Pos),!.
+
+update_ex_all_neg(_,_,win,0).
+update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D1) :-
+    newpred(win,P,D1),
+    Ex =.. [P,s(M,_,B),s(M1,_,B1)],
+    \+ current_predicate(P/2),
+    update_ex(Ex,negative,P),
+    D2 is D1 - 1,
+    update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D2).
+update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D1) :-
+    newpred(win,P,D1),
+    Ex =.. [P,s(M,_,B),s(M1,_,B1)],
+    current_predicate(P/2),
+    (user:call(Ex) -> update_ex(Ex,negative,P);true),
+    D2 is D1 - 1,
+    update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D2).
+%% Negative example can only be added after there is at least one positive example
+%% Negative example must be compatible with existing positive example
+update_ex(Ex,negative,P) :-
+    episode(P,_,Neg,_),
+    member(Ex,Neg),!.
+update_ex(Ex,negative,P) :-
+    episode(P,[Pos|Ps],Neg,BK),
+    \+(member(Ex,Neg)),!,
+    %compatible_with_pos(Pos,Ex),
+    retract(episode(P,[Pos|Ps],Neg,BK)),
+    assert(episode(P,[Pos|Ps],[Ex|Neg],BK)),!.
 
 %% reclassify draw position with respect to the updated winning strategy for mixed learning
 update_draw_moves(_,1) :- !.
