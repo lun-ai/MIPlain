@@ -1,3 +1,4 @@
+%%  Game environment for normal gameplay and replay
 
 :- [menace].
 
@@ -48,7 +49,7 @@ game(B,S1,S2,Game,Outcome):-
 make_move(current,M,B,B2,Bead):-play_menace(current,M,B,B2,Bead).
 make_move(last,M,B,B2,Bead):-play_menace(last,M,B,B2,Bead).
 
-%% play with optimal strategy = minimax algorithm
+%%  play with optimal strategy = minimax algorithm
 make_move(minimax,_,B,B2,none):- !,
     board_to_list(B,L),
     next_pos(L,L2,_,_),
@@ -56,7 +57,7 @@ make_move(minimax,_,B,B2,none):- !,
     retractall(board(_)),
     asserta(board(B2)).
 
-%% play with random strategy
+%%  play with random strategy
 make_move(random,M,B,B2,none):-
     findall(s(M1,_,B1),(move(s(M,_,B),s(M1,_,B1))),Ps),!,
     random_member(s(M1,_,B2),Ps),
@@ -64,7 +65,7 @@ make_move(random,M,B,B2,none):-
     asserta(board(B2)).
 
 
-%% Normal gameplay, each game has an ID associated with it
+%%  Normal gameplay, each game has an ID associated with it
 make_move(default,M,B,B2,default):-
     example(K),!,
     next_mark(M,M1),
@@ -73,7 +74,7 @@ make_move(default,M,B,B2,default):-
     random_member(B2,Bs),
     retractall(board(_)),
     asserta(board(B2)).
-%% Replaying, each replay uses ID of the original game
+%%  Replaying, each replay uses ID of the original game
 make_move(default,M,B,B2,default):-
     backtrack(K,_,M,_,_,_),!,
     next_mark(M,M1),
@@ -82,28 +83,19 @@ make_move(default,M,B,B2,default):-
     random_member(B2,Bs),
     retractall(board(_)),
     asserta(board(B2)).
-%% Replay move when there is only one available move to be made
+%%  Replay move when there is only one available move to be made
 make_move(branch,_,M,B,B2,_):-
     next_mark(M,M1),
     findall(B1,move(s(M,_,B),s(M1,_,B1)),[B2|[]]),
     retractall(board(_)),
     asserta(board(B2)).
-%% Replaying and pick a different game branch
+%%  Replaying and pick a different game branch
 make_move(branch,K,M,B,B2,B2):-
     next_mark(M,M1),
     move(s(M,_,B),s(M1,_,B1)),
     retractall(board(_)),
     asserta(board(B2)).
-%make_move(branch,K,M,B,B2,D):-
-%    next_mark(M,M1),
-%    newpred(win,P,D),
-%    current_predicate(P/2),
-%    findall(B1,call(P,s(M,_,B),s(M1,_,B1)),[B_|Bs]),!,
-%    set_random(seed(K)),
-%    random_member(B2,Bs),
-%    retractall(board(_)),
-%    asserta(board(B2)).
-%% Replaying and pick a different game branch
+%%  Replaying and pick a different game branch
 make_move(branch,K,M,B,B3,_):-
     next_mark(M,M1),
     findall(B1,move(s(M,_,B),s(M1,_,B1)),Bs),
@@ -114,8 +106,8 @@ make_move(branch,K,M,B,B3,_):-
     retractall(board(_)),
     asserta(board(B3)).
 
-%% play with a strategy described by a logic program LP
-%% default - semi-random with fix seed move
+%%  play with a strategy described by a logic program LP
+%%  default - semi-random with fix seed move
 make_move(learned_strategy,x,B1,B2,default) :-
     \+ execute_strategy(s(x,_,B1),_,s(o,_,B2)),
     make_move(default,x,B1,B2,default),!.
@@ -125,7 +117,7 @@ make_move(learned_strategy,x,B1,B2,none) :-
     asserta(board(B2)).
 
 
-%% play a game until termination
+%%  play a game until termination
 play(S1,S2,Game,Outcome) :-
     board(B),
     playing(P),

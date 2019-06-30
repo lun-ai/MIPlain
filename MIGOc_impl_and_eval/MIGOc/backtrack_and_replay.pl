@@ -1,5 +1,11 @@
 %%  MIGOc backtracks on lost / drawn games to generate negative examples
 %%  for avoiding hypothesis over-generalization.
+%%
+%%  MIGOc uses a set of winnable 2-ply board positions for gameplay
+%%  and backtracks each lost /  drawn game for replaying later
+%%  Each replay generates at least one depth 1, depth i negative example
+%%  or positive examples.
+
 
 :- [learning].
 :- [accessible_boards_1move].
@@ -11,7 +17,6 @@
 :- dynamic(backtrack/6).
 :- dynamic(replay_regret/1).
 
-%% ---------- Backtrack & replay ----------
 
 %% generate random initial boards from the set of 1-move ahead positions
 board(_,B):-

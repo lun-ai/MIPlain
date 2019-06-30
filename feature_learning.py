@@ -1,6 +1,6 @@
 import pickle
 import random
-import minimax_DB as nc
+from minimax import minimax_DB as nc
 
 data = pickle.load(open('data.m', 'rb'))
 canonical = pickle.load(open('canonical_map.m', 'rb'))

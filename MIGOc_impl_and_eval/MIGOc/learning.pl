@@ -35,7 +35,11 @@ metarule([P,Q,B,D,R,C,E],([P,A]:-[[Q,A,B,D],[R,A,C,E]])).
 
 %%  additional feature primitives
 prim(count_double_mark_line/3).
-prim(count_single_mark_line/3).
+
+%%  the second primitive was omitted for better
+%%  learning performance as it does not appear
+%%  in the optimal learned theory
+% prim(count_single_mark_line/3).
 
 %%  move & win classifiers
 prim(move/2).

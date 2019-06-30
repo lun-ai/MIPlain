@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 
 def get_inference():
-    # open('./output/inference.txt', 'w').close()
-    open('./output/rule_inference_a.txt', 'w').close()
-    open('./output/rule_inference_b.txt', 'w').close()
+    open('./output/inference.txt', 'w').close()
+    open('./output/rule_inference_MIGOc.txt', 'w').close()
+    open('./output/rule_inference_MIGO.txt', 'w').close()
     with open(os.devnull, "w") as f:
 
         for i in range(0, 50):
@@ -21,27 +21,27 @@ def get_inference():
         print('Statistics Collected')
 
 
-        # for i in range(0, 50):
-        #     call(
-        #         ['swipl', '-s', 'test_inference.pl', '-g', 'get_strategy_inference(a,' + str(100) + ').', '-t', 'halt'],
-        #         stdout=f)
-        # print('Statistics Collected')
-        #
-        # for i in range(0, 50):
-        #     call(
-        #         ['swipl', '-s', 'test_inference.pl', '-g', 'get_strategy_inference(b,' + str(100) + ').', '-t', 'halt'],
-        #         stdout=f)
-        # print('Statistics Collected')
+        for i in range(0, 50):
+            call(
+                ['swipl', '-s', 'test_inference.pl', '-g', 'get_strategy_inference(a,' + str(100) + ').', '-t', 'halt'],
+                stdout=f)
+        print('Statistics Collected')
+
+        for i in range(0, 50):
+            call(
+                ['swipl', '-s', 'test_inference.pl', '-g', 'get_strategy_inference(b,' + str(100) + ').', '-t', 'halt'],
+                stdout=f)
+        print('Statistics Collected')
 
 
 def plot_rule_inference_graph():
     l1 = []
     l2 = []
-    with open('./output/rule_inference_a.txt', 'r') as f:
+    with open('./output/rule_inference_MIGOc.txt', 'r') as f:
         for line in f:
             l1.append(list(map(float, line.strip('\n').strip().strip('[').strip(']').split(','))))
 
-    with open('./output/rule_inference_b.txt', 'r') as f:
+    with open('./output/rule_inference_MIGO.txt', 'r') as f:
         for line in f:
             l2.append(list(map(float, line.strip('\n').strip().strip('[').strip(']').split(','))))
     print(l1)
@@ -105,7 +105,7 @@ def get_regrets():
     open('./output/MIGO_with_features.txt', 'w').close()
     with open(os.devnull, "w") as f:
         for i in range(20):
-            call(['swipl', '-s', 'backtrack.pl', '-g', 'goal(' + str(400) + ').', '-t', 'halt'], stdout=f)
+            call(['swipl', '-s', 'backtrack_and_replay.pl', '-g', 'goal(' + str(400) + ').', '-t', 'halt'], stdout=f)
             print('Round' + str(i + 1))
 
 
@@ -153,4 +153,4 @@ def plot_regret_graph():
 # plot_inference_graph()
 # plot_rule_inference_graph()
 # get_regrets()
-plot_regret_graph()
+# plot_regret_graph()

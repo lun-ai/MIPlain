@@ -67,7 +67,7 @@ get_inference(b, N, [I1_|Is1], [I2_|Is2], [I3_|Is3],[I|Is]) :-
     get_inference(b,N1,Is1,Is2,Is3,Is).
 
 get_rule_inference(a,N) :-
-    open('./output/rule_inference_a.txt',append,Out),
+    open('./output/rule_inference_MIGOc.txt',append,Out),
     get_inference(a,N,Is1,Is2,Is3,_),!,
     reverse(Is1,Is1_r),
     reverse(Is2,Is2_r),
@@ -78,7 +78,7 @@ get_rule_inference(a,N) :-
     close(Out).
 
 get_rule_inference(b,N) :-
-    open('./output/rule_inference_b.txt',append,Out),
+    open('./output/rule_inference_MIGO.txt',append,Out),
     get_inference(b,N,Is1,Is2,Is3,_),!,
     reverse(Is1,Is1_r),
     reverse(Is2,Is2_r),

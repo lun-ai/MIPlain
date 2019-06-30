@@ -1,15 +1,15 @@
-%  Provide the background knowledge for arithmetical features
-%  and for playing Noughts-and-Crosses
-%
-%  Empty mark has value 1
-%  Player 1 mark has value 2
-%  Player 2 mark has value 3
-%
-%  The arithmetical features describe conditions satisfied
-%  by the current board state. These features are introduced
-%  to MIGO for learning an hypothesis that does not use negation
-%  and invented predicates. The MIGO learned strategy performs
-%  a Minimax search over the game path tree.
+%%  Provide the background knowledge for arithmetical features
+%%  and for playing Noughts-and-Crosses
+%%
+%%  Empty mark has value 1
+%%  Player 1 mark has value 2
+%%  Player 2 mark has value 3
+%%
+%%  The arithmetical features describe conditions satisfied
+%%  by the current board state. These features are introduced
+%%  to MIGO for learning an hypothesis that does not use negation
+%%  and invented predicates. The MIGO learned strategy performs
+%%  a Minimax search over the game path tree.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% ---------- BACKGROUND KNOWLEDGE ----------
@@ -189,6 +189,9 @@ move(X,9,b(A,B,C,D,E,F,G,H,e),b(A,B,C,D,E,F,G,H,X)) :-!.
 %  The learner is assumed to know how to classify win terminals
 won(s(M,_,B),M1) :- next_mark(M,M1),won_(M1,s(M,_,B)).
 won(s(M,_,B)) :- next_mark(M,M1),won_(M1,s(M,_,B)).
+
+%  Define the drawn condition
+drawn(s(M,_,B)) :- moves_left(s(M,_,B),0), \+(won(s(M,_,B))).
 
 won_(X,s(_,_,B)) :-
     value(X,M),
