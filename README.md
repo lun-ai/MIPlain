@@ -9,7 +9,7 @@ system MIGO (Muggleton and Hocquette 2019).
 winning first move for X = X moves + X has one attack + O moves + X will be blocked by O
                          + X then makes two attacks + O has no attack
                          
-winning second move for X = X moves + X has two attacks and O has no attack
+winning second move for X = X moves + X has two attacks + O has no attack
 
 winning third move for X = X moves + X has three pieces in a line
 
