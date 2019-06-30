@@ -4,10 +4,12 @@ metarule([P,R,not,Q],([P,A,B]:-[[R,A,B],[not,[Q,B,_]]])).
 prim(move/2).
 prim(won/1).
 
-%target(win_1).
-%target(win_2).
-%target(win_3).
+%%  To explain target predicates
+% target(win_1).
+% target(win_2).
+% target(win_3).
 
+%%  Example program and basic primitive explanations
 primitive_explanation(move, 'move').
 primitive_explanation(won, 'won').
 

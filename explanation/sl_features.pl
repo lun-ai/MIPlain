@@ -11,10 +11,13 @@ prim(two_strong_of_O/1).
 prim(move/2).
 prim(won/1).
 
-%target(win_1).
-%target(win_2).
-%target(win_3).
 
+%%  To explain target predicates
+% target(win_1).
+% target(win_2).
+% target(win_3).
+
+%%  Example program and basic primitive explanations
 primitive_explanation(move, 'move').
 primitive_explanation(won, 'won').
 primitive_explanation(zero_strong_of_X, 'X has no strong option').

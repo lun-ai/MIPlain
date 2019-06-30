@@ -90,7 +90,8 @@ line_value([o,x,o],18).
 line_value([o,o,x],18).
 line_value([o,o,o],27).
 
-%% arithmetical considerations for a board
+%%  Arithmetical values of a given board position can also
+%%  be computed using the followings
 line_product(I,B,P) :- bvalue(B,Bv), line(I,Bv,L), prod_list(L,P).
 line_product_v(I,Bv,P) :- line(I,Bv,L), prod_list(L,P).
 
@@ -165,7 +166,7 @@ compatible(s(_,_,B),s(_,_,B1)) :-
      moves_left(s(_,_,B1),N1),
      N = N1.
 
-% move generator
+%%  move generator
 move_X(s(x,_,B1),s(o,_,B2)) :- move(x,B1,B2).
 move_O(s(o,_,B1),s(x,_,B2)) :- move(o,B1,B2).
 move(s(M,_,B1),s(M1,_,B2)):- next_mark(M,M1), move(M,B1,B2).
@@ -185,12 +186,11 @@ move(X,7,b(A,B,C,D,E,F,e,H,I),b(A,B,C,D,E,F,X,H,I)) :-!.
 move(X,8,b(A,B,C,D,E,F,G,e,I),b(A,B,C,D,E,F,G,X,I)) :-!.
 move(X,9,b(A,B,C,D,E,F,G,H,e),b(A,B,C,D,E,F,G,H,X)) :-!.
 
-%  Define the win condition
-%  The learner is assumed to know how to classify win terminals
+%%  Define the win & draw condition
+%%  The learner is assumed to know how to classify win terminals
 won(s(M,_,B),M1) :- next_mark(M,M1),won_(M1,s(M,_,B)).
 won(s(M,_,B)) :- next_mark(M,M1),won_(M1,s(M,_,B)).
 
-%  Define the drawn condition
 drawn(s(M,_,B)) :- moves_left(s(M,_,B),0), \+(won(s(M,_,B))).
 
 won_(X,s(_,_,B)) :-
@@ -199,20 +199,4 @@ won_(X,s(_,_,B)) :-
     between(1,8,L),
     line(L,Bv,Ms),
     forall(member(I,Ms),I is M).
-
-%  Representation
-space :- write(' ').
-bar :- write('|').
-pos(X,B) :- space, val(X,B,Y), write(Y), space.
-val(X,B,' ') :- arg(X,B,e).
-val(X,B,'o') :- arg(X,B,o).
-val(X,B,'x') :- arg(X,B,x).
-hline :- write('---------').
-
-
-printstate(s(_,_,B)):- printboard(B).
-printboard(B) :- nl,
-    pos(1,B), bar, pos(2,B), bar, pos(3,B), nl, hline, nl,
-    pos(4,B), bar, pos(5,B), bar, pos(6,B), nl, hline, nl,
-    pos(7,B), bar, pos(8,B), bar, pos(9,B), nl, nl, !.
 
