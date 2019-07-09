@@ -1,0 +1,51 @@
+table.table1 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table1 td {
+	background-color: white;
+	border: 3px solid black;
+	font-size:80px;
+	color:black;
+	border-radius: 10px 10px 10px 10px;
+}
+
+table.table2 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table2 tr{
+    height:33.3%;
+}
+
+table.table2 td {
+	border: 2px solid black;
+	font-size:40px;
+	color:black;
+	border-radius: 5px 5px 5px 5px;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+.column3 {
+  float: left;
+  width: 33.3%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.example {
+    height: 100%;
+}
+
+
+

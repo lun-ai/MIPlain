@@ -1,0 +1,119 @@
+table.table1 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table1 td {
+	background-color: white;
+	border: 3px solid black;
+	font-size:80px;
+	color:black;
+	border-radius: 10px 10px 10px 10px;
+}
+
+table.table2 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table2 tr{
+    height:33.3%;
+}
+
+table.table2 td {
+	border: 2px solid black;
+	font-size:20px;
+	color:black;
+	margin-top:20px;
+	border-radius: 5px 5px 5px 5px;
+}
+
+table.table3 {
+	border-collapse:collapse;
+	height:100%;
+}
+
+table.table3 tr{
+    height:33.3%;
+}
+
+table.table3 td {
+	border: 2px solid black;
+	font-size:40px;
+	color:black;
+	margin-top:40px;
+	border-radius: 5px 5px 5px 5px;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  height:100%;
+}
+
+.column3 {
+  float: left;
+  width: 33%;
+  height:100%;
+}
+
+.column2 {
+  float: left;
+  width: 50%;
+  height:100%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.example {
+    height: 100%;
+}
+
+td.diagonalRising
+{
+	background: linear-gradient(to right bottom, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 51%,#ffffff 51.1%,#ffffff 100%);
+}
+
+td.diagonalFalling
+{
+	background: linear-gradient(to right top, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 51%,#ffffff 51.1%,#ffffff 100%);
+}
+
+td.diagonalCross
+{
+	position:   relative;
+	background: linear-gradient(to right bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 49.9%,rgba(0,0,0,1) 50%,rgba(0,0,0,1) 51%,rgba(0,0,0,0) 51.1%,rgba(0,0,0,0) 100%);
+	background:  linear-gradient(to right top, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 51%,#ffffff 51.1%,#ffffff 100%);
+}
+
+td.diagonalCross:after
+{
+	content:     "";
+	display:     block;
+	position:    absolute;
+	width:       100%;
+	height:      100%;
+	top:         0;
+	left:        0;
+	z-index:     -1;
+	background:  linear-gradient(to right top, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 51%,#ffffff 51.1%,#ffffff 100%);
+}
+
+.image
+{
+    width:       100px;
+	height:      100px;
+}
+
+.introImage
+{
+    width:       230px;
+	height:      230px;
+}
+
+
+
