@@ -13,7 +13,11 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     RED = 'red',
     GREEN = 'green',
     WHITE = 'transparent',
-    GREY = 'grey';
+    GREY = '#cbced4',
+    P1_COLOR = '#9aeda1',
+    P2_COLOR = '#f7cd92',
+    ISLAND_ATTR = ['Castle, River', 'Forest','Cornfield, Cow', 'Castle','Forest, River, Fish', 'Cornfield',
+                   'Castle, Horse', 'Forest', 'Cornfield, River'];
 
 var t,
     phase = 0,
@@ -142,16 +146,16 @@ function stopCountPhase1() {
     	S = scores.filter(x => x === 10).length
     	S = S/TOTAL_QUESTIONS
         
-	removeChild('nextQuestionButton', 'nextQuestion');
+	    removeChild('nextQuestionButton', 'nextQuestion');
         document.getElementById('phase').textContent = 'Well done for completing Part 1!';
         document.getElementById('timer').textContent = '';
         
-	if (S<th){   
-		document.getElementById('instruction1').textContent =
+        if (S<th){
+		    document.getElementById('instruction1').textContent =
                 	'In Part 2, examples are given by the Great Wizard'
                 	+ ' and you need choose between two potential moves for what '
                		 + 'you think to be the best move to WIN the Great Wizard.';
-		document.getElementById('instruction1').textContent = '';
+		    document.getElementById('instruction1').textContent = '';
         	document.getElementById('instruction2').textContent =
           	          'The Great Wizard tells you which one is the right move and which is not.';
         	document.getElementById('Great_Wizard_intro').style.display = 'block';
@@ -159,36 +163,35 @@ function stopCountPhase1() {
         	if (participantID % TOTAL_GROUP == 0) {
             	document.getElementById('instruction3').textContent =
                 	    'Then, you are given 2 minutes to think about your choice.'
-       		 } else {
+       		} else {
             		document.getElementById('instruction3').textContent =
                		 'Then, you are given 2 minutes to study the explanation from MIGO.'
             		document.getElementById('MIGO_intro').style.display = 'block';
-       			 }
+       		}
 
         	document.getElementById('numQuestion').textContent = '';
         	removeChild('gameBoard', 'game');
 
       		  createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
-	} else {
+	    } else {
 
-	record += '\n\nPart 1: \n'
-        + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: [' + difficulty + ']\n'
-        + 'scores: [' + scores + ']\n'
-        + 'time: [' + timeTaken + ']\n';
+	        record += '\n\nPart 1: \n'
+                + answers.map(g => '[[' + g.join('],[') + ']]\n')
+                + 'difficulty: [' + difficulty + ']\n'
+                + 'scores: [' + scores + ']\n'
+                + 'time: [' + timeTaken + ']\n';
 
-	document.getElementById('instruction1').textContent = 'Please now complete ALL questions of the following short survey';
-	document.getElementById('numQuestion').textContent = '';
-	document.getElementById('instruction2').textContent = '';
-        removeChild('gameBoard', 'game');
-	createButton('nextPhaseButton', 'nextPhase', 'Continue', phase4);
+	        document.getElementById('instruction1').textContent = 'Please now complete ALL questions of the following short survey';
+	        document.getElementById('numQuestion').textContent = '';
+	        document.getElementById('instruction2').textContent = '';
+                removeChild('gameBoard', 'game');
+	        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase4);
    
-	}
-     }
-	else {
+	    }
+   } else {
         	nextQuestion();
         	startCount();
-   	 }
+   }
 
 }
 
@@ -276,11 +279,11 @@ function stopCountPhase3() {
 
 function boardClicked() {
 
-    if (this.innerHTML !== EMPTY) {
+    if (this.style.backgroundColor !== WHITE) {
         return;
     } else if (!ended) {
 
-        this.innerHTML = TURN;
+        this.style.backgroundColor = P1_COLOR;
         ended = true;
 
         var currentBoard = convertBoxesTOBoard(boxes);
@@ -311,36 +314,70 @@ function nextQuestion() {
     boxes = [];
     document.getElementById('numQuestion').textContent = 'Question NO.' + currentQuestion;
 
-    var board = document.createElement('table');
+    var board = document.createElement('div');
+    document.getElementById('game').appendChild(board);
     board.setAttribute('id', 'gameBoard');
-    board.setAttribute('border', 1);
-    board.setAttribute('cellspacing', 0);
-    board.classList.add('table1');
+    board.style.position = 'absolute';
+    board.style.left = '20%';
+    board.style.height = '60%';
+    board.style.width = '60%';
 
     for (var i = 0; i < N_SIZE; i++) {
 
-        var row = document.createElement('tr');
-        board.appendChild(row);
+        var island = document.createElement('table');
+        island.classList.add('table4');
+        board.appendChild(island);
+        island.style.height = '30%';
+        island.style.width = '25%';
+        island.style.position = 'absolute';
+        if (i === 0) {
+            island.style.top = '10%';
+            island.style.left = '20%';
+        } else if (i == 1) {
+            island.style.top = '10%';
+            island.style.right = '20%';
+        } else {
+            island.style.top = '50%';
+            island.style.left = '37.5%';
+        }
+
+        var row1 = document.createElement('tr');
+        var row2 = document.createElement('tr');
+        island.appendChild(row1);
+        island.appendChild(row2);
+        var islandTag = document.createElement('td');
+        row1.appendChild(islandTag);
+        islandTag.style.height = '40%';
+        islandTag.style.width = '40%';
+        islandTag.setAttribute('align', 'center');
+        islandTag.setAttribute('valign', 'center');
+        islandTag.style.backgroundColor = GREY;
+        islandTag.innerHTML = 'Island ' + (i + 1);
 
         for (var j = 0; j < N_SIZE; j++) {
 
-        var cell = document.createElement('td');
-        cell.setAttribute('height', 120);
-        cell.setAttribute('width', 120);
-        cell.setAttribute('align', 'center');
-        cell.setAttribute('valign', 'center');
+            var cell = document.createElement('td');
+            if (j === 0) {
+                row1.appendChild(cell);
+            } else {
+                row2.appendChild(cell);
+            }
+            cell.style.height = '40%';
+            cell.style.width = '40%';
+            cell.setAttribute('align', 'center');
+            cell.setAttribute('valign', 'center');
 
-        cell.addEventListener('click', boardClicked);
-        cell.innerHTML = rightIndexAndLabel[i * 3 + j] == 'e' ?
-                         EMPTY :
-                         rightIndexAndLabel[i * 3 + j].charAt(0).toUpperCase();
-        row.appendChild(cell);
-        boxes.push(cell);
+            cell.addEventListener('click', boardClicked);
+            cell.innerHTML = ISLAND_ATTR[i * 3 + j];
+            cell.style.backgroundColor = rightIndexAndLabel[i * 3 + j] === 'e' ?
+                                         WHITE :
+                                         rightIndexAndLabel[i * 3 + j] === 'x' ?
+                                         P1_COLOR :
+                                         P2_COLOR;
 
+            boxes.push(cell);
         }
     }
-
-    document.getElementById('game').appendChild(board);
 
 }
 
@@ -366,9 +403,11 @@ function phase1() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
-                        ' for what you think to be the best move to WIN';
-    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question.';
+    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, '
+                        + 'and please press a White cell' +
+                        ' to acquire resources that you think can lead to WIN';
+    document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question.';
     stopCount();
 }
 
@@ -432,8 +471,10 @@ function phase3() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').textContent = 'You play X, and please press corresponding cell' +
-                        ' for what you think to be the best move to WIN';
+    document.getElementById('instruction1').textContent = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, '
+                        + 'and please press a White cell' +
+                        ' to acquire resources that you think can lead to WIN';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
