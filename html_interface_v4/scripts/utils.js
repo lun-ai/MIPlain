@@ -1,6 +1,7 @@
 var YELLOW = '#ffcc00',
     RED = 'red',
     GREEN = 'green',
+    ORANGE = '#ed880c',
     WHITE = 'transparent',
     GREY = 'grey',
     DEFAULT_C = '#cbced4',
@@ -137,6 +138,7 @@ function createButton(buttonId, parentId, text, func) {
     button.type = 'button';
     button.style.width = '80px';
     button.style.height = '35px';
+    button.align = 'center';
     button.id = buttonId;
     button.textContent = text;
     button.onclick = func;

@@ -162,7 +162,6 @@ function stopCountPhase1() {
       	createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
 
    } else {
-        console.log('new question');
         nextQuestion();
         startCount();
    }
@@ -310,6 +309,7 @@ function nextQuestion() {
         island.style.height = '30%';
         island.style.width = '25%';
         island.style.position = 'absolute';
+
         if (i === 0) {
             island.style.top = '10%';
             island.style.left = '20%';
@@ -383,8 +383,8 @@ function phase1() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, '
+    document.getElementById('instruction1').innerHTML = 'You play <span style="color: '
+                        + GREEN + '">Green</span>, '
                         + 'and please press a White cell' +
                         ' to acquire resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question.';
@@ -415,10 +415,13 @@ function phase2() {
 
     document.getElementById('phase').textContent = 'Part ' + phase;
 	
-    document.getElementById('instruction1').textContent = 'You are playing X and the Great Wizard plays O. '
-    document.getElementById('instruction2').textContent = 'Given an initial board, choose between two potential moves for what '
-                + 'you think to be the best move to WIN the Great Wizard.'
-    document.getElementById('instruction3').textContent =
+    document.getElementById('instruction1').innerHTML = 'You play <span style="color: '
+                        + GREEN + '">Green</span>, and the Great Wizard plays <span style="color: '
+                        + ORANGE + '">Orange</span>. '
+    document.getElementById('instruction2').innerHTML = 'Given an initial board, choose between two potential moves '
+                        + 'highlighted in <span style="background-color: yellow">Yellow</span>, '
+                        + 'for WINNING the Great Wizard.'
+    document.getElementById('instruction3').innerHTML =
                     'The Great Wizard then tells you which one is the right move and which is not. ';
 
     if (participantID % TOTAL_GROUP == 0) {
@@ -451,8 +454,8 @@ function phase3() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').textContent = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, '
+    document.getElementById('instruction1').textContent = 'You play <span style="color: '
+                        + GREEN + '">Green</span>, '
                         + 'and please press a White cell' +
                         ' to acquire resources that you think can lead to WIN';
     document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ';
@@ -537,18 +540,21 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], WHITE, 10);
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], WHITE, 10);
+        createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1', '', [], WHITE, 10);
+        createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move2', '', [], WHITE, 10);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
     } else {
-        createBoard(wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], GREY, 10);
-        createBoard(rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], GREY, 10);
+        createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move1', '', [], WHITE, 10);
+        createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move2', '', [], WHITE, 10);
         createButton('wrongMoveButton', 'wrongMoveComment', 'Choose this move', wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', 'Choose this move', rightMoveChosen);
     }
-    document.getElementById("rightMove"+rightIdx).style.color = YELLOW;
-    document.getElementById("wrongMove"+wrongIdx).style.color = YELLOW;
+
+    document.getElementById("rightMove"+rightIdx).innerHTML = '<span style="background-color: yellow">'
+                        + ISLAND_ATTR[rightIdx] + '</span>';
+    document.getElementById("wrongMove"+wrongIdx).innerHTML = '<span style="background-color: yellow">'
+                        + ISLAND_ATTR[wrongIdx] + '</span>';
 }
 
 function showExpl() {
@@ -559,8 +565,8 @@ function showExpl() {
     removeChild('wrongMoveButton', 'wrongMoveComment');
     removeChild('rightMoveButton', 'rightMoveComment');
 
-    document.getElementById('wrongMoveComment').textContent = 'This is a wrong move';
-    document.getElementById('rightMoveComment').textContent = 'This is a right move';
+    document.getElementById('wrongMoveComment').innerHTML = '<span style="color: red">This is a wrong move</span>';
+    document.getElementById('rightMoveComment').innerHTML = '<span style="color: green">This is a right move</span>';
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -569,8 +575,8 @@ function showExpl() {
     var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
-    document.getElementById('wrongMove' + wrongIdx).style.color = 'red';
-    document.getElementById('rightMove' + rightIdx).style.color = 'green';
+//    document.getElementById('wrongMove' + wrongIdx).style.color = 'red';
+//    document.getElementById('rightMove' + rightIdx).style.color = 'green';
 
     moveChosen = true;
     totalTime = EXPL_TIME;
@@ -663,58 +669,160 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
   table.style.backgroundRepeat = 'no-repeat';
 }
 
+function createParitalBoard(originalBoard, board, boardId, parentId, text, positions, color, borderWidth) {
+
+    var div = document.createElement('div');
+    div.setAttribute('id', boardId);
+    div.style.position = 'relative';
+    div.style.height = '250px';
+    document.getElementById(parentId).appendChild(div);
+
+    if (board.length !== 0) {
+
+        var original = changeLabelsOnBoard(originalBoard);
+        var newBoard = changeLabelsOnBoard(board);
+
+        var diffIdx = original.map((_,i) => original[i] === newBoard[i] ? -1 : i).filter(x => x === -1)[0];
+        var islandNum = Math.round(diffIdx / N_SIZE);
+
+        var island = document.createElement('table');
+        island.classList.add('table5');
+        island.setAttribute('id', boardId + 'Island');
+        div.appendChild(island);
+        island.style.height = '30%';
+        island.style.width = '40%';
+        island.style.position = 'absolute';
+        island.style.top = '20%';
+        island.style.left = '30%';
+
+        var row1 = document.createElement('tr');
+        var row2 = document.createElement('tr');
+        island.appendChild(row1);
+        island.appendChild(row2);
+        var islandTag = document.createElement('td');
+        row1.appendChild(islandTag);
+        islandTag.style.height = '40%';
+        islandTag.style.width = '40%';
+        islandTag.setAttribute('align', 'center');
+        islandTag.setAttribute('valign', 'center');
+        islandTag.style.backgroundColor = DEFAULT_C;
+        islandTag.innerHTML = 'Island ' + (islandNum + 1);
+
+        for (var j = 0; j < N_SIZE; j++) {
+
+            var cell = document.createElement('td');
+            if (j === 0) {
+                row1.appendChild(cell);
+            } else {
+                row2.appendChild(cell);
+            }
+            cell.style.height = '40%';
+            cell.style.width = '40%';
+            cell.setAttribute('id', boardId + (islandNum * 3 + j));
+            cell.setAttribute('align', 'center');
+            cell.setAttribute('valign', 'center');
+
+            cell.innerHTML = ISLAND_ATTR[islandNum * 3 + j];
+            cell.style.backgroundColor = newBoard[islandNum * 3 + j] === 'e' ?
+                                         WHITE :
+                                         newBoard[islandNum * 3 + j] === 'x' ?
+                                         P1_COLOR :
+                                         P2_COLOR;
+        }
+
+        var comment = document.createElement('div');
+        div.appendChild(comment);
+        comment.style.position = 'absolute';
+        comment.style.bottom = '30%';
+        comment.style.width = '100%';
+//        comment.style.left = '38%';
+        comment.setAttribute('id', boardId+'Comment');
+        comment.innerHTML = text;
+        comment.classList.add('col');
+        comment.align = 'center';
+        comment.style.fontSize = 'small';
+        comment.style.whiteSpace = 'pre-wrap';
+    }
+
+    for (var i = 0; i < positions.length; i++) {
+        document.getElementById(boardId+positions[i]).style.backgroundColor = color;
+    }
+
+}
+
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
 
-  var td = document.createElement('td');
-  td.setAttribute('id', boardId);
-  td.style.border = borderWidth + "px solid transparent";
-  td.align = 'center';
+    var div = document.createElement('div');
+    div.setAttribute('id', boardId);
+//    div.style.border = borderWidth + "px solid transparent";
+    div.style.position = 'relative';
+    div.style.height = '300px';
+    document.getElementById(parentId).appendChild(div);
 
-  if (board.length !== 0) {
+    if (board.length !== 0) {
 
-      var newBoard = changeLabelsOnBoard(board);
-      var table = document.createElement('table');
-      table.setAttribute('border', 1);
-      table.setAttribute('cellspacing', 0);
-      table.classList.add('table2');
+        var newBoard = changeLabelsOnBoard(board);
 
-      for (var i = 0; i < N_SIZE; i++) {
+        for (var i = 0; i < N_SIZE; i++) {
 
-          var row = document.createElement('tr');
-          table.appendChild(row);
+            var island = document.createElement('table');
+            island.classList.add('table5');
+            island.setAttribute('id', boardId + 'Island' + (i + 1));
+            div.appendChild(island);
+            island.style.height = '30%';
+            island.style.width = '40%';
+            island.style.position = 'absolute';
 
-          for (var j = 0; j < N_SIZE; j++) {
+            if (i === 0) {
+                island.style.top = '10%';
+                island.style.left = '5%';
+            } else if (i == 1) {
+                island.style.top = '10%';
+                island.style.right = '5%';
+            } else {
+                island.style.top = '60%';
+                island.style.left = '30%';
+            }
 
-              var cell = document.createElement('td');
-              cell.setAttribute('id', boardId + (i * 3 + j));
-              cell.setAttribute('height', 30);
-              cell.setAttribute('width',  30);
-              cell.setAttribute('align',  'center');
-              cell.setAttribute('valign',  'center');
-              cell.style.backgroundColor = WHITE;
+            var row1 = document.createElement('tr');
+            var row2 = document.createElement('tr');
+            island.appendChild(row1);
+            island.appendChild(row2);
+            var islandTag = document.createElement('td');
+            row1.appendChild(islandTag);
+            islandTag.style.height = '40%';
+            islandTag.style.width = '40%';
+            islandTag.setAttribute('align', 'center');
+            islandTag.setAttribute('valign', 'center');
+            islandTag.style.backgroundColor = DEFAULT_C;
+            islandTag.innerHTML = 'Island ' + (i + 1);
 
-              row.appendChild(cell);
-              cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
-          }
-      }
+            for (var j = 0; j < N_SIZE; j++) {
 
-      td.appendChild(table);
+                var cell = document.createElement('td');
+                if (j === 0) {
+                    row1.appendChild(cell);
+                } else {
+                    row2.appendChild(cell);
+                }
+                cell.style.height = '40%';
+                cell.style.width = '40%';
+                cell.setAttribute('align', 'center');
+                cell.setAttribute('valign', 'center');
 
-      var comment = document.createElement('div');
-      comment.setAttribute('id', boardId+'Comment');
-      comment.innerHTML = text;
-      comment.classList.add('col');
-      comment.align = 'center';
-      comment.style.fontSize = 'small';
-      comment.style.whiteSpace = 'pre-wrap';
+                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
+                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
+                                             WHITE :
+                                             newBoard[i * 3 + j] === 'x' ?
+                                             P1_COLOR :
+                                             P2_COLOR;
+            }
+        }
+    }
 
-      td.appendChild(comment);
-      document.getElementById(parentId).appendChild(td);
-  }
-
-  for (var i = 0; i < positions.length; i++) {
-      document.getElementById(boardId+positions[i]).style.backgroundColor = color;
-  }
+    for (var i = 0; i < positions.length; i++) {
+        document.getElementById(boardId+positions[i]).style.backgroundColor = color;
+    }
 }
 
 function clearBoards() {
@@ -823,7 +931,7 @@ function showNegExamples(board, parentId, pos){
     } else if (board.filter(x=>x==0).length == 4) {
         createBoardWithLine(board, 'negboard0', parentId, EMPTY,
                     findPosStrongOption(board, 1).map(changeIndex), 17.5);
-	document.getElementById('negboard0' + pos).style.color = RED;
+	    document.getElementById('negboard0' + pos).style.color = RED;
         var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
         if(opponentStrong.length == 0) {
 		createBoard(board, 'negboard1', parentId, EMPTY , board.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 10); 
@@ -843,9 +951,10 @@ function showNegExamples(board, parentId, pos){
 }
 
 
-document.getElementById('phase').textContent = '';
-document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                                    + 'For each question, you are given a board and you will play X.'
-document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-                                                    + ' You have ONE CHANCE for each question and try your best.';
-createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+//document.getElementById('phase').textContent = '';
+//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
+//                                                    + 'For each question, you are given a board and you will play X.'
+//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
+//                                                    + ' You have ONE CHANCE for each question and try your best.';
+//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+phase2();
