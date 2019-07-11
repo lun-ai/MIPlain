@@ -269,7 +269,13 @@ function boardClicked() {
         console.log(timeTaken);
         console.log(scores);
 
-        createButton('nextQuestionButton', 'nextQuestion', 'Next Question', stopCount);
+        createButton('nextQuestionButton', 'gameBoard', 'Next Question', stopCount);
+        var button = document.getElementById('nextQuestionButton');
+        button.style.position = 'absolute';
+        button.style.height = '10%';
+        button.style.width = '10%';
+        button.style.bottom = '0%';
+        button.style.left = '45%';
     }
 }
 
