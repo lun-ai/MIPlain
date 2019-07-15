@@ -531,6 +531,8 @@ function nextExample() {
 function showExample() {
 
     createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [], WHITE,10);
+    removeChild('rightMove','move1');
+    removeChild('rightMove','move1');
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -682,8 +684,8 @@ function createParitalBoard(originalBoard, board, boardId, parentId, text, posit
         var original = changeLabelsOnBoard(originalBoard);
         var newBoard = changeLabelsOnBoard(board);
 
-        var diffIdx = original.map((_,i) => original[i] === newBoard[i] ? -1 : i).filter(x => x === -1)[0];
-        var islandNum = Math.round(diffIdx / N_SIZE);
+        var diffIdx = original.map((_,i) => original[i] === newBoard[i] ? -1 : i).filter(x => x !== -1)[0];
+        var islandNum = Math.floor(diffIdx / N_SIZE);
 
         var island = document.createElement('table');
         island.classList.add('table5');
