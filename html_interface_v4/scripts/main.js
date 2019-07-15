@@ -815,6 +815,10 @@ function createBoardExpl(board, boardId, parentId, text, positions, color, borde
                                              P2_COLOR;
             }
         }
+
+        for (var i = 0; i < N_SIZE * N_SIZE; i++) {
+
+        }
     }
 }
 
