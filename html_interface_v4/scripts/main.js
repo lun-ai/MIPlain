@@ -735,7 +735,6 @@ function createParitalBoard(originalBoard, board, boardId, parentId, text, posit
         comment.style.position = 'absolute';
         comment.style.bottom = '30%';
         comment.style.width = '100%';
-//        comment.style.left = '38%';
         comment.setAttribute('id', boardId+'Comment');
         comment.innerHTML = text;
         comment.classList.add('col');
@@ -744,10 +743,77 @@ function createParitalBoard(originalBoard, board, boardId, parentId, text, posit
         comment.style.whiteSpace = 'pre-wrap';
     }
 
-    for (var i = 0; i < positions.length; i++) {
-        document.getElementById(boardId+positions[i]).style.backgroundColor = color;
-    }
+}
 
+function createBoardExpl(board, boardId, parentId, text, positions, color, borderWidth) {
+
+    var div = document.createElement('div');
+    div.setAttribute('id', boardId);
+    div.classList.add('column3');
+    div.style.position = 'relative';
+    div.style.height = '250px';
+    document.getElementById(parentId).appendChild(div);
+
+    if (board.length !== 0) {
+
+        var newBoard = changeLabelsOnBoard(board);
+
+        for (var i = 0; i < N_SIZE; i++) {
+
+            var island = document.createElement('table');
+            island.classList.add('table5');
+            island.setAttribute('id', boardId + 'Island' + (i + 1));
+            div.appendChild(island);
+            island.style.height = '25%';
+            island.style.width = '40%';
+            island.style.position = 'absolute';
+
+            if (i === 0) {
+                island.style.top = '10%';
+                island.style.left = '5%';
+            } else if (i == 1) {
+                island.style.top = '10%';
+                island.style.right = '5%';
+            } else {
+                island.style.top = '40%';
+                island.style.left = '30%';
+            }
+
+            var row1 = document.createElement('tr');
+            var row2 = document.createElement('tr');
+            island.appendChild(row1);
+            island.appendChild(row2);
+            var islandTag = document.createElement('td');
+            row1.appendChild(islandTag);
+            islandTag.style.height = '40%';
+            islandTag.style.width = '40%';
+            islandTag.setAttribute('align', 'center');
+            islandTag.setAttribute('valign', 'center');
+            islandTag.style.backgroundColor = DEFAULT_C;
+            islandTag.innerHTML = 'Island ' + (i + 1);
+
+            for (var j = 0; j < N_SIZE; j++) {
+
+                var cell = document.createElement('td');
+                if (j === 0) {
+                    row1.appendChild(cell);
+                } else {
+                    row2.appendChild(cell);
+                }
+                cell.style.height = '40%';
+                cell.style.width = '40%';
+                cell.setAttribute('align', 'center');
+                cell.setAttribute('valign', 'center');
+
+                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
+                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
+                                             WHITE :
+                                             newBoard[i * 3 + j] === 'x' ?
+                                             P1_COLOR :
+                                             P2_COLOR;
+            }
+        }
+    }
 }
 
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
@@ -819,10 +885,6 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             }
         }
     }
-
-    for (var i = 0; i < positions.length; i++) {
-        document.getElementById(boardId+positions[i]).style.backgroundColor = color;
-    }
 }
 
 function clearBoards() {
@@ -882,25 +944,25 @@ function showPosExamples(game, parentId, pos){
 
     } else if (game[0].filter(x=>x==0).length == 2) {
         // Depth 1
-        createBoardWithLine(game[0], 'posboard0', parentId, 'you move and make a triple-line',
+        createBoardExpl(game[0], 'posboard0', parentId, 'you move and make a triple-line',
                     winLine(game[0],1).map(changeIndex), 17.5);
-        document.getElementById('posboard0'+pos).style.color = GREEN;
+//        document.getElementById('posboard0'+pos).style.color = GREEN;
     }
 }
 
 function showNegExamples(board, parentId, pos){
     if (board.filter(x=>x==0).length == 6) {
         var strong = findPosStrongOption(board, 1).map(changeIndex);
-       	 if (strong.length == 0 ) {
-	 	createBoard(board, 'negboard0', parentId, EMPTY,
+       	if (strong.length == 0 ) {
+	 	    createBoardExpl(board, 'negboard0', parentId, EMPTY,
                 	    board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1),
                  	    GREY, 17.5);
-		var nextBoard = computeNextMove(board, 2);
-		createBoard(nextBoard,'negboard1', parentId, EMPTY, [], WHITE, 10);
-		nextBoard = computeNextMove(nextBoard, 1);
-		strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
+		    var nextBoard = computeNextMove(board, 2);
+		    createBoard(nextBoard,'negboard1', parentId, EMPTY, [], WHITE, 10);
+		    nextBoard = computeNextMove(nextBoard, 1);
+		    strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
 		             var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-           	 createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
+           	createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
 
             for (var i = 0; i < opponentPos.length; i++) {
                 document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
@@ -909,13 +971,13 @@ function showNegExamples(board, parentId, pos){
             document.getElementById('negboard2' + pos).style.color = RED;
             document.getElementById('negboard0' + pos).style.color = RED;
 		 
-	 } else {
-	     createBoardWithLine(board, 'negboard0', parentId, EMPTY,
+	    } else {
+	        createBoardWithLine(board, 'negboard0', parentId, EMPTY,
                     strong, 17.5);
             var nextBoard = computeNextMove(board, 2);
-	    createBoard(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 10);
+	        createBoard(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 10);
             
-	    nextBoard = computeNextMove(nextBoard, 1);
+	        nextBoard = computeNextMove(nextBoard, 1);
             strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
             var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
             createBoardWithLine(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
@@ -926,8 +988,8 @@ function showNegExamples(board, parentId, pos){
 
             document.getElementById('negboard1' + pos).style.color = RED;
             document.getElementById('negboard2' + pos).style.color = RED;
-	    document.getElementById('negboard0' + pos).style.color = RED;
-	}
+	        document.getElementById('negboard0' + pos).style.color = RED;
+	    }
     } else if (board.filter(x=>x==0).length == 4) {
         createBoardWithLine(board, 'negboard0', parentId, EMPTY,
                     findPosStrongOption(board, 1).map(changeIndex), 17.5);
@@ -937,16 +999,14 @@ function showNegExamples(board, parentId, pos){
 		createBoard(board, 'negboard1', parentId, EMPTY , board.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 10); 
        		 document.getElementById('negboard1' + pos).style.color = RED;
 		} else {
-		//     document.getElementById('posboard1').style.display = 'none';
-      //  }
-	      createBoardWithLine(board, 'negboard1', parentId, EMPTY,
+	        createBoardWithLine(board, 'negboard1', parentId, EMPTY,
                     opponentStrong, 17.5);
-		document.getElementById('negboard1' + pos).style.color = RED;
+		    document.getElementById('negboard1' + pos).style.color = RED;
 		}
-		} else if (board.filter(x=>x==0).length == 2) {
-        createBoard(board, 'negboard0', parentId, EMPTY,
-        board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 17.5);
-        document.getElementById('negboard0' + pos).style.color = RED;
+	} else if (board.filter(x=>x==0).length == 2) {
+        createBoardExpl(board, 'negboard0', parentId, EMPTY,
+            board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 17.5);
+//        document.getElementById('negboard0' + pos).style.color = RED;
     }
 }
 
