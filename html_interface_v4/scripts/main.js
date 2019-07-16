@@ -108,8 +108,6 @@ function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
     if (totalTime - sec < 0) {
         stopCount();
-    } else if (!ended && sec <= totalTime){
-//        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
         if(phase == 2 && sec == totalTime - 10) {
             if (currentExpl == TOTAL_EXPL) {
                 document.getElementById("timer").textContent = 'Will move onto the next part in 10 secs';
@@ -456,8 +454,8 @@ function phase3() {
 }
 
 function phase4() {
-    console.log(record);
 
+    console.log(record);
     flushLocalCache();
 
     phase = 4;
@@ -474,9 +472,7 @@ function phase4() {
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';
     document.getElementById('participantid').value = participantID
-    
 
-	
 	//localStorage.setItem("participantID"; participantID);
    // record += '\n\nPart 4: \n'
     //    + answers.map(g => '[[' + g.join('],[') + ']]\n')

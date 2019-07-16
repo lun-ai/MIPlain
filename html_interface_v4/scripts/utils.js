@@ -140,6 +140,7 @@ function createButton(buttonId, parentId, text, func) {
     button.id = buttonId;
     button.textContent = text;
     button.onclick = func;
+    button.disabled = false;
 }
 
 function createImage(imageId, parentId, text, src) {
