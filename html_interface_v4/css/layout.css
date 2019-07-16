@@ -130,6 +130,21 @@ table.table4 td {
 	border-radius: 5px 5px 5px 5px;
 }
 
+table.table5 {
+	border-collapse:collapse;
+}
+
+table.table5 tr{
+    height: 48%;
+}
+
+table.table5 td {
+	border: 1px solid black;
+	font-size: 10px;
+	color:black;
+	border-radius: 5px 5px 5px 5px;
+}
+
 
 
 
