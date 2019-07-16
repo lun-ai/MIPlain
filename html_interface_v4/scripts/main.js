@@ -31,9 +31,10 @@ var t,
     record = '';
 
 var texts = String(window.location).split('=');
+// uncomment for deployment
+//var participantID = (new Date).getTime();
 
-var participantID = (new Date).getTime();
-// var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
 function flushLocalCache() {
     prevBoard = [0,0,0,0,0,0,0,0,0],
@@ -301,8 +302,7 @@ function nextQuestion() {
 
     for (var i = 0; i < N_SIZE; i++) {
 
-        var island = document.createElement('table');
-        island.classList.add('table4');
+        var island = document.createElement('div');
         board.appendChild(island);
         island.style.height = '30%';
         island.style.width = '25%';
@@ -319,42 +319,36 @@ function nextQuestion() {
             island.style.left = '37.5%';
         }
 
-        var row1 = document.createElement('tr');
-        var row2 = document.createElement('tr');
-        island.appendChild(row1);
-        island.appendChild(row2);
-        var islandTag = document.createElement('td');
-        row1.appendChild(islandTag);
-        islandTag.style.height = '40%';
-        islandTag.style.width = '40%';
-        islandTag.setAttribute('align', 'center');
-        islandTag.setAttribute('valign', 'center');
+        var cell1 = createIsland(rightIndexAndLabel[i * 3], ISLAND_ATTR[i * 3]);
+        island.appendChild(cell1);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.addEventListener('click', boardClicked);
+        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+        island.appendChild(cell2);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.addEventListener('click', boardClicked);
+        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+        island.appendChild(cell3);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.addEventListener('click', boardClicked);
+
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.innerHTML = 'Island ' + (i + 1);
 
-        for (var j = 0; j < N_SIZE; j++) {
-
-            var cell = document.createElement('td');
-            if (j === 0) {
-                row1.appendChild(cell);
-            } else {
-                row2.appendChild(cell);
-            }
-            cell.style.height = '40%';
-            cell.style.width = '40%';
-            cell.setAttribute('align', 'center');
-            cell.setAttribute('valign', 'center');
-
-            cell.addEventListener('click', boardClicked);
-            cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-            cell.style.backgroundColor = rightIndexAndLabel[i * 3 + j] === 'e' ?
-                                         WHITE :
-                                         rightIndexAndLabel[i * 3 + j] === 'x' ?
-                                         P1_COLOR :
-                                         P2_COLOR;
-
-            boxes.push(cell);
-        }
+        boxes.push(cell1);
+        boxes.push(cell2);
+        boxes.push(cell3);
     }
 
 }
@@ -549,10 +543,10 @@ function showExample() {
         createButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
 
-    document.getElementById("rightMove"+rightIdx).innerHTML = '<span style="background-color: yellow">'
-                        + ISLAND_ATTR[rightIdx] + '</span>';
-    document.getElementById("wrongMove"+wrongIdx).innerHTML = '<span style="background-color: yellow">'
-                        + ISLAND_ATTR[wrongIdx] + '</span>';
+    document.getElementById("rightMove"+rightIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
+                        + ISLAND_ATTR[rightIdx] + '</span>');
+    document.getElementById("wrongMove"+wrongIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
+                        + ISLAND_ATTR[wrongIdx] + '</span>');
 }
 
 function showExpl() {
@@ -616,7 +610,6 @@ function createBoardWithLine(board, boardId, parentId, text, positions, borderWi
 
   var td = document.createElement('td');
   td.setAttribute('id', boardId);
-  td.style.border = borderWidth + "px solid transparent";
   td.align = 'center';
 
   if (board.length !== 0) {
@@ -683,8 +676,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         var diffIdx = original.map((_,i) => original[i] === newBoard[i] ? -1 : i).filter(x => x !== -1)[0];
         var islandNum = Math.floor(diffIdx / N_SIZE);
 
-        var island = document.createElement('table');
-        island.classList.add('table5');
+        var island = document.createElement('div');
         island.setAttribute('id', boardId + 'Island');
         div.appendChild(island);
         island.style.height = '30%';
@@ -693,40 +685,35 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         island.style.top = '20%';
         island.style.left = '30%';
 
-        var row1 = document.createElement('tr');
-        var row2 = document.createElement('tr');
-        island.appendChild(row1);
-        island.appendChild(row2);
-        var islandTag = document.createElement('td');
-        row1.appendChild(islandTag);
-        islandTag.style.height = '40%';
-        islandTag.style.width = '40%';
-        islandTag.setAttribute('align', 'center');
-        islandTag.setAttribute('valign', 'center');
+        var cell1 = createIsland(newBoard[islandNum * 3], ISLAND_ATTR[islandNum * 3]);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.style.fontSize = '10px';
+        cell1.setAttribute('id', boardId + (islandNum * 3));
+        var cell2 = createIsland(newBoard[islandNum * 3 + 1], ISLAND_ATTR[islandNum * 3 + 1]);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.style.fontSize = '10px';
+        cell2.setAttribute('id', boardId + (islandNum * 3 + 1));
+        var cell3 = createIsland(newBoard[islandNum * 3 + 2], ISLAND_ATTR[islandNum * 3 + 2]);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.style.fontSize = '10px';
+        cell3.setAttribute('id', boardId + (islandNum * 3 + 2));
+        island.appendChild(cell3);
+        island.appendChild(cell2);
+        island.appendChild(cell1);
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
+        islandTag.style.fontSize = '10px';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.innerHTML = 'Island ' + (islandNum + 1);
-
-        for (var j = 0; j < N_SIZE; j++) {
-
-            var cell = document.createElement('td');
-            if (j === 0) {
-                row1.appendChild(cell);
-            } else {
-                row2.appendChild(cell);
-            }
-            cell.style.height = '40%';
-            cell.style.width = '40%';
-            cell.setAttribute('id', boardId + (islandNum * 3 + j));
-            cell.setAttribute('align', 'center');
-            cell.setAttribute('valign', 'center');
-
-            cell.innerHTML = ISLAND_ATTR[islandNum * 3 + j];
-            cell.style.backgroundColor = newBoard[islandNum * 3 + j] === 'e' ?
-                                         WHITE :
-                                         newBoard[islandNum * 3 + j] === 'x' ?
-                                         P1_COLOR :
-                                         P2_COLOR;
-        }
 
         var comment = document.createElement('div');
         div.appendChild(comment);
@@ -734,7 +721,6 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         comment.style.bottom = '30%';
         comment.style.width = '100%';
         comment.setAttribute('id', boardId+'Comment');
-        comment.classList.add('col');
         comment.align = 'center';
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
@@ -750,6 +736,16 @@ function createBoardExpl(board, boardId, parentId, text, positions, color, borde
     div.classList.add('column3');
     div.style.position = 'relative';
     div.style.height = '250px';
+
+    var frame = document.createElement('div');
+    div.appendChild(frame);
+    frame.style.position = 'absolute';
+    frame.style.height = '65%';
+    frame.style.width = '100%';
+    frame.style.border = '2px solid black';
+    frame.style.top = '5%';
+    frame.style.backgroundColor = TRANSPAR;
+
     document.getElementById(parentId).appendChild(div);
 
     if (board.length !== 0) {
@@ -758,61 +754,51 @@ function createBoardExpl(board, boardId, parentId, text, positions, color, borde
 
         for (var i = 0; i < N_SIZE; i++) {
 
-            var island = document.createElement('table');
-            island.classList.add('table5');
+            var island = document.createElement('div');
             island.setAttribute('id', boardId + 'Island' + (i + 1));
             div.appendChild(island);
             island.style.height = '25%';
-            island.style.width = '40%';
+            island.style.width = '46%';
             island.style.position = 'absolute';
 
             if (i === 0) {
                 island.style.top = '10%';
-                island.style.left = '5%';
+                island.style.left = '3%';
             } else if (i == 1) {
                 island.style.top = '10%';
-                island.style.right = '5%';
+                island.style.right = '2%';
             } else {
                 island.style.top = '40%';
-                island.style.left = '30%';
+                island.style.left = '27.5%';
             }
 
-            var row1 = document.createElement('tr');
-            var row2 = document.createElement('tr');
-            island.appendChild(row1);
-            island.appendChild(row2);
-            var islandTag = document.createElement('td');
-            row1.appendChild(islandTag);
-            islandTag.style.height = '40%';
-            islandTag.style.width = '40%';
-            islandTag.setAttribute('align', 'center');
-            islandTag.setAttribute('valign', 'center');
+            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            cell1.style.top = '0%';
+            cell1.style.left = '0%';
+            cell1.style.fontSize = '8px';
+            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            cell2.style.top = '0%';
+            cell2.style.right = '0%';
+            cell2.style.fontSize = '8px';
+            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            cell3.style.bottom = '0%';
+            cell3.style.left = '25%';
+            cell3.style.fontSize = '8px';
+            island.appendChild(cell3);
+            island.appendChild(cell2);
+            island.appendChild(cell1);
+
+
+            var islandTag = document.createElement('div');
+            islandTag.classList.add('islandTag');
+            island.appendChild(islandTag);
+            islandTag.style.height = '18%';
+            islandTag.style.width = '30%';
+            islandTag.style.top = '40%';
+            islandTag.style.left = '35%';
+            islandTag.style.fontSize = '8px';
             islandTag.style.backgroundColor = DEFAULT_C;
             islandTag.innerHTML = 'Island ' + (i + 1);
-
-            for (var j = 0; j < N_SIZE; j++) {
-
-                var cell = document.createElement('td');
-                if (j === 0) {
-                    row1.appendChild(cell);
-                } else {
-                    row2.appendChild(cell);
-                }
-                cell.style.height = '40%';
-                cell.style.width = '40%';
-                cell.setAttribute('align', 'center');
-                cell.setAttribute('valign', 'center');
-
-                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
-                                             WHITE :
-                                             newBoard[i * 3 + j] === 'x' ?
-                                             P1_COLOR :
-                                             P2_COLOR;
-            }
-        }
-
-        for (var i = 0; i < N_SIZE * N_SIZE; i++) {
 
         }
     }
@@ -822,7 +808,6 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
-//    div.style.border = borderWidth + "px solid transparent";
     div.style.position = 'relative';
     div.style.height = '300px';
     document.getElementById(parentId).appendChild(div);
@@ -833,60 +818,69 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
         for (var i = 0; i < N_SIZE; i++) {
 
-            var island = document.createElement('table');
-            island.classList.add('table5');
+            var island = document.createElement('div');
             island.setAttribute('id', boardId + 'Island' + (i + 1));
             div.appendChild(island);
-            island.style.height = '30%';
+            island.style.height = '25%';
             island.style.width = '40%';
             island.style.position = 'absolute';
 
             if (i === 0) {
-                island.style.top = '10%';
+                island.style.top = '20%';
                 island.style.left = '5%';
             } else if (i == 1) {
-                island.style.top = '10%';
+                island.style.top = '20%';
                 island.style.right = '5%';
             } else {
                 island.style.top = '60%';
                 island.style.left = '30%';
             }
 
-            var row1 = document.createElement('tr');
-            var row2 = document.createElement('tr');
-            island.appendChild(row1);
-            island.appendChild(row2);
-            var islandTag = document.createElement('td');
-            row1.appendChild(islandTag);
-            islandTag.style.height = '40%';
-            islandTag.style.width = '40%';
-            islandTag.setAttribute('align', 'center');
-            islandTag.setAttribute('valign', 'center');
+            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            cell1.style.top = '0%';
+            cell1.style.left = '0%';
+            cell1.style.fontSize = '10px';
+            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            cell2.style.top = '0%';
+            cell2.style.right = '0%';
+            cell2.style.fontSize = '10px';
+            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            cell3.style.bottom = '0%';
+            cell3.style.left = '25%';
+            cell3.style.fontSize = '10px';
+            island.appendChild(cell3);
+            island.appendChild(cell2);
+            island.appendChild(cell1);
+
+
+            var islandTag = document.createElement('div');
+            islandTag.classList.add('islandTag');
+            island.appendChild(islandTag);
+            islandTag.style.height = '20%';
+            islandTag.style.width = '30%';
+            islandTag.style.top = '40%';
+            islandTag.style.left = '35%';
+            islandTag.style.fontSize = '10px';
             islandTag.style.backgroundColor = DEFAULT_C;
             islandTag.innerHTML = 'Island ' + (i + 1);
 
-            for (var j = 0; j < N_SIZE; j++) {
-
-                var cell = document.createElement('td');
-                if (j === 0) {
-                    row1.appendChild(cell);
-                } else {
-                    row2.appendChild(cell);
-                }
-                cell.style.height = '40%';
-                cell.style.width = '40%';
-                cell.setAttribute('align', 'center');
-                cell.setAttribute('valign', 'center');
-
-                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
-                                             WHITE :
-                                             newBoard[i * 3 + j] === 'x' ?
-                                             P1_COLOR :
-                                             P2_COLOR;
-            }
         }
     }
+}
+
+function createIsland(elem, text) {
+    var cell = document.createElement('div');
+    cell.classList.add('islandCell');
+    cell.style.height = '48.2%';
+    cell.style.width = '49%';
+
+    cell.innerHTML = formatHTMLText(text);
+    cell.style.backgroundColor = elem === 'e' ?
+                                 WHITE :
+                                 elem === 'x' ?
+                                 P1_COLOR :
+                                 P2_COLOR;
+    return cell;
 }
 
 function clearBoards() {

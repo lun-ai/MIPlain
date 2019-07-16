@@ -2,7 +2,8 @@ var YELLOW = '#ffcc00',
     RED = 'red',
     GREEN = 'green',
     ORANGE = '#ed880c',
-    WHITE = 'transparent',
+    TRANSPAR = 'transparent',
+    WHITE = 'white';
     GREY = 'grey',
     DEFAULT_C = '#cbced4',
     P1_COLOR = '#9aeda1',
@@ -387,4 +388,8 @@ function formattedDate() {
     }
     var today = dd + '_' + mm + '_' + yyyy + '-' + hours + '_' + minutes;
     return today;
+}
+
+function formatHTMLText(text) {
+    return '<p>' + text + '</p>';
 }
