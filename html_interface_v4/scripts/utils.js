@@ -1,6 +1,8 @@
 var YELLOW = '#ffcc00',
     RED = 'red',
-    GREEN = 'green',
+    GREEN = '#1fad37',
+    TEXT_GREEN = 'green',
+    TEXT_RED = RED,
     ORANGE = '#ed880c',
     TRANSPAR = 'transparent',
     WHITE = 'white';
@@ -9,7 +11,17 @@ var YELLOW = '#ffcc00',
     P1_COLOR = '#9aeda1',
     P2_COLOR = '#f7cd92',
     ISLAND_ATTR = ['Castle, River', 'Forest','Cornfield, Cow', 'Castle','Forest, River, Fish', 'Cornfield',
-                   'Castle, Horse', 'Forest', 'Cornfield, River'];
+                   'Castle, Horse', 'Forest', 'Cornfield, River'],
+    ISLAND_ATTR_MAP = {
+        'Castle': 'Castle',
+        'River': 'River',
+        'Cornfield': 'Cornfield',
+        'Cow': 'Animal',
+        'Forest': 'Forest',
+        'Horse': 'Animal',
+        'Fish': 'Animal'};
+    ATTR = ['Castle', 'River', 'Cornfield', 'Animal', 'Forest'];
+
 var minimaxTable = canonicalData,
     boardRepreToCanonical = canonicalMap;
 
@@ -37,21 +49,21 @@ function win(board, player) {
 
 function winLine(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
-        return [0,1,5];
+        return 'River';
     } else if (board[0] === board[3] && board[3] === board[7] && board[7] === player) {
-        return [0,3,7];
+        return 'Animal';
     } else if (board[1] === board[2] && board[2] === board[3] && board[3] === player) {
-        return [1,2,3];
+        return 'Island1';
     } else if (board[3] === board[4] && board[4] === board[5] && board[5] === player) {
-        return [3,4,5];
+        return 'Cornfield';
     } else if (board[7] === board[6] && board[6] === board[5] && board[5] === player) {
-        return [5,6,7];
+        return 'Island3';
     } else if (board[7] === board[8] && board[8] === board[1] && board[1] === player) {
-        return [1,7,8];
+        return 'Castle';
     } else if (board[8] === board[0] && board[0] === board[4] && board[4] === player) {
-        return [0,4,8];
+        return 'Island2';
     } else if (board[2] === board[0] && board[0] === board[6] && board[6] === player) {
-        return [0,2,6];
+        return 'Forest';
     }
     return [];
 }
@@ -346,28 +358,28 @@ function findPosStrongOption(board, player) {
     var newBoard = [...board].map(x=> x == 2 ? 3 : x);
 
     if ((newBoard[0] + newBoard[1] + newBoard[5]) == v) {
-        p = p.concat([0,1,5]);
+        p.push('River');
     }
     if ((newBoard[0] + newBoard[3] + newBoard[7]) == v) {
-        p = p.concat([0,3,7]);
+        p.push('Animal');
     }
     if ((newBoard[1] + newBoard[2] + newBoard[3]) == v) {
-        p = p.concat([1,2,3]);
+        p.push('Island1');
     }
     if ((newBoard[3] + newBoard[4] + newBoard[5]) == v) {
-        p = p.concat([3,4,5]);
+        p.push('Cornfield');
     }
     if ((newBoard[5] + newBoard[6] + newBoard[7]) == v) {
-        p = p.concat([5,6,7]);
+        p.push('Island3');
     }
     if ((newBoard[1] + newBoard[7] + newBoard[8]) == v) {
-        p = p.concat([1,7,8]);
+        p.push('Castle');
     }
     if ((newBoard[0] + newBoard[4] + newBoard[8]) == v) {
-        p = p.concat([0,4,8]);
+        p.push('Island2');
     }
     if ((newBoard[0] + newBoard[2] + newBoard[6]) == v) {
-        p = p.concat([0,2,6]);
+        p.push('Forest');
     }
     return [...new Set(p)];
 }
@@ -392,4 +404,59 @@ function formattedDate() {
 
 function formatHTMLText(text) {
     return '<p>' + text + '</p>';
+}
+
+function highlightAttr(boardId, positions, color, mark) {
+
+    for (var i = 0; i < N_SIZE; i++) {
+
+        for (var k = 0; k < positions.length; k++) {
+
+            var attr;
+
+            if (positions[k] === 'Island1' || positions[k] === 'Island2' || positions[k] === 'Island3') {
+
+                for (var q = 0; q < ATTR.length; q++) {
+                    attr = document.getElementById(boardId + positions[k] + ATTR[q] + mark);
+                    if (attr !== null) {
+                        attr.style.fontWeight = 'bold';
+                        attr.style.textDecoration = 'underline';
+//                        attr.style.backgroundColor = color;
+                    }
+                }
+
+            } else {
+                attr = document.getElementById(boardId + 'Island' + (i + 1) + positions[k] + mark);
+                if (attr !== null) {
+                    attr.style.fontWeight = 'bold';
+                    attr.style.textDecoration = 'underline';
+//                    attr.style.backgroundColor = color;
+                }
+            }
+        }
+
+    }
+}
+
+function highlightIslandCell(boardId, cellIdx, color, mark) {
+
+    console.log(cellIdx);
+
+    var attrs = ISLAND_ATTR[cellIdx].split(', ');
+    console.log(attrs);
+
+    for (var k = 0; k < attrs.length; k++) {
+
+        console.log(boardId + 'Island' + (Math.floor(cellIdx / N_SIZE) + 1) + attrs[k] + mark)
+        var attr = document.getElementById(boardId
+                                          + 'Island'
+                                          + (Math.floor(cellIdx / N_SIZE) + 1)
+                                          + ISLAND_ATTR_MAP[attrs[k]]
+                                          + mark);
+        if (attr !== null) {
+            attr.style.fontWeight = 'bold';
+            attr.style.textDecoration = 'underline';
+//            attr.style.backgroundColor = color;
+        }
+    }
 }
