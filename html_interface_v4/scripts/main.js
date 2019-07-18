@@ -679,6 +679,25 @@ function createBoard2(board, parentId, text) {
     createBoardExpl(board, 'board1', parentId, text, 'black');
 }
 
+function createBoard_withtriplet(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    if (player == 1){
+        highlightAttr(id, [winLine(board,player)], 'green', 'x');
+    } else {
+        highlightAttr(id, [winLine(board,player)], 'yellow', 'o');
+    }
+}
+
+function createBoard_withstrong(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    var strong = findPosStrongOption(board, player);
+    if (player == 1){
+        highlightAttr(id, strong, 'green', 'x');
+    } else {
+        highlightAttr(id, strong, 'yellow', 'o');
+    }
+}
+
 function createBoardExpl(board, boardId, parentId, text, color) {
     var div = document.createElement('div');
     div.setAttribute('id', boardId);

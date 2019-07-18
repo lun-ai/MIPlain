@@ -43,9 +43,9 @@
 
         <div id="triplets" align="center"></div>
         <script>
-        createBoard2('122201001', 'triplets','Triplet for Orange: Island 1');
-        createBoard2('202111012', 'triplets','Triplet for Green: Cornfield'); 
-        createBoard2('211201122', 'triplets','Triplet for Orange: Animal'); 
+        createBoard_withtriplet([1,2,2,2,0,1,0,0,1], 'triplet1', 'triplets','Triplet for Orange: Island 1', 2);
+        createBoard_withtriplet([2,0,2,1,1,1,0,1,2], 'triplet2', 'triplets','Triplet for Green: Cornfield', 1); 
+        createBoard_withtriplet([2,1,1,2,0,1,1,2,2], 'triplet3', 'triplets','Triplet for Orange: Animal', 2); 
 
         </script> <br /> <br />
 
@@ -59,9 +59,9 @@
 
         <script>
 
-        createBoard2('010002010', 'pairs','One pair for Green: Castle');
-        createBoard2('210102010', 'pairs','Two pairs for Green: Island 1 and Castle'); 
-        createBoard2('200102010', 'pairs','One pair for Orange: River'); 
+        createBoard_withstrong([0,1,0,0,0,2,0,1,0], 'pair1', 'pairs', 'One pair for Green: Castle', 1);
+        createBoard_withstrong([2,1,0,1,0,2,0,1,0], 'pair2', 'pairs', 'Two pairs for Green: Island 1 and Castle', 1);
+        createBoard_withstrong([2,0,0,1,0,2,0,1,0], 'pair3', 'pairs', 'One pair for Orange: River', 2);
 
         </script> <br /> <br />
 

@@ -355,6 +355,7 @@ function sortTestBoardsAscend(a,b){
 function findPosStrongOption(board, player) {
     var p = [];
     var v = player == 1 ? 2 : 6;
+
     var newBoard = [...board].map(x=> x == 2 ? 3 : x);
 
     if ((newBoard[0] + newBoard[1] + newBoard[5]) == v) {
@@ -408,7 +409,7 @@ function formatHTMLText(text) {
 
 function highlightAttr(boardId, positions, color, mark) {
 
-    for (var i = 0; i < N_SIZE; i++) {
+    for (var i = 0; i < 3; i++) {
 
         for (var k = 0; k < positions.length; k++) {
 
