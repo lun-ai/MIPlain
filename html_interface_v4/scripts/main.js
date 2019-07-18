@@ -675,14 +675,16 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
     }
 }
 
-function createBoardExpl(board, boardId, parentId, text, color) {
+function createBoard2(board, parentId, text) {
+    createBoardExpl(board, 'board1', parentId, text, 'black');
+}
 
+function createBoardExpl(board, boardId, parentId, text, color) {
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
     div.classList.add('column3');
     div.style.position = 'relative';
     div.style.height = '250px';
-
     var frame = document.createElement('div');
     div.appendChild(frame);
     frame.style.position = 'absolute';
@@ -690,15 +692,13 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     frame.style.width = '100%';
     frame.style.border = '1px solid black';
     frame.style.top = '5%';
-    frame.style.backgroundColor = TRANSPAR;
+    frame.style.backgroundColor = "transparent";
 
-    document.getElementById(parentId).appendChild(div);
-
+    document.getElementById(parentId).appendChild(div);  
     if (board.length !== 0) {
-
         var newBoard = changeLabelsOnBoard(board);
 
-        for (var i = 0; i < N_SIZE; i++) {
+        for (var i = 0; i < 3; i++) {
 
             var island = document.createElement('div');
             var islandID = boardId + 'Island' + (i + 1);
@@ -718,7 +718,6 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                 island.style.top = '40%';
                 island.style.left = '27.5%';
             }
-
             var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
@@ -792,6 +791,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     }
 
 }
+
 
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
 

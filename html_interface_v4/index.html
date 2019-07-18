@@ -3,130 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
     <title>Experiment Introduction</title>
 </head>
 <body onLoad="goNewWin()">
-<script type="text/javascript" src="scripts/noback.js"></script>
     <div align="center">
         <scan style="font-size:3vw">Introduction</scan>
-        <p> Do you want to become a Noughts and Crosses wizard? <br />
-            To become a Noughts and Crosses wizard, you need to pass a trial. This trial includes 3 parts. <br />
-            You will answer some questions. And you will become an apprentice of the Great Wizard. <br />
-            Finally, you will apply what you learn by answering some more questions.<br />
+        <p> Do you want to become an expert of the Island game? <br />
+            To do so, you will pass a trial which includes 4 parts. <br />
+            You will first get familiar with the rules of the game.
+            Then you will answer some questions about single moves. <br />
+            Next you will become an apprentice of the Great Wizard.
+            Finally, you will apply what you have learnt by answering some more questions about single moves.<br />
             <br />
-            <br />Here are some basics of becoming a Noughts and Crosses wizard.
-            <br /> Noughts and Crosses or Tic-tac-toe, is a two-players game for X and O, <br />
-            who take turns marking the spaces in a 3×3 grid. <br />
-            You can make a move in a untaken cell when the game has not terminated. <br />
+            <br /> First, here are some basics of the game. The Island game is a two-players game. <br />
+            The two players, green and orange, take turns conquering territories on the world below. <br />
+            </p>
+            </div>
+
+        <div id="initial" class="center">  </div>
+        <script> createBoard2('000000000','initial','Initial World'); </script>
+
+
+ <div style="clear:both" align="center">
+         <p>   You can conquer any untaken territory until the game has not terminated. <br />
+            Conquering a territory gives you one or several resources. For instance, conquering the top left territory would give you one Castle and one River. <br />
+            Each resource belongs to one of the following category: <br />
+            <i> Island 1, Island 2, Island 3, Forest, Castle, Cornfield, River, Animal. </i> <br />
             <br />
-            A TRIPLE-LINE is an alignment of three of the same mark. The player who succeeds in placing<br />
-            their marks in a HORIZONTAL, VERTICAL, or DIAGONAL TRIPLE-LINE wins the game. <br />
-            Each highlighted line of cells in the following board states is an example of TRIPLE-LINE. <br />
-        </p>
-
-
-         <div class="row">
-            <div class="column3">
-                <div align="right">
-                    <img src="imgs/intro1.png" class="introImage">
-                </div>
-            </div>
-            <div class="column3">
-                <div align="center">
-                    <img src="imgs/intro2.png" class="introImage">
-                </div>
-            </div>
-            <div class="column3">
-                <div align="left">
-                    <img src="imgs/intro3.png" class="introImage">
-                </div>
+            </p>
             </div>
 
-        </div>
+ <div style="clear:both" align="center">
+         <p>   A TRIPLET is a collection of three resources of the same category. The player who first succeeds in obtaining a triplet of one category of resource wins the game. One player has a triplet in each the following board states, the territories containing the resources of the triplet are highlighted.
+            <br />
+            </p>
+            </div>
 
-        <p> A DOUBLE-LINE is an alignment of two of the same mark. There can be multiple DOUBLE-LINES for a player.<br />
-            Each highlighted line of cells in the following board states is an example of DOUBLE-LINE. <br />
-        </p>
-        <div class="row">
-            <div class="column3">
-                <div align="right">
-                    <img src="imgs/intro4.png" class="introImage">
-                </div>
-            </div>
-            <div class="column3">
-                <div align="center">
-                    <img src="imgs/intro5.png" class="introImage">
-                </div>
-            </div>
-            <div class="column3">
-                <div align="left">
-                    <img src="imgs/intro6.png" class="introImage">
-                </div>
-            </div>
-        </div>
+        <div id="triplets" align="center"></div>
+        <script>
+        createBoard2('122201001', 'triplets','Triplet for Orange: Island 1');
+        createBoard2('202111012', 'triplets','Triplet for Green: Cornfield'); 
+        createBoard2('211201122', 'triplets','Triplet for Orange: Animal'); 
 
-        <p> A player could have no TRIPLE-LINE or DOUBLE-LINE. Following examples highlight such cases.<br />
-        </p>
-        <div class="row">
-            <div class="column3">
-                <table border="1" cellspacing="0" class="table3" align="right">
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
-                        <td height="70" width="70" align="center" valign="center">X</td>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                    </tr>
-                </table>
+        </script> <br /> <br />
+
+ <div style="clear:both" align="center">
+         <p>   A PAIR is a collection of two resources of the same category for one player, the third resource not being taken yet. One player has one or two pairs in each the following board states, the territories containing the resources of the pairs are highlighted.
+            <br />
+            </p>
             </div>
-            <div class="column3">
-                <table border="1" cellspacing="0" class="table3" align="center">
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
-                        <td height="70" width="70" align="center" valign="center" >X</td>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" >X</td>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" >X</td>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">O</td>
-                    </tr>
-                </table>
+
+        <div id="pairs" align="center"></div>
+
+        <script>
+
+        createBoard2('010002010', 'pairs','One pair for Green: Castle');
+        createBoard2('210102010', 'pairs','Two pairs for Green: Island 1 and Castle'); 
+        createBoard2('200102010', 'pairs','One pair for Orange: River'); 
+
+        </script> <br /> <br />
+
+ <div style="clear:both" align="center">
+         <p>   A player could have no TRIPLET nor PAIR. Following examples highlight such cases.
+            <br />
+            </p>
             </div>
-            <div class="column3">
-                <table border="1" cellspacing="0" class="table3" align="left">
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
-                        <td height="70" width="70" align="center" valign="center">O</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center">&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" >O</td>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" >&nbsp;</td>
-                        <td height="70" width="70" align="center" valign="center" style="background-color:grey">X</td>
-                    </tr>
-                </table>
-            </div>
-    </div>
-    <div align="center">
+
+        <div id="other" align="center"></div>
+
+        <script>
+        createBoard2('110000122', 'other','No pair nor triplet');
+        createBoard2('121002010', 'other','No pair nor triplet'); 
+        createBoard2('201201000', 'other','No pair nor triplet'); 
+
+        </script> <br /> <br />
+
+ <div align="center">
             <p> NOTE: While answering questions, do not feel rushed and take your time.<br />
 
                 Please follow the instructions given.
@@ -139,15 +93,7 @@
       <form action="">
           <input type="button" value="Ready & Continue" onclick="window.location.href='experiment.html';"/>
       </form>
-    </div>
-  <!--  <div align="center">
-        <p> Please enter your participant ID below and continue below whenever you feel ready.</p>
-        <FORM METHOD="LINK" ACTION="experiment.html">
-            Please enter participant ID you received: <INPUT TYPE="text" NAME="participantID">
-            <INPUT TYPE="submit" VALUE="Ready & Continue">
-        </FORM>
-
-    </div> -->
+    </div> 
 
 </body>
 </html>

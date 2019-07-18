@@ -160,4 +160,13 @@ div.islandTag {
     text-align : center;
 }
 
+.center {
+  display: block;
+  float: right;
+  position: relative;
+  left: 230px;
+  margin: auto;
+  width: 80%;
+}
+
 
