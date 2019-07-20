@@ -11,7 +11,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     EXPL_TIME = 120;
 
 var t,
-    phase = 0,
+    phase = 1,
     th = 1.2,
     S = 0,
     sec = 0,
@@ -19,21 +19,24 @@ var t,
     totalTime = QUESTION_TIME,
     currentQuestion = 0,
     prevBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    emptyBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    boardToPlay = emptyBoard,
     test_boards = PHASE1_QUESTIONS,
     difficulty = [],
     moveChosen = false,
     currentExpl = 0,
+    ended = false,
     timeTakenExpl = [],
     answers = [],
     scores = [],
     timeTaken = [],
-    ended = false,
     record = '';
 
 var texts = String(window.location).split('=');
+// uncomment for deployment
+//var participantID = (new Date).getTime();
 
-var participantID = (new Date).getTime();
-// var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
 function flushLocalCache() {
     prevBoard = [0,0,0,0,0,0,0,0,0],
@@ -108,8 +111,6 @@ function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
     if (totalTime - sec < 0) {
         stopCount();
-    } else if (!ended && sec <= totalTime){
-//        document.getElementById("timer").textContent = 'Remaining time: ' + Math.floor(elapse / 60) + ':' + wrapTime(elapse % 60);
         if(phase == 2 && sec == totalTime - 10) {
             if (currentExpl == TOTAL_EXPL) {
                 document.getElementById("timer").textContent = 'Will move onto the next part in 10 secs';
@@ -120,6 +121,87 @@ function startCount() {
         sec += 0.2;
         t = setTimeout(startCount, TIMER_SLICE);
     }
+}
+
+function stopCountPhase0() {
+    removeChild('nextPhaseButton', 'nextPhase');
+    removeChild('gameBoard', 'game');
+    boxes = [];
+
+    if (ended) {
+            // finished game
+        removeChild('gameBoard', 'game');
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+    }     
+    else {
+            // unfinished game
+    document.getElementById('instruction1').textContent = 'Select one territory to capture resources.';
+    document.getElementById('phase').textContent = '';
+    document.getElementById('instruction2').textContent = '';
+
+    boardToPlay = changeLabelsOnBoard(boardToPlay);
+    var board = document.createElement('div');
+    document.getElementById('game').appendChild(board);
+    board.setAttribute('id', 'gameBoard');
+    board.style.position = 'absolute';
+    board.style.left = '20%';
+    board.style.height = '60%';
+    board.style.width = '60%';
+
+    for (var i = 0; i < N_SIZE; i++) {
+
+        var island = document.createElement('div');
+        board.appendChild(island);
+        island.setAttribute('id', 'island');
+        island.style.height = '30%';
+        island.style.width = '25%';
+        island.style.position = 'absolute';
+
+        if (i === 0) {
+            island.style.top = '10%';
+            island.style.left = '20%';
+        } else if (i == 1) {
+            island.style.top = '10%';
+            island.style.right = '20%';
+        } else {
+            island.style.top = '50%';
+            island.style.left = '37.5%';
+        }
+
+        var cell1 = createIsland(boardToPlay[i * 3], ISLAND_ATTR[i * 3]);
+        island.appendChild(cell1);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.addEventListener('click', boardClickedgame);
+        var cell2 = createIsland(boardToPlay[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+        island.appendChild(cell2);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.addEventListener('click', boardClickedgame);
+        var cell3 = createIsland(boardToPlay[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+        island.appendChild(cell3);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.addEventListener('click', boardClickedgame);
+
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
+        islandTag.style.backgroundColor = DEFAULT_C;
+        islandTag.innerHTML = 'Island ' + (i + 1);
+
+        boxes.push(cell1);
+        boxes.push(cell2);
+        boxes.push(cell3);
+        }
+    
+    }
+
 }
 
 function stopCountPhase1() {
@@ -249,6 +331,40 @@ function stopCountPhase3() {
 
 }
 
+function boardClickedgame() {
+
+    if (this.style.backgroundColor !== WHITE) {
+        return;
+    }  else if (!ended) {
+        this.style.backgroundColor = P1_COLOR;
+
+        var currentBoard = convertBoxesTOBoard(boxes);
+        
+        if(win(currentBoard,1)) {
+            ended = true;
+            document.getElementById('instruction1').textContent = 'You have won the game!';
+            stopCount();
+
+        } else if (currentBoard.filter(x => x === 0).length === 0) {
+            ended = true;
+            document.getElementById('instruction1').textContent = 'The game is drawn.';
+            stopCount();
+        } else {
+            var board2 = computeNextMove(currentBoard, 2);
+            if (win(board2, 2)) {
+                ended = true;
+                document.getElementById('instruction1').textContent = 'You have lost the game!';
+                stopCount();
+            } else {
+            boardToPlay = board2;
+            stopCount();
+
+            }
+
+        }
+}
+}
+
 
 function boardClicked() {
 
@@ -303,8 +419,7 @@ function nextQuestion() {
 
     for (var i = 0; i < N_SIZE; i++) {
 
-        var island = document.createElement('table');
-        island.classList.add('table4');
+        var island = document.createElement('div');
         board.appendChild(island);
         island.style.height = '30%';
         island.style.width = '25%';
@@ -321,42 +436,36 @@ function nextQuestion() {
             island.style.left = '37.5%';
         }
 
-        var row1 = document.createElement('tr');
-        var row2 = document.createElement('tr');
-        island.appendChild(row1);
-        island.appendChild(row2);
-        var islandTag = document.createElement('td');
-        row1.appendChild(islandTag);
-        islandTag.style.height = '40%';
-        islandTag.style.width = '40%';
-        islandTag.setAttribute('align', 'center');
-        islandTag.setAttribute('valign', 'center');
+        var cell1 = createIsland(rightIndexAndLabel[i * 3], ISLAND_ATTR[i * 3]);
+        island.appendChild(cell1);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.addEventListener('click', boardClicked);
+        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+        island.appendChild(cell2);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.addEventListener('click', boardClicked);
+        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+        island.appendChild(cell3);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.addEventListener('click', boardClicked);
+
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.innerHTML = 'Island ' + (i + 1);
 
-        for (var j = 0; j < N_SIZE; j++) {
-
-            var cell = document.createElement('td');
-            if (j === 0) {
-                row1.appendChild(cell);
-            } else {
-                row2.appendChild(cell);
-            }
-            cell.style.height = '40%';
-            cell.style.width = '40%';
-            cell.setAttribute('align', 'center');
-            cell.setAttribute('valign', 'center');
-
-            cell.addEventListener('click', boardClicked);
-            cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-            cell.style.backgroundColor = rightIndexAndLabel[i * 3 + j] === 'e' ?
-                                         WHITE :
-                                         rightIndexAndLabel[i * 3 + j] === 'x' ?
-                                         P1_COLOR :
-                                         P2_COLOR;
-
-            boxes.push(cell);
-        }
+        boxes.push(cell1);
+        boxes.push(cell2);
+        boxes.push(cell3);
     }
 
 }
@@ -375,6 +484,20 @@ function endExpr() {
     window.location.href = 'record.php';
 }
 
+function phase0() {
+
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    phase = 0;
+    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game."
+    document.getElementById('instruction2').textContent = 'You play Green. For every move, press the cell you want to select. ' + 
+                        'You have only one shot for each of your move.'
+    totalTime = QUESTION_TIME;
+
+    createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
+}
+
 function phase1() {
 
     removeChild('nextPhaseButton', 'nextPhase');
@@ -383,9 +506,9 @@ function phase1() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').innerHTML = 'You play <span style="color: '
-                        + GREEN + '">Green</span>, '
-                        + 'and please press a White cell' +
+    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, '
+                        + 'and please press a WHITE cell' +
                         ' to acquire resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question.';
     stopCount();
@@ -394,6 +517,7 @@ function phase1() {
 function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
+    removeChild('gameBoard', 'game');
 
     record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -415,9 +539,9 @@ function phase2() {
 
     document.getElementById('phase').textContent = 'Part ' + phase;
 	
-    document.getElementById('instruction1').innerHTML = 'You play <span style="color: '
-                        + GREEN + '">Green</span>, and the Great Wizard plays <span style="color: '
-                        + ORANGE + '">Orange</span>. '
+    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, and the Great Wizard plays <span style="background-color: '
+                        + P2_COLOR + '">Orange</span>. '
     document.getElementById('instruction2').innerHTML = 'Given an initial board, choose between two potential moves '
                         + 'highlighted in <span style="background-color: yellow">Yellow</span>, '
                         + 'for WINNING the Great Wizard.'
@@ -454,19 +578,19 @@ function phase3() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').textContent = 'You play <span style="color: '
-                        + GREEN + '">Green</span>, '
-                        + 'and please press a White cell' +
+    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, '
+                        + 'and please press a WHITE cell' +
                         ' to acquire resources that you think can lead to WIN';
-    document.getElementById('instruction2').textContent = 'You have ONE CHANCE for each question. ';
+    document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
     stopCount();
 }
 
 function phase4() {
-    console.log(record);
 
+    console.log(record);
     flushLocalCache();
 
     phase = 4;
@@ -483,9 +607,7 @@ function phase4() {
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';
     document.getElementById('participantid').value = participantID
-    
 
-	
 	//localStorage.setItem("participantID"; participantID);
    // record += '\n\nPart 4: \n'
     //    + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -505,7 +627,9 @@ function checkform() {
 }
 
 function stopCount() {
-    if (phase == 1) {
+    if (phase == 0) {
+        stopCountPhase0();
+    } else if (phase == 1) {
         stopCountPhase1();
     } else if (phase == 2) {
         stopCountPhase2();
@@ -542,21 +666,21 @@ function showExample() {
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
 
     if (Math.random() > 0.5) {
-        var text1 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1', [], WHITE, 10);
-        var text2 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move2', [], WHITE, 10);
+        var text1 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1');
+        var text2 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move2');
         createButton('rightMoveButton', 'rightMoveComment', text1, rightMoveChosen);
         createButton('wrongMoveButton', 'wrongMoveComment', text2, wrongMoveChosen);
     } else {
-        var text1 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move1', [], WHITE, 10);
-        var text2 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move2', [], WHITE, 10);
+        var text1 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move1');
+        var text2 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move2');
         createButton('wrongMoveButton', 'wrongMoveComment', text1, wrongMoveChosen);
         createButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
 
-    document.getElementById("rightMove"+rightIdx).innerHTML = '<span style="background-color: yellow">'
-                        + ISLAND_ATTR[rightIdx] + '</span>';
-    document.getElementById("wrongMove"+wrongIdx).innerHTML = '<span style="background-color: yellow">'
-                        + ISLAND_ATTR[wrongIdx] + '</span>';
+    document.getElementById("rightMove"+rightIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
+                        + ISLAND_ATTR[rightIdx] + '</span>');
+    document.getElementById("wrongMove"+wrongIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
+                        + ISLAND_ATTR[wrongIdx] + '</span>');
 }
 
 function showExpl() {
@@ -616,62 +740,7 @@ function wrongMoveChosen() {
 
 }
 
-function createBoardWithLine(board, boardId, parentId, text, positions, borderWidth) {
-
-  var td = document.createElement('td');
-  td.setAttribute('id', boardId);
-  td.style.border = borderWidth + "px solid transparent";
-  td.align = 'center';
-
-  if (board.length !== 0) {
-
-      var newBoard = changeLabelsOnBoard(board);
-      var table = document.createElement('table');
-      table.setAttribute('border', 1);
-      table.setAttribute('cellspacing', 0);
-      table.classList.add('table2');
-
-      for (var i = 0; i < N_SIZE; i++) {
-
-          var row = document.createElement('tr');
-          table.appendChild(row);
-
-          for (var j = 0; j < N_SIZE; j++) {
-
-              var cell = document.createElement('td');
-              cell.setAttribute('id', boardId + (i * 3 + j));
-              cell.setAttribute('width',  30);
-              cell.setAttribute('height', 30);
-              cell.setAttribute('align',  'center');
-              cell.setAttribute('valign',  'center');
-              cell.style.backgroundColor = WHITE;
-
-              row.appendChild(cell);
-              cell.innerHTML = newBoard[i * 3 + j] == 'e' ? EMPTY : newBoard[i * 3 + j];
-          }
-      }
-
-      td.appendChild(table);
-
-      var comment = document.createElement('div');
-      comment.setAttribute('id', boardId+'Comment');
-      comment.innerHTML = text;
-      comment.classList.add('col');
-      comment.align = 'center';
-      comment.style.fontSize = 'small';
-      comment.style.whiteSpace = 'pre-wrap';
-
-      td.appendChild(comment);
-      document.getElementById(parentId).appendChild(td);
-  }
-
-  imgName = 'imgs/' + positions.sort().join('') + '.png';
-  table.style.backgroundImage = "url('" + imgName + "')";
-  table.style.backgroundSize = '100% 100%';
-  table.style.backgroundRepeat = 'no-repeat';
-}
-
-function createParitalBoard(originalBoard, board, boardId, parentId, positions, color, borderWidth) {
+function createParitalBoard(originalBoard, board, boardId, parentId) {
 
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
@@ -687,8 +756,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         var diffIdx = original.map((_,i) => original[i] === newBoard[i] ? -1 : i).filter(x => x !== -1)[0];
         var islandNum = Math.floor(diffIdx / N_SIZE);
 
-        var island = document.createElement('table');
-        island.classList.add('table5');
+        var island = document.createElement('div');
         island.setAttribute('id', boardId + 'Island');
         div.appendChild(island);
         island.style.height = '30%';
@@ -697,40 +765,35 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         island.style.top = '20%';
         island.style.left = '30%';
 
-        var row1 = document.createElement('tr');
-        var row2 = document.createElement('tr');
-        island.appendChild(row1);
-        island.appendChild(row2);
-        var islandTag = document.createElement('td');
-        row1.appendChild(islandTag);
-        islandTag.style.height = '40%';
-        islandTag.style.width = '40%';
-        islandTag.setAttribute('align', 'center');
-        islandTag.setAttribute('valign', 'center');
+        var cell1 = createIsland(newBoard[islandNum * 3], ISLAND_ATTR[islandNum * 3]);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.style.fontSize = '10px';
+        cell1.setAttribute('id', boardId + (islandNum * 3));
+        var cell2 = createIsland(newBoard[islandNum * 3 + 1], ISLAND_ATTR[islandNum * 3 + 1]);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.style.fontSize = '10px';
+        cell2.setAttribute('id', boardId + (islandNum * 3 + 1));
+        var cell3 = createIsland(newBoard[islandNum * 3 + 2], ISLAND_ATTR[islandNum * 3 + 2]);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.style.fontSize = '10px';
+        cell3.setAttribute('id', boardId + (islandNum * 3 + 2));
+        island.appendChild(cell3);
+        island.appendChild(cell2);
+        island.appendChild(cell1);
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
+        islandTag.style.fontSize = '10px';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.innerHTML = 'Island ' + (islandNum + 1);
-
-        for (var j = 0; j < N_SIZE; j++) {
-
-            var cell = document.createElement('td');
-            if (j === 0) {
-                row1.appendChild(cell);
-            } else {
-                row2.appendChild(cell);
-            }
-            cell.style.height = '40%';
-            cell.style.width = '40%';
-            cell.setAttribute('id', boardId + (islandNum * 3 + j));
-            cell.setAttribute('align', 'center');
-            cell.setAttribute('valign', 'center');
-
-            cell.innerHTML = ISLAND_ATTR[islandNum * 3 + j];
-            cell.style.backgroundColor = newBoard[islandNum * 3 + j] === 'e' ?
-                                         WHITE :
-                                         newBoard[islandNum * 3 + j] === 'x' ?
-                                         P1_COLOR :
-                                         P2_COLOR;
-        }
 
         var comment = document.createElement('div');
         div.appendChild(comment);
@@ -738,22 +801,158 @@ function createParitalBoard(originalBoard, board, boardId, parentId, positions, 
         comment.style.bottom = '30%';
         comment.style.width = '100%';
         comment.setAttribute('id', boardId+'Comment');
-        comment.classList.add('col');
         comment.align = 'center';
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
 
-        return 'Take (' + ISLAND_ATTR[islandNum * 3 + diffIdx] + ') on Island '+ (islandNum + 1);
+        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island '+ (islandNum + 1);
     }
 }
 
-function createBoardExpl(board, boardId, parentId, text, positions, color, borderWidth) {
+function createBoard2(board, parentId, text) {
+    createBoardExpl(board, 'board1', parentId, text, 'black');
+}
 
+function createBoard_withtriplet(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    if (player == 1){
+        highlightAttr(id, [winLine(board,player)], 'green', 'x');
+    } else {
+        highlightAttr(id, [winLine(board,player)], 'yellow', 'o');
+    }
+}
+
+function createBoard_withstrong(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    var strong = findPosStrongOption(board, player);
+    if (player == 1){
+        highlightAttr(id, strong, 'green', 'x');
+    } else {
+        highlightAttr(id, strong, 'yellow', 'o');
+    }
+}
+
+function createBoardExpl(board, boardId, parentId, text, color) {
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
     div.classList.add('column3');
     div.style.position = 'relative';
     div.style.height = '250px';
+    var frame = document.createElement('div');
+    div.appendChild(frame);
+    frame.style.position = 'absolute';
+    frame.style.height = '65%';
+    frame.style.width = '100%';
+    frame.style.border = '1px solid black';
+    frame.style.top = '5%';
+    frame.style.backgroundColor = "transparent";
+
+    document.getElementById(parentId).appendChild(div);  
+    if (board.length !== 0) {
+        var newBoard = changeLabelsOnBoard(board);
+
+        for (var i = 0; i < 3; i++) {
+
+            var island = document.createElement('div');
+            var islandID = boardId + 'Island' + (i + 1);
+            island.setAttribute('id', islandID);
+            div.appendChild(island);
+            island.style.height = '25%';
+            island.style.width = '46%';
+            island.style.position = 'absolute';
+
+            if (i === 0) {
+                island.style.top = '10%';
+                island.style.left = '3%';
+            } else if (i == 1) {
+                island.style.top = '10%';
+                island.style.right = '2%';
+            } else {
+                island.style.top = '40%';
+                island.style.left = '27.5%';
+            }
+            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            cell1.style.top = '0%';
+            cell1.style.left = '0%';
+            cell1.style.fontSize = '8px';
+            cell1.setAttribute('id', islandID + 'Cell1');
+            cell1.innerHTML = '<p>'
+                            + ISLAND_ATTR[i * 3]
+                                .split(', ')
+                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
+                                                       + newBoard[i * 3]
+                                                       + '">' + a + '</span>')
+                                .join(', ')
+                            + '</p>';
+
+            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            cell2.style.top = '0%';
+            cell2.style.right = '0%';
+            cell2.style.fontSize = '8px';
+            cell2.setAttribute('id', islandID + 'Cell2');
+            cell2.innerHTML = '<p>'
+                            + ISLAND_ATTR[i * 3 + 1]
+                                .split(', ')
+                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
+                                                       + newBoard[i * 3 + 1]
+                                                       + '">' + a + '</span>')
+                                .join(', ')
+                            + '</p>';
+
+            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            cell3.style.bottom = '0%';
+            cell3.style.left = '25%';
+            cell3.style.fontSize = '8px';
+            cell3.setAttribute('id', islandID + 'Cell3');
+            cell3.innerHTML = '<p>'
+                            + ISLAND_ATTR[i * 3 + 2]
+                                .split(', ')
+                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
+                                                       + newBoard[i * 3 + 2]
+                                                       + '">' + a + '</span>')
+                                .join(', ')
+                            + '</p>';
+
+            island.appendChild(cell3);
+            island.appendChild(cell2);
+            island.appendChild(cell1);
+
+            var islandTag = document.createElement('div');
+            islandTag.classList.add('islandTag');
+            island.appendChild(islandTag);
+            islandTag.style.height = '18%';
+            islandTag.style.width = '30%';
+            islandTag.style.top = '40%';
+            islandTag.style.left = '35%';
+            islandTag.style.fontSize = '8px';
+            islandTag.style.backgroundColor = DEFAULT_C;
+            islandTag.innerHTML = 'Island ' + (i + 1);
+
+        }
+
+        var comment = document.createElement('div');
+        div.appendChild(comment);
+        comment.style.position = 'absolute';
+        comment.style.top = '75%';
+        comment.style.width = '100%';
+        comment.setAttribute('id', boardId+'Comment');
+        comment.align = 'center';
+        comment.style.fontSize = 'small';
+        comment.style.whiteSpace = 'pre-wrap';
+        comment.innerHTML = '<span style="color: ' + color + '">'
+                        + text + '</span>';
+    }
+
+}
+
+
+function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
+
+    var div = document.createElement('div');
+    div.setAttribute('id', boardId);
+    div.style.position = 'relative';
+    div.style.height = '300px';
+    div.style.border = '1px solid black';
     document.getElementById(parentId).appendChild(div);
 
     if (board.length !== 0) {
@@ -762,8 +961,7 @@ function createBoardExpl(board, boardId, parentId, text, positions, color, borde
 
         for (var i = 0; i < N_SIZE; i++) {
 
-            var island = document.createElement('table');
-            island.classList.add('table5');
+            var island = document.createElement('div');
             island.setAttribute('id', boardId + 'Island' + (i + 1));
             div.appendChild(island);
             island.style.height = '25%';
@@ -771,126 +969,61 @@ function createBoardExpl(board, boardId, parentId, text, positions, color, borde
             island.style.position = 'absolute';
 
             if (i === 0) {
-                island.style.top = '10%';
+                island.style.top = '20%';
                 island.style.left = '5%';
             } else if (i == 1) {
-                island.style.top = '10%';
-                island.style.right = '5%';
-            } else {
-                island.style.top = '40%';
-                island.style.left = '30%';
-            }
-
-            var row1 = document.createElement('tr');
-            var row2 = document.createElement('tr');
-            island.appendChild(row1);
-            island.appendChild(row2);
-            var islandTag = document.createElement('td');
-            row1.appendChild(islandTag);
-            islandTag.style.height = '40%';
-            islandTag.style.width = '40%';
-            islandTag.setAttribute('align', 'center');
-            islandTag.setAttribute('valign', 'center');
-            islandTag.style.backgroundColor = DEFAULT_C;
-            islandTag.innerHTML = 'Island ' + (i + 1);
-
-            for (var j = 0; j < N_SIZE; j++) {
-
-                var cell = document.createElement('td');
-                if (j === 0) {
-                    row1.appendChild(cell);
-                } else {
-                    row2.appendChild(cell);
-                }
-                cell.style.height = '40%';
-                cell.style.width = '40%';
-                cell.setAttribute('align', 'center');
-                cell.setAttribute('valign', 'center');
-
-                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
-                                             WHITE :
-                                             newBoard[i * 3 + j] === 'x' ?
-                                             P1_COLOR :
-                                             P2_COLOR;
-            }
-        }
-
-        for (var i = 0; i < N_SIZE * N_SIZE; i++) {
-
-        }
-    }
-}
-
-function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
-
-    var div = document.createElement('div');
-    div.setAttribute('id', boardId);
-//    div.style.border = borderWidth + "px solid transparent";
-    div.style.position = 'relative';
-    div.style.height = '300px';
-    document.getElementById(parentId).appendChild(div);
-
-    if (board.length !== 0) {
-
-        var newBoard = changeLabelsOnBoard(board);
-
-        for (var i = 0; i < N_SIZE; i++) {
-
-            var island = document.createElement('table');
-            island.classList.add('table5');
-            island.setAttribute('id', boardId + 'Island' + (i + 1));
-            div.appendChild(island);
-            island.style.height = '30%';
-            island.style.width = '40%';
-            island.style.position = 'absolute';
-
-            if (i === 0) {
-                island.style.top = '10%';
-                island.style.left = '5%';
-            } else if (i == 1) {
-                island.style.top = '10%';
+                island.style.top = '20%';
                 island.style.right = '5%';
             } else {
                 island.style.top = '60%';
                 island.style.left = '30%';
             }
 
-            var row1 = document.createElement('tr');
-            var row2 = document.createElement('tr');
-            island.appendChild(row1);
-            island.appendChild(row2);
-            var islandTag = document.createElement('td');
-            row1.appendChild(islandTag);
-            islandTag.style.height = '40%';
-            islandTag.style.width = '40%';
-            islandTag.setAttribute('align', 'center');
-            islandTag.setAttribute('valign', 'center');
+            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            cell1.style.top = '0%';
+            cell1.style.left = '0%';
+            cell1.style.fontSize = '10px';
+            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            cell2.style.top = '0%';
+            cell2.style.right = '0%';
+            cell2.style.fontSize = '10px';
+            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            cell3.style.bottom = '0%';
+            cell3.style.left = '25%';
+            cell3.style.fontSize = '10px';
+            island.appendChild(cell3);
+            island.appendChild(cell2);
+            island.appendChild(cell1);
+
+
+            var islandTag = document.createElement('div');
+            islandTag.classList.add('islandTag');
+            island.appendChild(islandTag);
+            islandTag.style.height = '20%';
+            islandTag.style.width = '30%';
+            islandTag.style.top = '40%';
+            islandTag.style.left = '35%';
+            islandTag.style.fontSize = '10px';
             islandTag.style.backgroundColor = DEFAULT_C;
             islandTag.innerHTML = 'Island ' + (i + 1);
 
-            for (var j = 0; j < N_SIZE; j++) {
-
-                var cell = document.createElement('td');
-                if (j === 0) {
-                    row1.appendChild(cell);
-                } else {
-                    row2.appendChild(cell);
-                }
-                cell.style.height = '40%';
-                cell.style.width = '40%';
-                cell.setAttribute('align', 'center');
-                cell.setAttribute('valign', 'center');
-
-                cell.innerHTML = ISLAND_ATTR[i * 3 + j];
-                cell.style.backgroundColor = newBoard[i * 3 + j] === 'e' ?
-                                             WHITE :
-                                             newBoard[i * 3 + j] === 'x' ?
-                                             P1_COLOR :
-                                             P2_COLOR;
-            }
         }
     }
+}
+
+function createIsland(elem, text) {
+    var cell = document.createElement('div');
+    cell.classList.add('islandCell');
+    cell.style.height = '48.2%';
+    cell.style.width = '49%';
+
+    cell.innerHTML = formatHTMLText(text);
+    cell.style.backgroundColor = elem === 'e' ?
+                                 WHITE :
+                                 elem === 'x' ?
+                                 P1_COLOR :
+                                 P2_COLOR;
+    return cell;
 }
 
 function clearBoards() {
@@ -916,105 +1049,112 @@ function clearBoards() {
 }
 
 function showPosExamples(game, parentId, pos){
-    if (game[0].filter(x=>x==0).length == 6) {
+    if (game[0].filter(x => x === 0).length === 6) {
         // Depth 3
-	    //
-        var strongPos = findPosStrongOption(game[0], 1).map(changeIndex);
+        var strong1 = findPosStrongOption(game[0], 1);
+        var strong2 = findPosStrongOption(game[2], 1);
 
-        createBoardExpl(game[0], 'posboard0', parentId, 'you move and make 1 double-line',
-                    strongPos, 17.5);
-        createBoardExpl(game[1], 'posboard1', parentId, 'O blocks your double-line',
-                    strongPos, GREY, 0);
-        createBoardExpl(game[2], 'posboard2', parentId, 'you make 2 double-line and\n O has no double-line',
-                    findPosStrongOption(game[2], 1).map(changeIndex), 0);
+        createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
+        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent would block', TEXT_GREEN);
+        createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs of "'
+                                                        + findPosStrongOption(game[2], 1)
+                                                        + '" and opponent should have no pair', TEXT_GREEN);
 
-	    var opponentPos = game[2].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-        for (var i = 0; i < opponentPos.length; i++) {
-//            document.getElementById('posboard2' + opponentPos[i]).style.backgroundColor = GREY;
-        }
+        highlightAttr('posboard0', strong1, GREEN, 'x');
+        highlightIslandCell('posboard1', game[1]
+                                         .map((x,i) => x !== game[0][i] ? changeIndex(i) : -1)
+                                         .filter(x => x !== -1)[0],
+                            'yellow', 'o');
+        highlightAttr('posboard2',
+                      [...new Set(game[0]
+                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
+                                  .filter(x => x !== -1)
+                                  .join(', ')
+                                  .split(', '))],
+                      'yellow', 'o');
+        highlightAttr('posboard2', strong2, GREEN, 'x');
 
-//        document.getElementById('posboard0'+pos).style.color = GREEN;
-//        document.getElementById('posboard1'+pos).style.color = GREEN;
-//        document.getElementById('posboard2'+pos).style.color = GREEN;
-
-    } else if (game[0].filter(x=>x==0).length == 4) {
+    } else if (game[0].filter(x => x === 0).length === 4) {
         // Depth 2
+        var strong = findPosStrongOption(game[0], 1);
+	    createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 2 pairs (' + strong + ')', TEXT_GREEN);
+        createBoardExpl(game[0], 'posboard1', parentId, 'Opponent should have no pair', TEXT_GREEN);
+        highlightAttr('posboard0', strong, GREEN, 'x');
+        highlightAttr('posboard1',
+                      [...new Set(game[0]
+                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
+                                  .filter(x => x !== -1)
+                                  .join(', ')
+                                  .split(', '))],
+                      'yellow', 'o');
 
-	    createBoardExpl(game[0], 'posboard0', parentId, 'you move and make 2 double-lines',
-                    findPosStrongOption(game[0], 1).map(changeIndex), 17.5);
-        createBoardExpl(game[0], 'posboard1', parentId, 'O has no double-line',
-                        game[0].map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1),
-                        GREY, 10);
-//        document.getElementById('posboard0'+pos).style.color = GREEN;
-//        document.getElementById('posboard1'+pos).style.color = GREEN;
-
-    } else if (game[0].filter(x=>x==0).length == 2) {
+    } else if (game[0].filter(x => x === 0).length === 2) {
         // Depth 1
-        createBoardExpl(game[0], 'posboard0', parentId, 'you move and make a triple-line',
-                    winLine(game[0],1).map(changeIndex), 17.5);
-//        document.getElementById('posboard0'+pos).style.color = GREEN;
+        createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 1 trio (' + winLine(game[0],1) + ')', TEXT_GREEN);
+        highlightAttr('posboard0', [winLine(game[0],1)], GREEN, 'x');
     }
 }
 
 function showNegExamples(board, parentId, pos){
-    if (board.filter(x=>x==0).length == 6) {
-        var strong = findPosStrongOption(board, 1).map(changeIndex);
-       	if (strong.length == 0 ) {
-	 	    createBoardExpl(board, 'negboard0', parentId, EMPTY,
-                	    board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1),
-                 	    GREY, 17.5);
-		    var nextBoard = computeNextMove(board, 2);
-		    createBoardExpl(nextBoard,'negboard1', parentId, EMPTY, [], WHITE, 10);
-		    nextBoard = computeNextMove(nextBoard, 1);
-		    strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
-		             var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-           	createBoardExpl(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
+    if (board.filter(x => x === 0).length === 6) {
+        // depth 3
+        var strong1 = findPosStrongOption(board, 1);
+        var strong2, newBoard;
 
-            for (var i = 0; i < opponentPos.length; i++) {
-//                document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
-            }
-
-//	        document.getElementById('negboard1' + pos).style.color = RED;
-//            document.getElementById('negboard2' + pos).style.color = RED;
-//            document.getElementById('negboard0' + pos).style.color = RED;
-		 
+       	if (strong1.length === 0 ) {
+	 	    createBoardExpl(board, 'negboard0', parentId, 'Contrast: Not enough pair(s)', TEXT_RED);
 	    } else {
-	        createBoardExpl(board, 'negboard0', parentId, EMPTY,
-                    strong, 17.5);
-            var nextBoard = computeNextMove(board, 2);
-	        createBoardExpl(nextBoard,'negboard1', parentId, EMPTY, strong, GREY, 10);
-            
-	        nextBoard = computeNextMove(nextBoard, 1);
-            strong = findPosStrongOption(nextBoard, 1).map(changeIndex);
-            var opponentPos = nextBoard.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1);
-            createBoardExpl(nextBoard,'negboard2', parentId, EMPTY, strong, 10);
-
-            for (var i = 0; i < opponentPos.length; i++) {
-//                document.getElementById('negboard2' + opponentPos[i]).style.backgroundColor = GREY;
-            }
-
-//            document.getElementById('negboard1' + pos).style.color = RED;
-//            document.getElementById('negboard2' + pos).style.color = RED;
-//	        document.getElementById('negboard0' + pos).style.color = RED;
+	        createBoardExpl(board, 'negboard0', parentId, EMPTY, TEXT_RED);
 	    }
-    } else if (board.filter(x=>x==0).length == 4) {
-        createBoardExpl(board, 'negboard0', parentId, EMPTY,
-                    findPosStrongOption(board, 1).map(changeIndex), 17.5);
-//	    document.getElementById('negboard0' + pos).style.color = RED;
-        var opponentStrong = findPosStrongOption(board, 2).map(changeIndex);
 
-        if(opponentStrong.length == 0) {
-		    createBoardExpl(board, 'negboard1', parentId, EMPTY , board.map((x,i) => x == 2 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 10);
-//       		 document.getElementById('negboard1' + pos).style.color = RED;
-		} else {
-	        createBoardExpl(board, 'negboard1', parentId, EMPTY,
-                    opponentStrong, 17.5);
-//		    document.getElementById('negboard1' + pos).style.color = RED;
+        nextBoard = computeNextMove(board, 2);
+	    createBoardExpl(nextBoard,'negboard1', parentId, EMPTY, TEXT_RED);
+	    highlightIslandCell('negboard1', nextBoard
+                                         .map((x,i) => x !== board[i] ? changeIndex(i) : -1)
+                                         .filter(x => x !== -1)[0],
+                            'yellow', 'o');
+	    nextBoard = computeNextMove(nextBoard, 1);
+        strong2 = findPosStrongOption(nextBoard, 1);
+
+        if (strong2.length !== 2) {
+            createBoardExpl(nextBoard,'negboard2', parentId, 'Contrast: Not enough pair(s)', TEXT_RED);
+            highlightAttr('negboard2', strong2, GREEN, 'x');
+		}  else {
+		    createBoardExpl(nextBoard,'negboard2', parentId, 'Contrast: opponent has 1 pair', TEXT_RED);
+            highlightAttr('negboard2',
+                          [...new Set(nextBoard
+                                      .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
+                                      .filter(x => x !== -1)
+                                      .join(', ')
+                                      .split(', '))],
+                          'yellow', 'o');
 		}
-	} else if (board.filter(x=>x==0).length == 2) {
-        createBoardExpl(board, 'negboard0', parentId, EMPTY,
-            board.map((x,i) => x == 1 ? changeIndex(i) : -1).filter(x => x != -1), GREY, 17.5);
-//        document.getElementById('negboard0' + pos).style.color = RED;
+
+	    highlightAttr('negboard0', strong1, GREEN, 'x');
+
+    } else if (board.filter(x => x === 0).length === 4) {
+        // depth 2
+        var strong = findPosStrongOption(board, 1);
+        if (strong.length !== 2) {
+            createBoardExpl(board, 'negboard0', parentId, 'Contrast: Not enough pair(s)', TEXT_RED);
+        } else {
+            createBoardExpl(board, 'negboard0', parentId, EMPTY, TEXT_RED);
+        }
+        highlightAttr('negboard0', strong, 'yellow', 'x');
+
+        var opponentStrong = findPosStrongOption(board, 2);
+        if (opponentStrong.length === 0) {
+		    createBoardExpl(board, 'negboard1', parentId, EMPTY, TEXT_RED);
+		    highlightAttr('negboard1', ATTR, 'yellow', 'o');
+		} else {
+	        createBoardExpl(board, 'negboard1', parentId, 'Contrast: opponent has 1 pair', TEXT_RED);
+	        highlightAttr('negboard1', opponentStrong, 'yellow', 'o');
+		}
+
+	} else if (board.filter(x => x === 0).length === 2) {
+	    // depth 1
+        createBoardExpl(board, 'negboard0', parentId, 'Contrast: No trio', TEXT_RED);
+        highlightAttr('negboard0', ATTR, 'yellow', 'x');
     }
 }
 
@@ -1025,4 +1165,4 @@ function showNegExamples(board, parentId, pos){
 //document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
 //                                                    + ' You have ONE CHANCE for each question and try your best.';
 //createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
-phase2();
+phase0();

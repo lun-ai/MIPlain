@@ -145,6 +145,28 @@ table.table5 td {
 	border-radius: 5px 5px 5px 5px;
 }
 
+div.islandCell {
+    border: 1px solid black;
+    font-size: 15px;
+    position: absolute;
+    text-align : center;
+}
 
+div.islandTag {
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 15px;
+    position: absolute;
+    text-align : center;
+}
+
+.center {
+  display: block;
+  float: right;
+  position: relative;
+  left: 230px;
+  margin: auto;
+  width: 80%;
+}
 
 
