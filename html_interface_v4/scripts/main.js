@@ -11,7 +11,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     EXPL_TIME = 120;
 
 var t,
-    phase = 0,
+    phase = 1,
     th = 1.2,
     S = 0,
     sec = 0,
@@ -131,7 +131,7 @@ function stopCountPhase0() {
     if (ended) {
             // finished game
         removeChild('gameBoard', 'game');
-        prephase1();
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
     }     
     else {
             // unfinished game
@@ -203,16 +203,6 @@ function stopCountPhase0() {
     }
 
 }
-
-function prephase1() {
-  //  document.getElementById('phase').textContent = '';
-  //  document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                        //          + 'For each question, you are given a board and you will play X.'
-  //  document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-                                        //          + ' You have ONE CHANCE for each question and try your best.';
-    createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
-}
-
 
 function stopCountPhase1() {
 
@@ -500,9 +490,9 @@ function phase0() {
 
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = 'You play Green. For every move, press the cell' +
-                        ' you want to select. ';
-    document.getElementById('instruction2').textContent = 'You have only one shot for each of your move. '
+    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game."
+    document.getElementById('instruction2').textContent = 'You play Green. For every move, press the cell you want to select. ' + 
+                        'You have only one shot for each of your move.'
     totalTime = QUESTION_TIME;
 
     createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
