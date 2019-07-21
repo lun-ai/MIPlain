@@ -131,7 +131,7 @@ function stopCountPhase0() {
     if (ended) {
             // finished game
         removeChild('gameBoard', 'game');
-        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', prephase1);
     }     
     else {
             // unfinished game
@@ -350,7 +350,8 @@ function boardClickedgame() {
             document.getElementById('instruction1').textContent = 'The game is drawn.';
             stopCount();
         } else {
-            var board2 = computeNextMove(currentBoard, 2);
+           // var board2 = computeNextMove(currentBoard, 2);
+           var board2 = randomMove(currentBoard,2);
             if (win(board2, 2)) {
                 ended = true;
                 document.getElementById('instruction1').textContent = 'You have lost the game!';
@@ -490,12 +491,20 @@ function phase0() {
 
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game."
+    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game. Your opponent plays randomly."
     document.getElementById('instruction2').textContent = 'You play Green. For every move, press the cell you want to select. ' + 
                         'You have only one shot for each of your move.'
     totalTime = QUESTION_TIME;
 
     createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
+}
+
+function prephase1() {
+    document.getElementById('phase').textContent = '';
+    document.getElementById('instruction1').innerHTML = 'From now on, you will play against another opponent, which is an OPTIMAL player.' 
+    document.getElementById('instruction2').innerHTML = 'It will always select the best move for itself.';
+    createButton('nextPhaseButton', 'nextPhase', 'Next', phase1);
+
 }
 
 function phase1() {
