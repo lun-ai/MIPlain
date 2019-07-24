@@ -310,6 +310,13 @@ function computeNextMove(board, player){
                         .map(Number);
 }
 
+function randomMove(board, player){
+    const indices = board.map((val, i) => val === 0 ? i : -1).filter(index => index !== -1);
+    var randomMove = indices[Math.floor(Math.random()*indices.length)];
+    board[randomMove] = player;
+    return board;
+
+}
 
 /*
     Query minimax table to check score of a player's move (from previous board to current board)
