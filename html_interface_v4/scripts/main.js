@@ -408,11 +408,11 @@ function phase2() {
     document.getElementById('phase').textContent = 'Part ' + phase;
 	
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, and the Great Wizard plays <span style="background-color: '
+                        + P1_COLOR + '">Green</span>, and opponent plays <span style="background-color: '
                         + P2_COLOR + '">Orange</span>. '
     document.getElementById('instruction2').innerHTML = 'Given an initial board, choose between two potential moves '
                         + 'highlighted in <span style="background-color: yellow">Yellow</span>, '
-                        + 'for WINNING the Great Wizard.'
+                        + 'for WINNING.'
     document.getElementById('instruction3').innerHTML =
                     'The Great Wizard then tells you which one is the right move and which is not. ';
 
@@ -902,12 +902,13 @@ function showPosExamples(game, parentId, pos){
         var strong2 = findPosStrongOption(game[2], 1);
 
         createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
-        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent would block', TEXT_GREEN);
+        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent would block (' + strong1 + ')', TEXT_GREEN);
         createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs of "'
                                                         + findPosStrongOption(game[2], 1)
                                                         + '" and opponent should have no pair', TEXT_GREEN);
 
         highlightAttr('posboard0', strong1, GREEN, 'x');
+        highlightAttr('posboard1', strong1, GREEN, 'x');
         highlightIslandCell('posboard1', game[1]
                                          .map((x,i) => x !== game[0][i] ? changeIndex(i) : -1)
                                          .filter(x => x !== -1)[0],

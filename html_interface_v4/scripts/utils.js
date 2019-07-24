@@ -455,8 +455,9 @@ function highlightIslandCell(boardId, cellIdx, color, mark) {
                                           + mark);
         if (attr !== null) {
             attr.style.fontWeight = 'bold';
-            attr.style.textDecoration = 'underline';
+//            attr.style.textDecoration = 'underline';
 //            attr.style.backgroundColor = color;
+            attr.style.border = '1px solid ' + color;
         }
     }
 }
