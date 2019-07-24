@@ -11,7 +11,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     EXPL_TIME = 120;
 
 var t,
-    phase = 0,
+    phase = 1,
     th = 1.2,
     S = 0,
     sec = 0,
@@ -19,15 +19,17 @@ var t,
     totalTime = QUESTION_TIME,
     currentQuestion = 0,
     prevBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    emptyBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    boardToPlay = emptyBoard,
     test_boards = PHASE1_QUESTIONS,
     difficulty = [],
     moveChosen = false,
     currentExpl = 0,
+    ended = false,
     timeTakenExpl = [],
     answers = [],
     scores = [],
     timeTaken = [],
-    ended = false,
     record = '';
 
 var texts = String(window.location).split('=');
@@ -119,6 +121,87 @@ function startCount() {
         sec += 0.2;
         t = setTimeout(startCount, TIMER_SLICE);
     }
+}
+
+function stopCountPhase0() {
+    removeChild('nextPhaseButton', 'nextPhase');
+    removeChild('gameBoard', 'game');
+    boxes = [];
+
+    if (ended) {
+            // finished game
+        removeChild('gameBoard', 'game');
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', prephase1);
+    }     
+    else {
+            // unfinished game
+        document.getElementById('instruction1').textContent = 'Select one territory to capture resources.';
+        document.getElementById('phase').textContent = '';
+        document.getElementById('instruction2').textContent = '';
+
+        boardToPlay = changeLabelsOnBoard(boardToPlay);
+        var board = document.createElement('div');
+        document.getElementById('game').appendChild(board);
+        board.setAttribute('id', 'gameBoard');
+        board.style.position = 'absolute';
+        board.style.left = '20%';
+        board.style.height = '60%';
+        board.style.width = '60%';
+
+        for (var i = 0; i < N_SIZE; i++) {
+
+            var island = document.createElement('div');
+            board.appendChild(island);
+            island.setAttribute('id', 'island');
+            island.style.height = '30%';
+            island.style.width = '25%';
+            island.style.position = 'absolute';
+
+            if (i === 0) {
+                island.style.top = '10%';
+                island.style.left = '20%';
+            } else if (i == 1) {
+                island.style.top = '10%';
+                island.style.right = '20%';
+            } else {
+                island.style.top = '50%';
+                island.style.left = '37.5%';
+            }
+
+            var cell1 = createIsland(boardToPlay[i * 3], ISLAND_ATTR[i * 3]);
+            island.appendChild(cell1);
+            cell1.style.top = '0%';
+            cell1.style.left = '0%';
+            cell1.addEventListener('click', boardClickedgame);
+            var cell2 = createIsland(boardToPlay[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            island.appendChild(cell2);
+            cell2.style.top = '0%';
+            cell2.style.right = '0%';
+            cell2.addEventListener('click', boardClickedgame);
+            var cell3 = createIsland(boardToPlay[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            island.appendChild(cell3);
+            cell3.style.bottom = '0%';
+            cell3.style.left = '25%';
+            cell3.addEventListener('click', boardClickedgame);
+
+
+            var islandTag = document.createElement('div');
+            islandTag.classList.add('islandTag');
+            island.appendChild(islandTag);
+            islandTag.style.height = '20%';
+            islandTag.style.width = '30%';
+            islandTag.style.top = '40%';
+            islandTag.style.left = '35%';
+            islandTag.style.backgroundColor = DEFAULT_C;
+            islandTag.innerHTML = 'Island ' + (i + 1);
+
+            boxes.push(cell1);
+            boxes.push(cell2);
+            boxes.push(cell3);
+        }
+    
+    }
+
 }
 
 function stopCountPhase1() {
@@ -248,6 +331,41 @@ function stopCountPhase3() {
 
 }
 
+function boardClickedgame() {
+
+    if (this.style.backgroundColor !== WHITE) {
+        return;
+    }  else if (!ended) {
+        this.style.backgroundColor = P1_COLOR;
+
+        var currentBoard = convertBoxesTOBoard(boxes);
+        
+        if(win(currentBoard,1)) {
+            ended = true;
+            document.getElementById('instruction1').textContent = 'You have won the game!';
+            stopCount();
+
+        } else if (currentBoard.filter(x => x === 0).length === 0) {
+            ended = true;
+            document.getElementById('instruction1').textContent = 'The game is drawn.';
+            stopCount();
+        } else {
+           // var board2 = computeNextMove(currentBoard, 2);
+           var board2 = randomMove(currentBoard,2);
+            if (win(board2, 2)) {
+                ended = true;
+                document.getElementById('instruction1').textContent = 'You have lost the game!';
+                stopCount();
+            } else {
+            boardToPlay = board2;
+            stopCount();
+
+            }
+
+        }
+}
+}
+
 
 function boardClicked() {
 
@@ -367,6 +485,30 @@ function endExpr() {
     window.location.href = 'record.php';
 }
 
+function phase0() {
+
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    phase = 0;
+    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game. Your opponent plays randomly."
+    document.getElementById('instruction2').textContent = 'You play Green. For every move, press the cell you want to select. ' + 
+                        'You have only one shot for each of your move.'
+    totalTime = QUESTION_TIME;
+
+    createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
+}
+
+function prephase1() {
+
+    document.getElementById('phase').textContent = '';
+    document.getElementById('instruction1').innerHTML = 'From now on, you will play against another opponent, which is an OPTIMAL player, in Part 1.'
+    document.getElementById('instruction2').innerHTML = 'And you should choose what you think to be the best move to WIN.'
+                                                    + ' You have ONE CHANCE for each question and try your best.';
+    createButton('nextPhaseButton', 'nextPhase', 'Next', phase1);
+
+}
+
 function phase1() {
 
     removeChild('nextPhaseButton', 'nextPhase');
@@ -386,6 +528,7 @@ function phase1() {
 function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
+    removeChild('gameBoard', 'game');
 
     record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -495,7 +638,9 @@ function checkform() {
 }
 
 function stopCount() {
-    if (phase == 1) {
+    if (phase == 0) {
+        stopCountPhase0();
+    } else if (phase == 1) {
         stopCountPhase1();
     } else if (phase == 2) {
         stopCountPhase2();
@@ -675,14 +820,35 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
     }
 }
 
-function createBoardExpl(board, boardId, parentId, text, color) {
+function createBoard2(board, parentId, text) {
+    createBoardExpl(board, 'board1', parentId, text, 'black');
+}
 
+function createBoard_withtriplet(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    if (player == 1){
+        highlightAttr(id, [winLine(board,player)], 'green', 'x');
+    } else {
+        highlightAttr(id, [winLine(board,player)], 'yellow', 'o');
+    }
+}
+
+function createBoard_withstrong(board, id, parentId, text, player) {
+    createBoardExpl(board, id, parentId, text, 'black');
+    var strong = findPosStrongOption(board, player);
+    if (player == 1){
+        highlightAttr(id, strong, 'green', 'x');
+    } else {
+        highlightAttr(id, strong, 'yellow', 'o');
+    }
+}
+
+function createBoardExpl(board, boardId, parentId, text, color) {
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
     div.classList.add('column3');
     div.style.position = 'relative';
     div.style.height = '250px';
-
     var frame = document.createElement('div');
     div.appendChild(frame);
     frame.style.position = 'absolute';
@@ -690,15 +856,13 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     frame.style.width = '100%';
     frame.style.border = '1px solid black';
     frame.style.top = '5%';
-    frame.style.backgroundColor = TRANSPAR;
+    frame.style.backgroundColor = "transparent";
 
-    document.getElementById(parentId).appendChild(div);
-
+    document.getElementById(parentId).appendChild(div);  
     if (board.length !== 0) {
-
         var newBoard = changeLabelsOnBoard(board);
 
-        for (var i = 0; i < N_SIZE; i++) {
+        for (var i = 0; i < 3; i++) {
 
             var island = document.createElement('div');
             var islandID = boardId + 'Island' + (i + 1);
@@ -718,7 +882,6 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                 island.style.top = '40%';
                 island.style.left = '27.5%';
             }
-
             var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
@@ -792,6 +955,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     }
 
 }
+
 
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
 
@@ -1006,11 +1170,14 @@ function showNegExamples(board, parentId, pos){
     }
 }
 
+function greenCountTable() {
+    
+}
 
-//document.getElementById('phase').textContent = '';
-//document.getElementById('instruction1').textContent = 'In Part 1, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-//                                                    + 'For each question, you are given a board and you will play X.'
-//document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-//                                                    + ' You have ONE CHANCE for each question and try your best.';
-//createButton('nextPhaseButton', 'nextPhase', 'Continue', phase1);
+function orangeCountTable() {
+}
+
+function boardView() {
+}
+
 phase2();

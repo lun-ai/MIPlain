@@ -310,6 +310,13 @@ function computeNextMove(board, player){
                         .map(Number);
 }
 
+function randomMove(board, player){
+    const indices = board.map((val, i) => val === 0 ? i : -1).filter(index => index !== -1);
+    var randomMove = indices[Math.floor(Math.random()*indices.length)];
+    board[randomMove] = player;
+    return board;
+
+}
 
 /*
     Query minimax table to check score of a player's move (from previous board to current board)
@@ -355,6 +362,7 @@ function sortTestBoardsAscend(a,b){
 function findPosStrongOption(board, player) {
     var p = [];
     var v = player == 1 ? 2 : 6;
+
     var newBoard = [...board].map(x=> x == 2 ? 3 : x);
 
     if ((newBoard[0] + newBoard[1] + newBoard[5]) == v) {
@@ -408,7 +416,7 @@ function formatHTMLText(text) {
 
 function highlightAttr(boardId, positions, color, mark) {
 
-    for (var i = 0; i < N_SIZE; i++) {
+    for (var i = 0; i < 3; i++) {
 
         for (var k = 0; k < positions.length; k++) {
 
