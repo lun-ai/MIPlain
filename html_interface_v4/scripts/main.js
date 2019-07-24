@@ -1303,4 +1303,4 @@ function boardView(parentId, board) {
     button.style.right = '0%';
 }
 
-phase2();
+phase0();
