@@ -25,6 +25,22 @@ var YELLOW = '#ffcc00',
 var minimaxTable = canonicalData,
     boardRepreToCanonical = canonicalMap;
 
+function countAttrs(board, player) {
+
+    var result = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    result[7] = Number(board[0] === player) + Number(board[1] === player) + Number(board[5] === player);
+    result[3] = Number(board[0] === player) + Number(board[3] === player) + Number(board[7] === player);
+    result[0] = Number(board[1] === player) + Number(board[2] === player) + Number(board[3] === player);
+    result[5] = Number(board[3] === player) + Number(board[4] === player) + Number(board[5] === player);
+    result[2] = Number(board[7] === player) + Number(board[6] === player) + Number(board[5] === player);
+    result[4] = Number(board[7] === player) + Number(board[8] === player) + Number(board[1] === player);
+    result[1] = Number(board[8] === player) + Number(board[0] === player) + Number(board[4] === player);
+    result[6] = Number(board[2] === player) + Number(board[0] === player) + Number(board[6] === player);
+
+    return result;
+}
+
 
 function win(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
@@ -156,6 +172,8 @@ function createButton(buttonId, parentId, text, func) {
     button.textContent = text;
     button.onclick = func;
     button.disabled = false;
+
+    return button;
 }
 
 function createImage(imageId, parentId, text, src) {
