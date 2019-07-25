@@ -1428,4 +1428,4 @@ function boardView(parentId, board, top, right) {
     button.style.right = right;
 }
 
-phase2();
+phase0();
