@@ -34,12 +34,12 @@ table.table3 {
 }
 
 table.table3 tr{
-    height:33.3%;
+    width: 45%;
 }
 
 table.table3 td {
 	border: 2px solid black;
-	font-size:40px;
+	font-size:15px;
 	color:black;
 	margin-top:40px;
 	border-radius: 5px 5px 5px 5px;

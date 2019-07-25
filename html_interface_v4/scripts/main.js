@@ -172,17 +172,17 @@ function stopCountPhase0() {
             island.appendChild(cell1);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
-            cell1.addEventListener('click', boardClickedgame);
+            cell1.addEventListener('click', boardClickedGame);
             var cell2 = createIsland(boardToPlay[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
             island.appendChild(cell2);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
-            cell2.addEventListener('click', boardClickedgame);
+            cell2.addEventListener('click', boardClickedGame);
             var cell3 = createIsland(boardToPlay[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
             island.appendChild(cell3);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
-            cell3.addEventListener('click', boardClickedgame);
+            cell3.addEventListener('click', boardClickedGame);
 
 
             var islandTag = document.createElement('div');
@@ -217,6 +217,8 @@ function stopCountPhase1() {
    if (currentQuestion > TOTAL_QUESTIONS) {
         
 	    removeChild('nextQuestionButton', 'nextQuestion');
+	    removeChild('gamep1CountTable', 'game');
+        removeChild('gamep2CountTable', 'game');
         document.getElementById('phase').textContent = 'Well done for completing Part 1!';
         document.getElementById('timer').textContent = '';
 
@@ -285,6 +287,7 @@ function stopCountPhase2() {
         document.getElementById('instruction2').textContent = 'You should choose what you think to be the best move to WIN.'
                                                     + ' You have ONE CHANCE for each question and should try your best.';
         document.getElementById('instruction3').textContent = '';
+        document.getElementById('instruction4').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
@@ -305,9 +308,12 @@ function stopCountPhase3() {
     currentQuestion += 1;
 
     if (currentQuestion > TOTAL_QUESTIONS) {
+
         removeChild('nextQuestionButton', 'nextQuestion');
         removeChild('nextExampleButton', 'nextExample');
         removeChild('gameBoard', 'game');
+        removeChild('gamep1CountTable', 'game');
+        removeChild('gamep2CountTable', 'game');
         removeChild('nextPhaseButton', 'nextPhase');
         document.getElementById('phase').textContent =
                 'Well done for completing Part 3!'
@@ -317,11 +323,11 @@ function stopCountPhase3() {
         document.getElementById('instruction3').textContent = '';
         document.getElementById('numQuestion').textContent = '';
 
-	 record += '\n\nPart 3: \n'
-        + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: [' + difficulty + ']\n'
-        + 'scores: [' + scores + ']\n'
-        + 'time: [' + timeTaken + ']\n';
+	    record += '\n\nPart 3: \n'
+               + answers.map(g => '[[' + g.join('],[') + ']]\n')
+               + 'difficulty: [' + difficulty + ']\n'
+               + 'scores: [' + scores + ']\n'
+               + 'time: [' + timeTaken + ']\n';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase4);
 
     } else {
@@ -331,7 +337,7 @@ function stopCountPhase3() {
 
 }
 
-function boardClickedgame() {
+function boardClickedGame() {
 
     if (this.style.backgroundColor !== WHITE) {
         return;
@@ -385,6 +391,43 @@ function boardClicked() {
         console.log(timeTaken);
         console.log(scores);
 
+        var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+        var div1 = document.createElement('div');
+        document.getElementById('game').appendChild(div1);
+        div1.setAttribute('id', 'game' + 'p1CountTable');
+        div1.style.position = 'absolute';
+        div1.style.width = '10%';
+        div1.style.height = '50%';
+        div1.style.top = '20%';
+        div1.style.right = '20%';
+        removeChild('gamep1CountTable', 'game');
+        var table1 = document.createElement('table');
+        table1.classList.add('table3');
+        div1.appendChild(table1);
+
+        var count = countAttrs(currentBoard, 1);
+
+        for (var i = 0; i < 8; i++) {
+
+            var row = document.createElement('tr');
+            table1.appendChild(row);
+
+            for (var j = 0; j < 2; j++) {
+
+                var cell = document.createElement('td');
+                row.appendChild(cell);
+                cell.style.align = 'center';
+
+                if (j % 2 === 0) {
+                    cell.style.backgroundColor = P1_COLOR;
+                    cell.innerHTML = attr[i];
+                } else {
+                    cell.innerHTML = count[i];
+                }
+
+            }
+        }
+
         createButton('nextQuestionButton', 'gameBoard', 'Next Question', stopCount);
         var button = document.getElementById('nextQuestionButton');
         button.style.position = 'absolute';
@@ -392,6 +435,8 @@ function boardClicked() {
         button.style.width = '10%';
         button.style.bottom = '0%';
         button.style.left = '45%';
+
+
     }
 }
 
@@ -407,6 +452,8 @@ function nextQuestion() {
     var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
     removeChild('gameBoard', 'game');
     removeChild('nextQuestionButton', 'nextQuestion');
+    removeChild('gamep1CountTable', 'game');
+    removeChild('gamep2CountTable', 'game');
     boxes = [];
     document.getElementById('numQuestion').textContent = 'Question NO.' + currentQuestion;
 
@@ -469,6 +516,76 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
+    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var div1 = document.createElement('div');
+    document.getElementById('game').appendChild(div1);
+    div1.setAttribute('id', 'game' + 'p1CountTable');
+    div1.style.position = 'absolute';
+    div1.style.width = '10%';
+    div1.style.height = '50%';
+    div1.style.top = '20%';
+    div1.style.right = '20%';
+    var table1 = document.createElement('table');
+    table1.classList.add('table3');
+    div1.appendChild(table1);
+
+    var count = countAttrs(prevBoard, 1);
+
+    for (var i = 0; i < 8; i++) {
+
+        var row = document.createElement('tr');
+        table1.appendChild(row);
+
+        for (var j = 0; j < 2; j++) {
+
+            var cell = document.createElement('td');
+            row.appendChild(cell);
+            cell.style.align = 'center';
+
+            if (j % 2 === 0) {
+                cell.style.backgroundColor = P1_COLOR;
+                cell.innerHTML = attr[i];
+            } else {
+                cell.innerHTML = count[i];
+            }
+
+        }
+    }
+
+    var div2 = document.createElement('div');
+    document.getElementById('game').appendChild(div2);
+    div2.setAttribute('id', 'game' + 'p2CountTable');
+    div2.style.position = 'absolute';
+    div2.style.width = '10%';
+    div2.style.height = '50%';
+    div2.style.top = '20%';
+    div2.style.right = '12%';
+    var table2 = document.createElement('table');
+    table2.classList.add('table3');
+    div2.appendChild(table2);
+
+    count = countAttrs(prevBoard, 2);
+
+    for (var i = 0; i < 8; i++) {
+
+        var row = document.createElement('tr');
+        table2.appendChild(row);
+
+        for (var j = 0; j < 2; j++) {
+
+            var cell = document.createElement('td');
+            row.appendChild(cell);
+            cell.style.align = 'center';
+
+            if (j % 2 === 0) {
+                cell.style.backgroundColor = P2_COLOR;
+                cell.innerHTML = attr[i];
+            } else {
+                cell.innerHTML = count[i];
+            }
+
+        }
+    }
 }
 
 function endExpr() {
@@ -521,7 +638,7 @@ function phase1() {
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
                         + P1_COLOR + '">Green</span>, '
                         + 'and please press a WHITE cell' +
-                        ' to acquire resources that you think can lead to WIN';
+                        ' to capture resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question.';
     stopCount();
 }
@@ -561,12 +678,14 @@ function phase2() {
                     'The Great Wizard then tells you which one is the right move and which is not. ';
 
     if (participantID % TOTAL_GROUP == 0) {
-        document.getElementById('instruction3').textContent +=
+        document.getElementById('instruction3').innerHTML +=
                     'You are given time to think about your choice.';
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
-        document.getElementById('instruction3').textContent +=
-                    'You are given time to study the comments from MIGO AI.'
+        document.getElementById('instruction3').innerHTML +=
+                    'You are given time to study the comments from MIGO AI. ';
+        document.getElementById('instruction4').innerHTML = '<span style="text-decoration: underline">'
+                    + 'You can press button at the corner of each board to view the table for resources captured.</span>'
     }
 
     stopCount();
@@ -593,7 +712,7 @@ function phase3() {
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
                         + P1_COLOR + '">Green</span>, '
                         + 'and please press a WHITE cell' +
-                        ' to acquire resources that you think can lead to WIN';
+                        ' to capture resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
@@ -956,7 +1075,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createButton(boardId + 'p1CountTableButton', boardId, 'Board', function() {p1CountTable(boardId, board);});
+    var button = createButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%');});
     button.style.position = 'absolute';
     button.style.top = '65%';
     button.style.right = '0%';
@@ -1026,6 +1145,11 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
         }
     }
+
+    var button = createButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%');});
+    button.style.position = 'absolute';
+    button.style.top = '90%';
+    button.style.right = '0%';
 }
 
 function createIsland(elem, text) {
@@ -1176,7 +1300,7 @@ function showNegExamples(board, parentId, pos){
     }
 }
 
-function p1CountTable(parentId, board) {
+function p1CountTable(parentId, board, top, right) {
 
     var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
@@ -1228,13 +1352,13 @@ function p1CountTable(parentId, board) {
     }
 
     removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createButton(parentId + 'p2CountTableButton', parentId, 'P1 resources', function() {p2CountTable(parentId, board);});
+    var button = createButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right);});
     button.style.position = 'absolute';
-    button.style.top = '65%';
-    button.style.right = '0%';
+    button.style.top = top;
+    button.style.right = right;
 }
 
-function p2CountTable(parentId, board) {
+function p2CountTable(parentId, board, top, right) {
 
     var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
@@ -1284,13 +1408,13 @@ function p2CountTable(parentId, board) {
     }
 
     removeChild(parentId + 'p2CountTableButton', parentId);
-    var button = createButton(parentId + 'boardView', parentId, 'P2 resources', function() {boardView(parentId, board);});
+    var button = createButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right);});
     button.style.position = 'absolute';
-    button.style.top = '65%';
-    button.style.right = '0%';
+    button.style.top = top;
+    button.style.right = right;
 }
 
-function boardView(parentId, board) {
+function boardView(parentId, board, top, right) {
 
     document.getElementById(parentId + 'p2CountTable').style.display = 'none';
     document.getElementById(parentId + 'Island1').style.display = 'initial';
@@ -1298,10 +1422,10 @@ function boardView(parentId, board) {
     document.getElementById(parentId + 'Island3').style.display = 'initial';
 
     removeChild(parentId + 'boardView', parentId);
-    var button = createButton(parentId + 'p1CountTableButton', parentId, 'Board', function() {p1CountTable(parentId, board);});
+    var button = createButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right);});
     button.style.position = 'absolute';
-    button.style.top = '65%';
-    button.style.right = '0%';
+    button.style.top = top;
+    button.style.right = right;
 }
 
-phase0();
+phase2();
