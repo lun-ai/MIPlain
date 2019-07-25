@@ -234,7 +234,7 @@ function stopCountPhase1() {
                 	    'Then, you are given 2 minutes to think about your choice.'
        	} else {
             document.getElementById('instruction3').textContent =
-               		 'Then, you are given 2 minutes to study the explanation from MIGO.'
+               		 'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
             document.getElementById('MIGO_intro').style.display = 'block';
         }
 
@@ -280,10 +280,10 @@ function stopCountPhase2() {
         document.getElementById('explanation').style.display = 'none';
         document.getElementById('timer').textContent = '';
         document.getElementById('phase').textContent = 'Well done for completing Part 2!';
-        document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions. '
-                                                    + 'For each question, you are given a board and you will play X.'
-        document.getElementById('instruction2').textContent = 'And you should choose what you think to be the best move to WIN.'
-                                                    + ' You have ONE CHANCE for each question.';
+        document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions '
+                                                    + 'for which you play against an OPTIMAL opponent.';
+        document.getElementById('instruction2').textContent = 'You should choose what you think to be the best move to WIN.'
+                                                    + ' You have ONE CHANCE for each question and should try your best.';
         document.getElementById('instruction3').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
@@ -491,8 +491,8 @@ function phase0() {
 
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').textContent = "You will first play a training game to get familiar with the rules of the game. Your opponent plays randomly."
-    document.getElementById('instruction2').textContent = 'You play Green. For every move, press the cell you want to select. ' + 
+    document.getElementById('instruction1').innerHTML = 'You will first play a training game to get familiar with the rules of the game. Your opponent plays randomly as <span style="background-color:' + P2_COLOR + '">Orange</span>.'
+    document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. For every move, press the cell you want to select. ' +
                         'You have only one shot for each of your move.'
     totalTime = QUESTION_TIME;
 
@@ -502,9 +502,10 @@ function phase0() {
 function prephase1() {
 
     document.getElementById('phase').textContent = '';
-    document.getElementById('instruction1').innerHTML = 'From now on, you will play against another opponent, which is an OPTIMAL player, in Part 1.'
+    document.getElementById('instruction1').innerHTML = 'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions'
+                                                    + ' for which you play against another opponent who plays OPTIMALLY.'
     document.getElementById('instruction2').innerHTML = 'And you should choose what you think to be the best move to WIN.'
-                                                    + ' You have ONE CHANCE for each question and try your best.';
+                                                    + ' You have ONE CHANCE for each question and you should try your best.';
     createButton('nextPhaseButton', 'nextPhase', 'Next', phase1);
 
 }
@@ -820,8 +821,8 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
     }
 }
 
-function createBoard2(board, parentId, text) {
-    createBoardExpl(board, 'board1', parentId, text, 'black');
+function createBoard2(board, id, parentId, text) {
+    createBoardExpl(board, id, parentId, text, 'black');
 }
 
 function createBoard_withtriplet(board, id, parentId, text, player) {
