@@ -124,22 +124,25 @@ function startCount() {
 }
 
 function stopCountPhase0() {
+
     removeChild('nextPhaseButton', 'nextPhase');
     removeChild('gameBoard', 'game');
     boxes = [];
 
     if (ended) {
-            // finished game
+        // finished game
+        removeChild('gamep1CountTable','game');
+        removeChild('gamep2CountTable','game');
         removeChild('gameBoard', 'game');
         createButton('nextPhaseButton', 'nextPhase', 'Continue', prephase1);
     }     
     else {
-            // unfinished game
+        // unfinished game
         document.getElementById('instruction1').textContent = 'Select one territory to capture resources.';
         document.getElementById('phase').textContent = '';
         document.getElementById('instruction2').textContent = '';
 
-        boardToPlay = changeLabelsOnBoard(boardToPlay);
+        var currentBoard = changeLabelsOnBoard(boardToPlay);
         var board = document.createElement('div');
         document.getElementById('game').appendChild(board);
         board.setAttribute('id', 'gameBoard');
@@ -168,17 +171,17 @@ function stopCountPhase0() {
                 island.style.left = '37.5%';
             }
 
-            var cell1 = createIsland(boardToPlay[i * 3], ISLAND_ATTR[i * 3]);
+            var cell1 = createIsland(currentBoard[i * 3], ISLAND_ATTR[i * 3]);
             island.appendChild(cell1);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.addEventListener('click', boardClickedGame);
-            var cell2 = createIsland(boardToPlay[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            var cell2 = createIsland(currentBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
             island.appendChild(cell2);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.addEventListener('click', boardClickedGame);
-            var cell3 = createIsland(boardToPlay[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            var cell3 = createIsland(currentBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
             island.appendChild(cell3);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
@@ -199,9 +202,88 @@ function stopCountPhase0() {
             boxes.push(cell2);
             boxes.push(cell3);
         }
-    
+
+        removeChild('gamep1CountTable','game');
+        removeChild('gamep2CountTable','game');
+        createCountTables('game', boardToPlay);
+
+        boardToPlay = currentBoard;
     }
 
+}
+
+function createCountTables(parentId, board) {
+
+    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var div1 = document.createElement('div');
+    document.getElementById(parentId).appendChild(div1);
+    div1.setAttribute('id', parentId + 'p1CountTable');
+    div1.style.position = 'absolute';
+    div1.style.width = '10%';
+    div1.style.height = '50%';
+    div1.style.top = '10%';
+    div1.style.right = '20%';
+    var table1 = document.createElement('table');
+    table1.classList.add('table3');
+    div1.appendChild(table1);
+
+    var count = countAttrs(board, 1);
+
+    for (var i = 0; i < 8; i++) {
+
+        var row = document.createElement('tr');
+        table1.appendChild(row);
+
+        for (var j = 0; j < 2; j++) {
+
+            var cell = document.createElement('td');
+            row.appendChild(cell);
+            cell.style.align = 'center';
+
+            if (j % 2 === 0) {
+                cell.style.backgroundColor = P1_COLOR;
+                cell.innerHTML = attr[i];
+            } else {
+                cell.innerHTML = count[i];
+            }
+
+        }
+    }
+
+    var div2 = document.createElement('div');
+    document.getElementById(parentId).appendChild(div2);
+    div2.setAttribute('id', parentId + 'p2CountTable');
+    div2.style.position = 'absolute';
+    div2.style.width = '10%';
+    div2.style.height = '50%';
+    div2.style.top = '10%';
+    div2.style.right = '12%';
+    var table2 = document.createElement('table');
+    table2.classList.add('table3');
+    div2.appendChild(table2);
+
+    count = countAttrs(board, 2);
+
+    for (var i = 0; i < 8; i++) {
+
+        var row = document.createElement('tr');
+        table2.appendChild(row);
+
+        for (var j = 0; j < 2; j++) {
+
+            var cell = document.createElement('td');
+            row.appendChild(cell);
+            cell.style.align = 'center';
+
+            if (j % 2 === 0) {
+                cell.style.backgroundColor = P2_COLOR;
+                cell.innerHTML = attr[i];
+            } else {
+                cell.innerHTML = count[i];
+            }
+
+        }
+    }
 }
 
 function stopCountPhase1() {
@@ -341,35 +423,39 @@ function boardClickedGame() {
 
     if (this.style.backgroundColor !== WHITE) {
         return;
-    }  else if (!ended) {
+    } else if (!ended) {
+
         this.style.backgroundColor = P1_COLOR;
 
         var currentBoard = convertBoxesTOBoard(boxes);
         
         if(win(currentBoard,1)) {
+
             ended = true;
             document.getElementById('instruction1').textContent = 'You have won the game!';
             stopCount();
 
         } else if (currentBoard.filter(x => x === 0).length === 0) {
+
             ended = true;
             document.getElementById('instruction1').textContent = 'The game is drawn.';
             stopCount();
+
         } else {
-           // var board2 = computeNextMove(currentBoard, 2);
-           var board2 = randomMove(currentBoard,2);
+
+            var board2 = randomMove(currentBoard,2);
+
             if (win(board2, 2)) {
                 ended = true;
                 document.getElementById('instruction1').textContent = 'You have lost the game!';
                 stopCount();
             } else {
-            boardToPlay = board2;
-            stopCount();
-
+                boardToPlay = board2;
+                stopCount();
             }
 
         }
-}
+    }
 }
 
 
@@ -435,7 +521,6 @@ function boardClicked() {
         button.style.width = '10%';
         button.style.bottom = '0%';
         button.style.left = '45%';
-
 
     }
 }
