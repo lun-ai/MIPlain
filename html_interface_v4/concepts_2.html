@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+    <div align="center">
+        <scan style="font-size:3vw">Definitions: Pair</scan>
+    </div>
+
+<div style="clear:both" align="center">
+         <p> Now, please read carefully the definitions below that will help you thorough the game.
+            <br />
+            Remember, you can click on the corner button of each board to view the table of resources captured.
+            </p>
+        </div>
+
+ <div style="clear:both" align="center">
+         <p>   A PAIR is a collection of two resources of the same category for one player, the third resource not being taken yet by the opponent. <br />
+            One player has one or two pairs in each the following board states, the territories containing the resources of the pairs are highlighted.
+            <br />
+            <br />
+            </p>
+            </div>
+
+<div id="pairs1" class="center"></div>
+        <script>
+        createBoard_withstrong([0,1,0,0,0,2,0,1,0], 'pair1', 'pairs1', 'One pair for Green: Castle', 1);
+    </script> <br /> <br />
+
+<div id="pairs2" class="center"></div>
+        <script>
+        createBoard_withstrong([2,1,0,1,0,2,0,1,0], 'pair2', 'pairs2', 'Two pairs for Green: Island 1 and Castle', 1);
+    </script> <br /> <br />
+
+<div id="pairs3" class="center"></div>
+        <script>
+        createBoard_withstrong([2,0,0,1,0,2,0,1,0], 'pair3', 'pairs3', 'One pair for Orange: River', 2);
+    </script> <br /> <br />
+
+
+    <div style="clear:both" align="center">
+            <br /> <br />
+      <form action="">
+          <input type="button" value="Back" onclick="window.location.href='concepts_1.html';"/>
+          <input type="button" value="Next" onclick="window.location.href='concepts_3.html';"/>
+      </form>
+    </div> 
+
+</body>
+</html>

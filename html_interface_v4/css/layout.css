@@ -160,13 +160,18 @@ div.islandTag {
     text-align : center;
 }
 
-.center {
+div.center {
   display: block;
   float: right;
   position: relative;
-  left: 230px;
+  left: 200px;
   margin: auto;
   width: 80%;
+}
+
+div.center:hover {
+  left: 330px;
+  transform: scale(1.4);
 }
 
 

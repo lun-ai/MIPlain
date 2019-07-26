@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+    <div align="center">
+        <scan style="font-size:3vw">Definitions: Triplet</scan>
+    </div>
+
+<div style="clear:both" align="center">
+         <p> Now, please read carefully the definitions below that will help you thorough the game.
+            <br />
+            Remember, you can click on the corner button of each board to view the table of resources captured.
+            </p>
+        </div>
+
+
+ <div style="clear:both" align="center">
+         <p>   A TRIPLET is a collection of three resources of the same category. <br />
+            One player has a triplet in each the following board states, the territories containing the resources of the triplet are highlighted.
+            <br />
+            <br />
+            </p>
+            </div>
+
+        <div id="triplets1" class="center"></div>
+        <script>
+        createBoard_withtriplet([1,2,2,2,0,1,0,0,1], 'triplet1', 'triplets1','Triplet for Orange: Island 1', 2);
+        </script> <br /> <br />
+
+        <div id="triplets2" class="center"></div>
+        <script>
+        createBoard_withtriplet([2,0,2,1,1,1,0,1,2], 'triplet2', 'triplets2','Triplet for Green: Cornfield', 1); 
+        </script> <br /> <br />
+
+        <div id="triplets3" class="center"></div>
+        <script>
+        createBoard_withtriplet([2,1,1,2,0,1,1,2,2], 'triplet3', 'triplets3','Triplet for Orange: Animal', 2); 
+        </script> <br /> <br />
+
+
+    <div style="clear:both" align="center">
+        <br /> <br />
+      <form action="">
+          <input type="button" value="Back" onclick="window.location.href='index.html';"/>
+          <input type="button" value="Next" onclick="window.location.href='concepts_2.html';"/>
+      </form>
+    </div> 
+
+</body>
+</html>

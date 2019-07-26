@@ -129,8 +129,13 @@ function stopCountPhase0() {
     removeChild('gameBoard', 'game');
     boxes = [];
 
+    if (boardToPlay == emptyBoard){
+        document.getElementById('instruction2').textContent = '';
+    }
+
     if (ended) {
         // finished game
+        document.getElementById('instruction2').textContent = '';
         removeChild('gamep1CountTable','game');
         removeChild('gamep2CountTable','game');
         removeChild('gameBoard', 'game');
@@ -140,7 +145,6 @@ function stopCountPhase0() {
         // unfinished game
         document.getElementById('instruction1').textContent = 'Select one territory to capture resources.';
         document.getElementById('phase').textContent = '';
-        document.getElementById('instruction2').textContent = '';
 
         var currentBoard = changeLabelsOnBoard(boardToPlay);
         var board = document.createElement('div');
@@ -175,16 +179,19 @@ function stopCountPhase0() {
             island.appendChild(cell1);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
+            cell1.setAttribute('id', 'cell1_'+i);
             cell1.addEventListener('click', boardClickedGame);
             var cell2 = createIsland(currentBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
             island.appendChild(cell2);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
+            cell2.setAttribute('id', 'cell2_'+i);
             cell2.addEventListener('click', boardClickedGame);
             var cell3 = createIsland(currentBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
             island.appendChild(cell3);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
+            cell3.setAttribute('id', 'cell3_'+i);
             cell3.addEventListener('click', boardClickedGame);
 
 
@@ -222,7 +229,10 @@ function createCountTables(parentId, board) {
     div1.style.width = '10%';
     div1.style.height = '50%';
     div1.style.top = '10%';
-    div1.style.right = '20%';
+    div1.style.right = '21%';
+
+    add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+
     var table1 = document.createElement('table');
     table1.classList.add('table3');
     div1.appendChild(table1);
@@ -257,7 +267,10 @@ function createCountTables(parentId, board) {
     div2.style.width = '10%';
     div2.style.height = '50%';
     div2.style.top = '10%';
-    div2.style.right = '12%';
+    div2.style.right = '11%';
+
+    add_table_title(div2, 'Comment2', 'Resource table for <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
+
     var table2 = document.createElement('table');
     table2.classList.add('table3');
     div2.appendChild(table2);
@@ -427,6 +440,8 @@ function boardClickedGame() {
 
         this.style.backgroundColor = P1_COLOR;
 
+        document.getElementById('instruction2').textContent = 'You have captured ' + resources(this.id) + '!';
+
         var currentBoard = convertBoxesTOBoard(boxes);
         
         if(win(currentBoard,1)) {
@@ -485,8 +500,9 @@ function boardClicked() {
         div1.style.width = '10%';
         div1.style.height = '50%';
         div1.style.top = '20%';
-        div1.style.right = '20%';
+        div1.style.right = '21%';
         removeChild('gamep1CountTable', 'game');
+        add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
         var table1 = document.createElement('table');
         table1.classList.add('table3');
         div1.appendChild(table1);
@@ -609,7 +625,10 @@ function nextQuestion() {
     div1.style.width = '10%';
     div1.style.height = '50%';
     div1.style.top = '20%';
-    div1.style.right = '20%';
+    div1.style.right = '21%';
+
+    add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+
     var table1 = document.createElement('table');
     table1.classList.add('table3');
     div1.appendChild(table1);
@@ -644,7 +663,10 @@ function nextQuestion() {
     div2.style.width = '10%';
     div2.style.height = '50%';
     div2.style.top = '20%';
-    div2.style.right = '12%';
+    div2.style.right = '11%';
+
+    add_table_title(div2, 'Comment2', 'Resource table for <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
+
     var table2 = document.createElement('table');
     table2.classList.add('table3');
     div2.appendChild(table2);
@@ -693,7 +715,7 @@ function phase0() {
 
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').innerHTML = 'You will first play a training game to get familiar with the rules of the game. Your opponent plays randomly as <span style="background-color:' + P2_COLOR + '">Orange</span>.'
+    document.getElementById('instruction1').innerHTML = 'You are all set up! Lets now play a training game to get familiar with the rules of the game. Your opponent plays randomly as <span style="background-color:' + P2_COLOR + '">Orange</span>.'
     document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. For every move, press the cell you want to select. ' +
                         'You have only one shot for each of your move.'
     totalTime = QUESTION_TIME;
@@ -1029,6 +1051,7 @@ function createBoard2(board, id, parentId, text) {
     createBoardExpl(board, id, parentId, text, 'black');
 }
 
+
 function createBoard_withtriplet(board, id, parentId, text, player) {
     createBoardExpl(board, id, parentId, text, 'black');
     if (player == 1){
@@ -1166,6 +1189,20 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     button.style.right = '0%';
 }
 
+function add_table_title(parent,id,text){
+
+    var title = document.createElement('div');
+    parent.appendChild(title);
+    title.style.position = 'relative';
+    title.style.top = '0%';
+    title.style.width = '100%';
+    title.setAttribute('id', id);
+    title.align = 'center';
+    title.style.fontSize = 'small';
+    title.style.whiteSpace = 'pre-wrap';
+    title.innerHTML = text;
+
+}
 
 function createBoard(board, boardId, parentId, text, positions, color, borderWidth) {
 

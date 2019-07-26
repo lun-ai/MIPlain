@@ -20,6 +20,16 @@ var YELLOW = '#ffcc00',
         'Forest': 'Forest',
         'Horse': 'Animal',
         'Fish': 'Animal'};
+    board_resources = {
+        'cell1_0':'Castle, River',
+        'cell1_1':'Castle',
+        'cell1_2':'Castle, Horse',
+        'cell2_0':'Forest',
+        'cell2_1':'Forest,River,Fish',
+        'cell2_2':'Forest',
+        'cell3_0':'Cornfield,Cow',      
+        'cell3_1':'Cornfield',
+        'cell3_2':'Cornfield,River'};
     ATTR = ['Castle', 'River', 'Cornfield', 'Animal', 'Forest'];
 
 var minimaxTable = canonicalData,
@@ -82,6 +92,10 @@ function winLine(board, player) {
         return 'Forest';
     }
     return [];
+}
+
+function resources(id){
+    return board_resources[id];
 }
 
 
