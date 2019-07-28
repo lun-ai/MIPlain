@@ -982,6 +982,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
 
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
+    div.classList.add('center1');
     div.style.position = 'relative';
     div.style.height = '250px';
     document.getElementById(parentId).appendChild(div);
@@ -1088,8 +1089,9 @@ function createMoveButton(buttonId, parentId, text, func) {
 function createBoardExpl(board, boardId, parentId, text, color) {
 
     var div = document.createElement('div');
-    div.setAttribute('id', boardId);
     div.classList.add('column3');
+    div.classList.add('center1');
+    div.setAttribute('id', boardId);
     div.style.position = 'relative';
     div.style.height = '250px';
     var frame = document.createElement('div');
@@ -1099,7 +1101,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     frame.style.width = '100%';
     frame.style.border = '1px solid black';
     frame.style.top = '5%';
-    frame.style.backgroundColor = "transparent";
+    frame.style.backgroundColor = "white";
 
     document.getElementById(parentId).appendChild(div);  
     if (board.length !== 0) {
@@ -1221,6 +1223,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 
     var div = document.createElement('div');
     div.setAttribute('id', boardId);
+    div.classList.add('center1');
     div.style.position = 'relative';
     div.style.height = '300px';
     div.style.border = '1px solid black';
