@@ -174,4 +174,20 @@ div.center:hover {
   transform: scale(1.4);
 }
 
+.blackButton {
+    align: center;
+    background-color: #555555;
+    color: white;
+    border-radius: 5px;
+}
+
+.introButton {
+    align: center;
+    background-color: #555555;
+    color: white;
+    border-radius: 5px;
+    width: 80px;
+    height: 35px;
+}
+
 

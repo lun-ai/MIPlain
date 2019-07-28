@@ -174,14 +174,14 @@ function createButton(buttonId, parentId, text, func) {
     var button = document.getElementById(buttonId);
 
     if (button == null) {
-        button = document.createElement('Button');
+        button = document.createElement('button');
         document.getElementById(parentId).appendChild(button);
     }
 
     button.type = 'button';
-//    button.style.width = '80px';
-//    button.style.height = '35px';
-    button.align = 'center';
+    button.classList.add('blackButton');
+    button.style.width = '80px';
+    button.style.height = '35px';
     button.id = buttonId;
     button.textContent = text;
     button.onclick = func;

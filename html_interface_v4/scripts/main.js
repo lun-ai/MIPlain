@@ -906,13 +906,13 @@ function showExample() {
     if (Math.random() > 0.5) {
         var text1 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1');
         var text2 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move2');
-        createButton('rightMoveButton', 'rightMoveComment', text1, rightMoveChosen);
-        createButton('wrongMoveButton', 'wrongMoveComment', text2, wrongMoveChosen);
+        createMoveButton('rightMoveButton', 'rightMoveComment', text1, rightMoveChosen);
+        createMoveButton('wrongMoveButton', 'wrongMoveComment', text2, wrongMoveChosen);
     } else {
         var text1 = createParitalBoard(examples[currentExpl - 1], wrongMoves[currentExpl - 1], 'wrongMove', 'move1');
         var text2 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move2');
-        createButton('wrongMoveButton', 'wrongMoveComment', text1, wrongMoveChosen);
-        createButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
+        createMoveButton('wrongMoveButton', 'wrongMoveComment', text1, wrongMoveChosen);
+        createMoveButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
 
     document.getElementById("rightMove"+rightIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
@@ -1071,6 +1071,20 @@ function createBoard_withstrong(board, id, parentId, text, player) {
     }
 }
 
+function createTableViewButton(buttonId, parentId, text, func) {
+    var button = createButton(buttonId, parentId, text, func);
+    button.style.position = 'absolute';
+    button.style.width = '';
+    button.style.height = '';
+    return button;
+}
+
+function createMoveButton(buttonId, parentId, text, func) {
+    var button = createTableViewButton(buttonId, parentId, text, func);
+    button.style.position = 'relative';
+    return button;
+}
+
 function createBoardExpl(board, boardId, parentId, text, color) {
 
     var div = document.createElement('div');
@@ -1183,8 +1197,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%');});
-    button.style.position = 'absolute';
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%');});
     button.style.top = '65%';
     button.style.right = '0%';
 }
@@ -1268,8 +1281,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%');});
-    button.style.position = 'absolute';
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%');});
     button.style.top = '90%';
     button.style.right = '0%';
 }
@@ -1474,8 +1486,7 @@ function p1CountTable(parentId, board, top, right) {
     }
 
     removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right);});
-    button.style.position = 'absolute';
+    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right);});
     button.style.top = top;
     button.style.right = right;
 }
@@ -1530,8 +1541,7 @@ function p2CountTable(parentId, board, top, right) {
     }
 
     removeChild(parentId + 'p2CountTableButton', parentId);
-    var button = createButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right);});
-    button.style.position = 'absolute';
+    var button = createTableViewButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right);});
     button.style.top = top;
     button.style.right = right;
 }
@@ -1544,10 +1554,9 @@ function boardView(parentId, board, top, right) {
     document.getElementById(parentId + 'Island3').style.display = 'initial';
 
     removeChild(parentId + 'boardView', parentId);
-    var button = createButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right);});
-    button.style.position = 'absolute';
+    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right);});
     button.style.top = top;
     button.style.right = right;
 }
 
-phase0();
+phase2();
