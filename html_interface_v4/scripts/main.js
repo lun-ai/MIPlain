@@ -482,12 +482,12 @@ function board1Click() {
 
         clicked = 1;
 
-        var div = document.getElementById('commentdiv');
+        var div = document.getElementById('emptyBoard');
 
         var comment = document.createElement('div');
         div.appendChild(comment);
         comment.style.position = 'absolute';
-        comment.style.top = '65%';
+        comment.style.top = '-5%';
         comment.style.width = '100%';
         comment.setAttribute('id', 'Comment');
         comment.align = 'center';
