@@ -13,6 +13,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
 var t,
     phase = 1,
     th = 1.2,
+    clicked = 0,
     S = 0,
     sec = 0,
     boxes = [],
@@ -470,6 +471,37 @@ function boardClickedGame() {
             }
 
         }
+    }
+}
+
+function board1Click() {
+    if (this.style.backgroundColor !== WHITE || clicked == 1) {
+        return;
+    } else {
+        this.style.backgroundColor = P1_COLOR;
+
+        clicked = 1;
+
+        var div = document.getElementById('commentdiv');
+
+        var comment = document.createElement('div');
+        div.appendChild(comment);
+        comment.style.position = 'absolute';
+        comment.style.top = '65%';
+        comment.style.width = '100%';
+        comment.setAttribute('id', 'Comment');
+        comment.align = 'center';
+        comment.style.fontSize = 'normal';
+        comment.style.whiteSpace = 'pre-wrap';
+        comment.innerHTML = 'You have captured ' + resources(this.id) + '!';
+
+        var currentBoard = convertBoxesTOBoard(boxes);
+
+        removeChild('emptyBoard' + 'p1CountTableButton', 'emptyBoard');
+        var button = createTableViewButton('emptyBoard' + 'p1CountTableButton', 'emptyBoard', 'P1 resources', function() {p1CountTable('emptyBoard', currentBoard, '90%', '17%');});
+        button.style.top = '90%';
+        button.style.right = '17%';
+        
     }
 }
 
@@ -1048,10 +1080,86 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
     }
 }
 
-function createBoard2(board, id, parentId, text) {
-    createBoardExpl(board, id, parentId, text, 'black');
-}
+function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
 
+    var currentBoard = changeLabelsOnBoard(iniboard);
+    var board = document.createElement('div');
+    document.getElementById(parentId).appendChild(board);
+    board.setAttribute('id', boardid);
+    board.style.position = 'absolute';
+    board.style.left = '-22%';
+    board.style.height = '80%';
+    board.style.width = '80%';
+    var frame = document.createElement('div');
+    board.appendChild(frame);
+    frame.style.position = 'absolute';
+    frame.style.height = '95%';
+    frame.style.left = '15%';
+    frame.style.width = '70%';
+    frame.style.border = '1px solid black';
+    frame.style.top = '7%';
+    frame.style.backgroundColor = "white";
+
+    for (var i = 0; i < 3; i++) {
+        var island = document.createElement('div');
+        board.appendChild(island);
+        var islandID = boardid + 'Island' + (i + 1);
+        island.setAttribute('id', islandID);
+        island.style.height = '40%';
+        island.style.width = '25%';
+        island.style.position = 'absolute';
+
+        if (i === 0) {
+            island.style.top = '10%';
+            island.style.left = '20%';
+        } else if (i == 1) {
+            island.style.top = '10%';
+            island.style.right = '20%';
+        } else {
+            island.style.top = '60%';
+            island.style.left = '37.5%';
+            }
+
+        var cell1 = createIsland(currentBoard[i * 3], ISLAND_ATTR[i * 3]);
+        island.appendChild(cell1);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.setAttribute('id', 'cell1_'+i);
+        cell1.addEventListener('click', board1Click);
+        var cell2 = createIsland(currentBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+        island.appendChild(cell2);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.setAttribute('id', 'cell2_'+i);
+        cell2.addEventListener('click', board1Click);
+        var cell3 = createIsland(currentBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+        island.appendChild(cell3);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.setAttribute('id', 'cell3_'+i);
+        cell3.addEventListener('click', board1Click);
+
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
+        islandTag.style.backgroundColor = DEFAULT_C;
+        islandTag.innerHTML = 'Island ' + (i + 1);
+
+        boxes.push(cell1);
+        boxes.push(cell2);
+        boxes.push(cell3);
+
+    }
+
+    var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, board, '90%', '17%');});
+    button.style.top = '90%';
+    button.style.right = '17%';
+}
 
 function createBoard_withtriplet(board, id, parentId, text, player) {
     createBoardExpl(board, id, parentId, text, 'black');
@@ -1481,7 +1589,6 @@ function p1CountTable(parentId, board, top, right) {
                 } else {
                     cell.innerHTML = count[Math.floor((i * 4 + j - 1) / 2)];
                 }
-
             }
         }
     } else {

@@ -9,20 +9,7 @@
 </head>
 <body onLoad="goNewWin()">
     <div align="center">
-        <scan style="font-size:3vw">Introduction</scan>
-        <p> Do you want to become an expert of the Island game? <br /> <br />
-
-            To do so, you will pass a trial which includes 4 parts. <br />
-            You will first get familiar with the rules of the game. <br />
-            Then you will answer some questions about single moves. <br />
-            Next you will become an apprentice of the Great Wizard. <br />
-            Finally, you will apply what you have learnt by answering some more questions about single moves.<br />
-            <br />
-            </p>
-            </div>
-
-               <div align="center">
-        <scan style="font-size:2vw"> <u>Rules of the game</u> </scan>
+        <scan style="font-size:3vw">Rules of the game </scan>
         <p> <br /> First, here are some basics of the game. The Island game is a two-player game. <br />
             The two players, <span style="background-color: #9aeda1">Green</span> and <span style="background-color: #f7cd92">Orange</span>, take turns conquering territories. <br />
             Any untaken territory can be conquered until the game terminates. <br />
@@ -36,41 +23,26 @@
             Below is the initial world. Select one territory to get some resources. <br />
             </p>
             </div>
-    <br />
-    <br />
 
- <div id = "commentdiv" style="clear:both" align="center">
-            </div>
-
-    <br />
-    <br />
-    <br />
-
-<div id="initial" style="height:400px;" class="center">
-            <script>
-            boxes = [];
-            createBoard_oneclick([0,0,0,0,0,0,0,0,0],'emptyBoard','initial','Initial World','black');
-            </script>
-        </div>
-    <br />
-    <br />
+<!--
+<div id="initial" style="height:400px;" align="center">
+            <script> createBoard2(['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],'emptyBoard','initial','Initial World'); </script>
+        </div> -->
 
 <div style="clear:both" align="center">
          <p> Each resource belongs to one of the following category: <br />
             <i> Island 1, Island 2, Island 3, Forest, Castle, Cornfield, River, Animal. </i> <br /> <br />
             The player who first succeeds in obtaining three resources of the same category wins the game. <br /> <br />
              You can press the button at the corner of each board to view the table for resources captured. <br />
-             Pressing "P1 resources" will show the resources captured by <span style="background-color: #9aeda1">Green</span> so far,<br />
-            then pressing "P2 resources" will show the resources captured by <span style="background-color: #f7cd92">Orange</span> so far.<br />
-            Pressing "Board" will get you back to the current board. <br />
-             Please press the corner button on the Initial World above to see the resources captured.
+             Pressing "P1 resources" will show the resources captured by <span style="background-color: #9aeda1">Green</span> so far, then pressing "P2 resources" will show the resources captured by <span style="background-color: #f7cd92">Orange</span> so far. Pressing "Board" will get you back to the current board. <br />
+             Please press the button on the Initial Board above to see the resources captured.
             <br />
             </p>
             </div>
 
     <div align="center">
       <form action="">
-          <input type="button" class="introButton" value="Continue" onclick="window.location.href='concepts_1.html';"/>
+          <input type="button" value="Continue" onclick="window.location.href='concepts.html';"/>
       </form>
     </div> 
 
