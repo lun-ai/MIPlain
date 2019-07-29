@@ -482,7 +482,7 @@ function board1Click() {
 
         clicked = 1;
 
-        var div = document.getElementById('emptyBoard');
+        var div = document.getElementById('emptyWorld');
 
         var comment = document.createElement('div');
         div.appendChild(comment);
@@ -497,8 +497,8 @@ function board1Click() {
 
         var currentBoard = convertBoxesTOBoard(boxes);
 
-        removeChild('emptyBoard' + 'p1CountTableButton', 'emptyBoard');
-        var button = createTableViewButton('emptyBoard' + 'p1CountTableButton', 'emptyBoard', 'P1 resources', function() {p1CountTable('emptyBoard', currentBoard, '90%', '17%', '36%','36%', '60%', '60%');});
+        removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
+        var button = createTableViewButton('emptyWorld' + 'p1CountTableButton', 'emptyWorld', 'P1 resources', function() {p1CountTable('emptyWorld', currentBoard, '90%', '17%', '80%', '80%', '40%', '40%');});
         button.style.top = '90%';
         button.style.right = '17%';
         
@@ -1087,15 +1087,15 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
     document.getElementById(parentId).appendChild(board);
     board.setAttribute('id', boardid);
     board.style.position = 'absolute';
-    board.style.left = '-17%';
-    board.style.height = '70%';
-    board.style.width = '70%';
+    board.style.left = '-22%';
+    board.style.height = '80%';
+    board.style.width = '80%';
     var frame = document.createElement('div');
     board.appendChild(frame);
     frame.style.position = 'absolute';
     frame.style.height = '95%';
-    frame.style.width = '65%';
-    frame.style.left = '17%';
+    frame.style.left = '15%';
+    frame.style.width = '70%';
     frame.style.border = '1px solid black';
     frame.style.top = '7%';
     frame.style.backgroundColor = "white";
@@ -1139,6 +1139,7 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
         cell3.setAttribute('id', 'cell3_'+i);
         cell3.addEventListener('click', board1Click);
 
+
         var islandTag = document.createElement('div');
         islandTag.classList.add('islandTag');
         island.appendChild(islandTag);
@@ -1154,8 +1155,8 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
         boxes.push(cell3);
 
     }
+    var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, board, '90%', '17%', '80%', '80%', '40%', '40%');});
 
-    var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, board, '90%', '17%', '36%', '36%', '60%', '60%');});
     button.style.top = '90%';
     button.style.right = '17%';
 }
@@ -1306,7 +1307,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%', '60%', '60%', '20%', '20%');});
     button.style.top = '65%';
     button.style.right = '0%';
 }
@@ -1391,7 +1392,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%', '60%', '60%', '20%', '20%');});
     button.style.top = '90%';
     button.style.right = '0%';
 }
@@ -1544,7 +1545,7 @@ function showNegExamples(board, parentId, pos){
     }
 }
 
-function p1CountTable(parentId, board, top, right, toptable, righttable, width, height) {
+function p1CountTable(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft) {
 
     var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
@@ -1560,10 +1561,10 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
         var div = document.createElement('div');
         parent.appendChild(div);
         div.style.position = 'absolute';
-        div.style.width = width;
-        div.style.height = height;
-        div.style.top = toptable;
-        div.style.left = righttable;
+        div.style.width = tablewidth;
+        div.style.height = tableheight;
+        div.style.top = tabletop;
+        div.style.left = tableleft;
         table = document.createElement('table');
         table.classList.add('table4');
         table.setAttribute('id', parentId + 'p1CountTable');
@@ -1595,12 +1596,12 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
     }
 
     removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft);});
     button.style.top = top;
     button.style.right = right;
 }
 
-function p2CountTable(parentId, board, top, right, toptable, righttable, width, height) {
+function p2CountTable(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft) {
 
     var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
@@ -1614,10 +1615,10 @@ function p2CountTable(parentId, board, top, right, toptable, righttable, width, 
         var div = document.createElement('div');
         parent.appendChild(div);
         div.style.position = 'absolute';
-        div.style.width = '60%';
-        div.style.height = '60%';
-        div.style.top = toptable;
-        div.style.left = righttable;
+        div.style.width = tablewidth;
+        div.style.height = tableheight;
+        div.style.top = tabletop;
+        div.style.left = tableleft;
         table = document.createElement('table');
         table.classList.add('table4');
         table.setAttribute('id', parentId + 'p2CountTable');
@@ -1650,12 +1651,12 @@ function p2CountTable(parentId, board, top, right, toptable, righttable, width, 
     }
 
     removeChild(parentId + 'p2CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft);});
     button.style.top = top;
     button.style.right = right;
 }
 
-function boardView(parentId, board, top, right, toptable, righttable, width, height) {
+function boardView(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft) {
 
     document.getElementById(parentId + 'p2CountTable').style.display = 'none';
     document.getElementById(parentId + 'Island1').style.display = 'initial';
@@ -1663,7 +1664,7 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     document.getElementById(parentId + 'Island3').style.display = 'initial';
 
     removeChild(parentId + 'boardView', parentId);
-    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right, tablewidth, tableheight, tabletop, tableleft);});
     button.style.top = top;
     button.style.right = right;
 }
