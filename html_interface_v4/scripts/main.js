@@ -497,10 +497,10 @@ function board1Click() {
 
         var currentBoard = convertBoxesTOBoard(boxes);
 
-      //  removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
+    //    removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
         var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 resources', function() {p1CountTable('emptyWorld', currentBoard, '90%', '17%', '36%','36%', '60%', '60%');});
         button.style.top = '90%';
-        button.style.right = '17%';
+        button.style.right = '19%';
         
     }
 }
@@ -1154,9 +1154,9 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
         boxes.push(cell3);
 
     }
-  //  var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, iniboard, '90%', '17%', '36%', '36%', '60%', '60%');});
-  //  button.style.top = '90%';
-  //  button.style.right = '17%';
+ //   var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, iniboard, '90%', '17%', '36%', '36%', '60%', '60%');});
+ //   button.style.top = '90%';
+ //   button.style.right = '17%';
 }
 
 function createBoard_withtriplet(board, id, parentId, text, player) {
