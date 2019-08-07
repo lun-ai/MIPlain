@@ -161,17 +161,12 @@ div.islandTag {
 }
 
 div.center {
-  display: block;
-  float: right;
   position: relative;
-  left: 200px;
-  margin: auto;
-  width: 80%;
+  width: 60%;
 }
 
 div.center:hover {
   position: relative;
-  left: 225px;
   transform: scale(1.1);
 }
 

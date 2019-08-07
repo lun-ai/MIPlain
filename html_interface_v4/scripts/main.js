@@ -780,9 +780,9 @@ function phase1() {
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
                         + P1_COLOR + '">Green</span>, '
-                        + 'and please press a WHITE cell' +
+                        + 'and please press a <b>WHITE</b> cell' +
                         ' to capture resources that you think can lead to WIN';
-    document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question.';
+    document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question.';
     stopCount();
 }
 
@@ -822,13 +822,13 @@ function phase2() {
 
     if (participantID % TOTAL_GROUP == 0) {
         document.getElementById('instruction3').innerHTML +=
-                    'You are given time to think about your choice.';
+                    'You are given time to think about your choice. <br /> <br />';
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    'You are given time to study the comments from MIGO AI. ';
+                    'You are given time to study the comments from MIGO AI.';
         document.getElementById('instruction4').innerHTML = '<span style="text-decoration: underline">'
-                    + 'You can press button at the corner of each board to view the table for resources captured.</span>'
+                    + 'You can press button at the corner of each board to view the table for resources captured.</span> <br /> <br />'
     }
 
     stopCount();
@@ -854,9 +854,9 @@ function phase3() {
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
                         + P1_COLOR + '">Green</span>, '
-                        + 'and please press a WHITE cell' +
+                        + 'and please press a <b>WHITE</b> cell' +
                         ' to capture resources that you think can lead to WIN';
-    document.getElementById('instruction2').innerHTML = 'You have ONE CHANCE for each question. ';
+    document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question. ';
 
     test_boards = PHASE3_QUESTIONS;
     stopCount();
@@ -1093,9 +1093,8 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
     document.getElementById(parentId).appendChild(board);
     board.setAttribute('id', boardid);
     board.style.position = 'absolute';
-    board.style.left = '-17%';
-    board.style.height = '70%';
-    board.style.width = '70%';
+    board.style.width = '100%';
+    board.style.height = '80%';
     var frame = document.createElement('div');
     board.appendChild(frame);
     frame.style.position = 'absolute';
@@ -1166,22 +1165,30 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
 }
 
 function createBoard_withtriplet(board, id, parentId, text, player) {
-    createBoardExpl(board, id, parentId, text, 'black');
+    var div = createBoardExpl(board, id, parentId, text, 'black');
     if (player == 1){
         highlightAttr(id, [winLine(board,player)], 'green', 'x');
     } else {
         highlightAttr(id, [winLine(board,player)], 'yellow', 'o');
     }
+
+    div.classList.remove('column3');
+    div.style.width = '70%';
+    div.style.height = '100%';
 }
 
 function createBoard_withstrong(board, id, parentId, text, player) {
-    createBoardExpl(board, id, parentId, text, 'black');
+    var div = createBoardExpl(board, id, parentId, text, 'black');
     var strong = findPosStrongOption(board, player);
     if (player == 1){
         highlightAttr(id, strong, 'green', 'x');
     } else {
         highlightAttr(id, strong, 'yellow', 'o');
     }
+
+    div.classList.remove('column3');
+    div.style.width = '70%';
+    div.style.height = '100%';
 }
 
 function createTableViewButton(buttonId, parentId, text, func) {
@@ -1314,6 +1321,8 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '65%';
     button.style.right = '0%';
+
+    return div;
 }
 
 function add_table_title(parent,id,text){
