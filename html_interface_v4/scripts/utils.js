@@ -186,6 +186,8 @@ function createButton(buttonId, parentId, text, func) {
     button.textContent = text;
     button.onclick = func;
     button.disabled = false;
+    button.style.position = 'relative';
+    button.style.zIndex = "4";
 
     return button;
 }

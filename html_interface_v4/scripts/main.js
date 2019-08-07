@@ -8,7 +8,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TURN = 'X',
     TOTAL_GROUP = 2,
     QUESTION_TIME = 60 * 60 * 24,
-    EXPL_TIME = 120;
+    EXPL_TIME = 15;
 
 var t,
     phase = 1,
@@ -34,8 +34,6 @@ var t,
     record = '';
 
 var texts = String(window.location).split('=');
-// uncomment for deployment
-//var participantID = (new Date).getTime();
 
 var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 
@@ -112,7 +110,8 @@ function startCount() {
     var elapse = Math.max(totalTime - sec, 0);
     if (totalTime - sec < 0) {
         stopCount();
-        if(phase == 2 && sec == totalTime - 10) {
+    } else if (!ended && sec <= totalTime){
+        if(phase == 2 && (totalTime - sec - 10) < 0.01) {
             if (currentExpl == TOTAL_EXPL) {
                 document.getElementById("timer").textContent = 'Will move onto the next part in 10 secs';
             } else {
@@ -351,6 +350,7 @@ function stopCountPhase1() {
 function stopCountPhase2() {
 
     if (currentExpl != 0) {
+        ended = true;
         if (!moveChosen) {
             answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
             timeTaken.push(totalTime);
@@ -918,6 +918,7 @@ function nextExample() {
 
     clearBoards();
     moveChosen = false;
+    ended = false;
     totalTime = QUESTION_TIME;
     removeChild('nextExampleButton', 'nextExample');
     answers.push([]);
@@ -960,6 +961,7 @@ function showExample() {
 function showExpl() {
 
     timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
+    totalTime = EXPL_TIME;
     console.log(timeTaken);
 
     removeChild('wrongMoveButton', 'wrongMoveComment');

@@ -176,6 +176,7 @@ div.center:hover {
 }
 
 div.center1:hover{
+  position: relative;
   transform: scale(1.2);
   z-index: 3;
 }
