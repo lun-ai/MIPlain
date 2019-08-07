@@ -498,7 +498,7 @@ function board1Click() {
         var currentBoard = convertBoxesTOBoard(boxes);
 
     //    removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
-        var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 resources', function() {p1CountTable('emptyWorld', currentBoard, '90%', '17%', '36%','36%', '60%', '60%');});
+        var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 resources', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
         button.style.top = '90%';
         button.style.right = '19%';
         
@@ -747,9 +747,13 @@ function phase0() {
 
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
-    document.getElementById('instruction1').innerHTML = 'You are all set up! Lets now play a training game to get familiar with the rules of the game. Your opponent plays randomly as <span style="background-color:' + P2_COLOR + '">Orange</span>.'
-    document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. For every move, press the cell you want to select. ' +
-                        'You have only one shot for each of your move.'
+    document.getElementById('instruction1').innerHTML =
+    			'Lets now play a training game to get familiar with the rules of the game. <br />' + 
+    			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> choose optimal moves.<br /> <br />';
+    document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. <br />' +
+    			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
+    			'For every move, press the cell you want to select. ' +
+                'You have only one shot for each of your move.<br /> <br />';
     totalTime = QUESTION_TIME;
 
     createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
@@ -758,10 +762,10 @@ function phase0() {
 function prephase1() {
 
     document.getElementById('phase').textContent = '';
-    document.getElementById('instruction1').innerHTML = 'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions'
-                                                    + ' for which you play against another opponent who plays OPTIMALLY.'
-    document.getElementById('instruction2').innerHTML = 'And you should choose what you think to be the best move to WIN.'
-                                                    + ' You have ONE CHANCE for each question and you should try your best.';
+    document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span>: it always chooses the best possible move. <br /><br />' +
+    			'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions.';
+    document.getElementById('instruction2').innerHTML = 'Choose what you think to be the best move to WIN.<br />'
+                                                    + ' You have ONE CHANCE for each question and you should try your best.<br /><br />';
     createButton('nextPhaseButton', 'nextPhase', 'Next', phase1);
 
 }

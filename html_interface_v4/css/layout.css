@@ -170,8 +170,9 @@ div.center {
 }
 
 div.center:hover {
-  left: 330px;
-  transform: scale(1.4);
+  position: relative;
+  left: 225px;
+  transform: scale(1.1);
 }
 
 div.center1:hover{
