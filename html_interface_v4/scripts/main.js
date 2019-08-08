@@ -8,7 +8,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TURN = 'X',
     TOTAL_GROUP = 2,
     QUESTION_TIME = 60 * 60 * 24,
-    EXPL_TIME = 15;
+    EXPL_TIME = 120;
 
 var t,
     phase = 1,
@@ -143,7 +143,7 @@ function stopCountPhase0() {
     }     
     else {
         // unfinished game
-        document.getElementById('instruction1').textContent = 'Select one territory to capture resources.';
+        document.getElementById('instruction1').textContent = 'Select one territory at a time to capture resources.';
         document.getElementById('phase').textContent = '';
 
         var currentBoard = changeLabelsOnBoard(boardToPlay);
