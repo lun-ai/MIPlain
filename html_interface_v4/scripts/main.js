@@ -749,10 +749,10 @@ function phase0() {
     document.getElementById('phase').textContent = 'Phase No.' + phase;
     document.getElementById('instruction1').innerHTML =
     			'Lets now play a training game to get familiar with the rules of the game. <br />' + 
-    			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> choose optimal moves.<br /> <br />';
+    			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
     document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. <br />' +
     			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
-    			'For every move, press the cell you want to select. ' +
+    			'For every move, press a <b>WHITE</b> cell you want to select. ' +
                 'You have only one shot for each of your move.<br /> <br />';
     totalTime = QUESTION_TIME;
 
