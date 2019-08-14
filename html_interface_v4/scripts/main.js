@@ -308,8 +308,20 @@ function stopCountPhase1() {
 
     currentQuestion += 1;
     
-    
    if (currentQuestion > TOTAL_QUESTIONS) {
+
+
+        record += '\n\nPart 1: \n'
+        + answers.map(g => '[[' + g.join('],[') + ']]\n')
+        + 'difficulty: [' + difficulty + ']\n'
+        + 'scores: [' + scores + ']\n'
+        + 'time: [' + timeTaken + ']\n';
+
+       // console.log(record);
+       // flushLocalCache();
+
+        var element = document.getElementById("postrecord");
+        element.value = record;
         
 	    removeChild('nextQuestionButton', 'nextQuestion');
 	    removeChild('gamep1CountTable', 'game');
@@ -317,28 +329,13 @@ function stopCountPhase1() {
         document.getElementById('phase').textContent = 'Well done for completing Part 1!';
         document.getElementById('timer').textContent = '';
 
-		document.getElementById('instruction1').textContent =
-                	'In Part 2, examples are given by the Great Wizard'
-                	+ ' and you need choose between two potential moves for what '
-               		 + 'you think to be the best move to WIN the Great Wizard.';
-		document.getElementById('instruction1').textContent = '';
-        document.getElementById('instruction2').textContent =
-          	          'The Great Wizard tells you which one is the right move and which is not.';
-        document.getElementById('Great_Wizard_intro').style.display = 'block';
+        document.getElementById('goconcepts2').style.display = 'block';
 
-        if (participantID % TOTAL_GROUP == 0) {
-            document.getElementById('instruction3').textContent =
-                	    'Then, you are given 2 minutes to think about your choice.'
-       	} else {
-            document.getElementById('instruction3').textContent =
-               		 'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
-            document.getElementById('MIGO_intro').style.display = 'block';
-        }
+        document.getElementById('instruction1').textContent = '';
+        document.getElementById('instruction2').textContent = '';
 
         document.getElementById('numQuestion').textContent = '';
         removeChild('gameBoard', 'game');
-
-      	createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
 
    } else {
         nextQuestion();
@@ -743,8 +740,7 @@ function endExpr() {
 
 function phase0() {
 
-    removeChild('nextPhaseButton', 'nextPhase');
-
+  //  removeChild('nextPhaseButton', 'nextPhase');
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
     document.getElementById('instruction1').innerHTML =
@@ -786,20 +782,33 @@ function phase1() {
     stopCount();
 }
 
+function prephase2() {
+    document.getElementById('instruction1').textContent =
+                'In Part 2, examples are given by the Great Wizard'
+                + ' and you need choose between two potential moves for what '
+                 + 'you think to be the best move to WIN the Great Wizard.';
+    document.getElementById('instruction2').textContent =
+                  'The Great Wizard tells you which one is the right move and which is not.';
+    document.getElementById('Great_Wizard_intro').style.display = 'block';
+
+    if (participantID % TOTAL_GROUP == 0) {
+        document.getElementById('instruction3').textContent =
+                    'Then, you are given 2 minutes to think about your choice.'
+    } else {
+        document.getElementById('instruction3').textContent =
+                 'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
+        document.getElementById('MIGO_intro').style.display = 'block';
+    }
+
+    createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
+
+
+}
+
 function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
     removeChild('gameBoard', 'game');
-
-    record += '\n\nPart 1: \n'
-        + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: [' + difficulty + ']\n'
-        + 'scores: [' + scores + ']\n'
-        + 'time: [' + timeTaken + ']\n';
-
-    console.log(record);
-
-    flushLocalCache();
 	
     phase = 2
 	
@@ -877,6 +886,7 @@ function phase4() {
     // localStorage.setItem("expResult", record);
     var element = document.getElementById("postrecord");
     element.value = record
+    document.write(record);
     document.getElementById('phase').textContent = 'Part ' + u;
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';
@@ -1681,5 +1691,3 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     button.style.top = top;
     button.style.right = right;
 }
-
-phase0();
