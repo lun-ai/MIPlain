@@ -317,6 +317,8 @@ function stopCountPhase1() {
         + 'scores: [' + scores + ']\n'
         + 'time: [' + timeTaken + ']\n';
 
+        document.getElementById('participantid').value = participantID;
+
        // console.log(record);
        // flushLocalCache();
 
@@ -886,7 +888,6 @@ function phase4() {
     // localStorage.setItem("expResult", record);
     var element = document.getElementById("postrecord");
     element.value = record
-    document.write(record);
     document.getElementById('phase').textContent = 'Part ' + u;
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';

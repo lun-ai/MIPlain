@@ -22,9 +22,10 @@
 <div id='game' class='row' align="center"></div>
 <div id="nextQuestion" class='row' align="center"></div>
 
-<form id="goconcepts2" align="center" style="display:none" method="post">
+<form id="goconcepts2" align="center" style="display:none" method="post" action="save_part1.cgi">
     <input type="hidden"; id="postrecord", name="postrecord" value="">
-    <input type="button" class="introButton" value="Next" onclick="window.location.href='concepts_2.html';"/>
+      <input type="hidden" id="participantid", name="participantid" value="">
+    <input type="submit" class="introButton" value="Next"/>
 </form>
 
 <div id='explanation' class="row" style="display:none">
