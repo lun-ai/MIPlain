@@ -12,6 +12,6 @@ fwrite($fp, $_POST[age].PHP_EOL);
 fwrite($fp, PHP_EOL);
 fwrite($fp, $_POST[degree].PHP_EOL);
 fclose($fp);
-include("concepts_2.html");
+include("pairs.html");
 
 ?>
