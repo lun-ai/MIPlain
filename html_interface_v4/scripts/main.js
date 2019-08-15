@@ -785,6 +785,7 @@ function phase1() {
 }
 
 function prephase2() {
+    phase = 2;
     document.getElementById('instruction1').textContent =
                 'In Part 2, examples are given by the Great Wizard'
                 + ' and you need choose between two potential moves for what '
@@ -792,6 +793,8 @@ function prephase2() {
     document.getElementById('instruction2').textContent =
                   'The Great Wizard tells you which one is the right move and which is not.';
     document.getElementById('Great_Wizard_intro').style.display = 'block';
+
+    document.getElementById('phase').textContent = 'Part ' + phase;
 
     if (participantID % TOTAL_GROUP == 0) {
         document.getElementById('instruction3').textContent =
@@ -811,8 +814,6 @@ function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
     removeChild('gameBoard', 'game');
-	
-    phase = 2
 	
     totalTime = QUESTION_TIME;
 
