@@ -11,6 +11,7 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     EXPL_TIME = 120;
 
 var t,
+    participantID = 0,
     phase = 1,
     th = 1.2,
     clicked = 0,
@@ -35,8 +36,7 @@ var t,
 
 var texts = String(window.location).split('=');
 
-var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
-
+// var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
 function flushLocalCache() {
     prevBoard = [0,0,0,0,0,0,0,0,0],
     difficulty = [],
@@ -309,7 +309,7 @@ function stopCountPhase1() {
     currentQuestion += 1;
     
    if (currentQuestion > TOTAL_QUESTIONS) {
-
+        var participantID = localStorage['partID'];
 
         record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -324,7 +324,6 @@ function stopCountPhase1() {
 
         var element = document.getElementById("postrecord");
         element.value = record;
-        
 	    removeChild('nextQuestionButton', 'nextQuestion');
 	    removeChild('gamep1CountTable', 'game');
         removeChild('gamep2CountTable', 'game');
@@ -347,7 +346,7 @@ function stopCountPhase1() {
 }
 
 function stopCountPhase2() {
-
+    var participantID = localStorage['partID'];
     if (currentExpl != 0) {
         ended = true;
         if (!moveChosen) {
@@ -399,7 +398,7 @@ function stopCountPhase3() {
         clearTimeout(t);
         sec = 0;
     }
-
+    var participantID = localStorage['partID'];
     currentQuestion += 1;
 
     if (currentQuestion > TOTAL_QUESTIONS) {
@@ -741,8 +740,13 @@ function endExpr() {
 }
 
 function phase0() {
+    //var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+    var participantID = (new Date).getTime();
+    participantID = 2*participantID+1;
+    localStorage.setItem( 'partID', participantID);
 
-  //  removeChild('nextPhaseButton', 'nextPhase');
+	
+	//  removeChild('nextPhaseButton', 'nextPhase');
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
     document.getElementById('instruction1').innerHTML =
@@ -785,6 +789,10 @@ function phase1() {
 }
 
 function prephase2() {
+
+    var participantID = localStorage['partID'];
+ //   localStorage.removeItem( 'partID' ); // Clear the localStorage
+    
     phase = 2;
     document.getElementById('instruction1').textContent =
                 'In Part 2, examples are given by the Great Wizard'
@@ -814,7 +822,7 @@ function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
     removeChild('gameBoard', 'game');
-	
+    var participantID = localStorage['partID'];
     totalTime = QUESTION_TIME;
 
     document.getElementById('explanation').style.display = 'block';
@@ -849,7 +857,7 @@ function phase2() {
 function phase3() {
 
     removeChild('nextPhaseButton', 'nextPhase');
-
+    var participantID = localStorage['partID'];
     record += '\n\nPart 2: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'scores: [' + scores + ']\n'
@@ -875,7 +883,7 @@ function phase3() {
 }
 
 function phase4() {
-
+    var participantID = localStorage['partID'];
     console.log(record);
     flushLocalCache();
 
