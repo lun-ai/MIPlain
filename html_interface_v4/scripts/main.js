@@ -59,6 +59,7 @@ function flushLocalCache() {
 function applyStrategy(board) {
 
     var session = pl.create(RESOLUTION_DEPTH);
+    var participantID = localStorage['partID'];
 
     session.consult(PL_FILE_NAME + (participantID % TOTAL_GROUP) + '.pl');
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
@@ -727,6 +728,7 @@ function nextQuestion() {
 
 function endExpr() {
 
+    var participantID = localStorage['partID'];
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(record));
     element.setAttribute('download', participantID + '#' + formattedDate() + '.txt');
@@ -1003,6 +1005,7 @@ function showExpl() {
     moveChosen = true;
     totalTime = EXPL_TIME;
     sec = 0;
+    var participantID = localStorage['partID'];
 
     if (participantID % TOTAL_GROUP != 0) {
 
