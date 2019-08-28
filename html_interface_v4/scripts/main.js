@@ -232,7 +232,7 @@ function createCountTables(parentId, board) {
     div1.style.top = '10%';
     div1.style.right = '21%';
 
-    add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
 
     var table1 = document.createElement('table');
     table1.classList.add('table3');
@@ -270,7 +270,7 @@ function createCountTables(parentId, board) {
     div2.style.top = '10%';
     div2.style.right = '11%';
 
-    add_table_title(div2, 'Comment2', 'Resource table for <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
+    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
 
     var table2 = document.createElement('table');
     table2.classList.add('table3');
@@ -347,7 +347,7 @@ function stopCountPhase1() {
 }
 
 function stopCountPhase2() {
-    var participantID = localStorage['partID'];
+    var participantID = localStorage['partID'];P
     if (currentExpl != 0) {
         ended = true;
         if (!moveChosen) {
@@ -497,7 +497,7 @@ function board1Click() {
         var currentBoard = convertBoxesTOBoard(boxes);
 
     //    removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
-        var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 resources', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
+        var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 points', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
         button.style.top = '90%';
         button.style.right = '19%';
         
@@ -533,7 +533,7 @@ function boardClicked() {
         div1.style.top = '20%';
         div1.style.right = '21%';
         removeChild('gamep1CountTable', 'game');
-        add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+        add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
         var table1 = document.createElement('table');
         table1.classList.add('table3');
         div1.appendChild(table1);
@@ -658,7 +658,7 @@ function nextQuestion() {
     div1.style.top = '20%';
     div1.style.right = '21%';
 
-    add_table_title(div1, 'Comment1', 'Resource table for <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
 
     var table1 = document.createElement('table');
     table1.classList.add('table3');
@@ -696,7 +696,7 @@ function nextQuestion() {
     div2.style.top = '20%';
     div2.style.right = '11%';
 
-    add_table_title(div2, 'Comment2', 'Resource table for <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
+    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
 
     var table2 = document.createElement('table');
     table2.classList.add('table3');
@@ -758,6 +758,10 @@ function phase0() {
     			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
     			'For every move, press a <b>WHITE</b> cell you want to select. ' +
                 'You have only one shot for each of your move.<br /> <br />';
+    document.getElementById('instruction2').innerHTML =  '<span style="text-decoration: underline"> NOTE: While answering questions, do not feel rushed and take your time.</span> <br />'
+                     + '<span style="text-decoration: underline"> Please follow the instructions given. </span> <br />'
+                     + '<span style="text-decoration: underline"> Please do not discuss your results with any other participants. </span> <br /> <br />';
+
     totalTime = QUESTION_TIME;
 
     createButton('nextPhaseButton', 'nextPhase', 'Play', stopCount);
@@ -850,7 +854,7 @@ function phase2() {
         document.getElementById('instruction3').innerHTML +=
                     'You are given time to study the comments from MIGO AI.';
         document.getElementById('instruction4').innerHTML = '<span style="text-decoration: underline">'
-                    + 'You can press button at the corner of each board to view the table for resources captured.</span> <br /> <br />'
+                    + 'You can press button at the corner of each board to view the table of points obtained so far.</span> <br /> <br />'
     }
 
     stopCount();
@@ -1341,7 +1345,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '65%';
     button.style.right = '0%';
 
@@ -1428,7 +1432,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 resources', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '90%';
     button.style.right = '0%';
 }
@@ -1632,7 +1636,7 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
     }
 
     removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 resources', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 points', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
 }
@@ -1700,7 +1704,7 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     document.getElementById(parentId + 'Island3').style.visibility = "visible";
 
     removeChild(parentId + 'boardView', parentId);
-    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 resources', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
 }
