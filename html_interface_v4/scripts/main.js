@@ -1491,10 +1491,10 @@ function showPosExamples(game, parentId, pos){
         var strong2 = findPosStrongOption(game[2], 1);
 
         createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
-        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent would block (' + strong1 + ')', TEXT_GREEN);
+        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent blocks (' + strong1 + ')', TEXT_GREEN);
         createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs of "'
                                                         + findPosStrongOption(game[2], 1)
-                                                        + '" and opponent should have no pair', TEXT_GREEN);
+                                                        + '" and opponent has no pair', TEXT_GREEN);
 
         highlightAttr('posboard0', strong1, GREEN, 'x');
         highlightAttr('posboard1', strong1, GREEN, 'x');
