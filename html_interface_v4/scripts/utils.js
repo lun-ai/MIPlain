@@ -10,27 +10,25 @@ var YELLOW = '#ffcc00',
     DEFAULT_C = '#cbced4',
     P1_COLOR = '#9aeda1',
     P2_COLOR = '#f7cd92',
-    ISLAND_ATTR = ['Castle, River', 'Forest','Cornfield, Cow', 'Castle','Forest, River, Fish', 'Cornfield',
-                   'Castle, Horse', 'Forest', 'Cornfield, River'],
+    ISLAND_ATTR = ['Castle, River', 'Forest','Cornfield, Fish', 'Castle','Forest, River, Fish', 'Cornfield',
+                   'Castle, Fish', 'Forest', 'Cornfield, River'],
     ISLAND_ATTR_MAP = {
         'Castle': 'Castle',
         'River': 'River',
         'Cornfield': 'Cornfield',
-        'Cow': 'Animal',
         'Forest': 'Forest',
-        'Horse': 'Animal',
-        'Fish': 'Animal'};
+        'Fish': 'Fish'};
     board_resources = {
         'cell1_0':'Castle, River',
         'cell1_1':'Castle',
-        'cell1_2':'Castle, Horse',
+        'cell1_2':'Castle, Fish',
         'cell2_0':'Forest',
         'cell2_1':'Forest,River,Fish',
         'cell2_2':'Forest',
-        'cell3_0':'Cornfield,Cow',      
+        'cell3_0':'Cornfield,Fish',      
         'cell3_1':'Cornfield',
         'cell3_2':'Cornfield,River'};
-    ATTR = ['Castle', 'River', 'Cornfield', 'Animal', 'Forest'];
+    ATTR = ['Castle', 'River', 'Cornfield', 'Fish', 'Forest'];
 
 var minimaxTable = canonicalData,
     boardRepreToCanonical = canonicalMap;
@@ -77,7 +75,7 @@ function winLine(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
         return 'River';
     } else if (board[0] === board[3] && board[3] === board[7] && board[7] === player) {
-        return 'Animal';
+        return 'Fish';
     } else if (board[1] === board[2] && board[2] === board[3] && board[3] === player) {
         return 'Island1';
     } else if (board[3] === board[4] && board[4] === board[5] && board[5] === player) {
@@ -403,7 +401,7 @@ function findPosStrongOption(board, player) {
         p.push('River');
     }
     if ((newBoard[0] + newBoard[3] + newBoard[7]) == v) {
-        p.push('Animal');
+        p.push('Fish');
     }
     if ((newBoard[1] + newBoard[2] + newBoard[3]) == v) {
         p.push('Island1');

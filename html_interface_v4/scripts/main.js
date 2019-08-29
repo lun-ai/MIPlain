@@ -222,7 +222,7 @@ function stopCountPhase0() {
 
 function createCountTables(parentId, board) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
     var div1 = document.createElement('div');
     document.getElementById(parentId).appendChild(div1);
     div1.setAttribute('id', parentId + 'p1CountTable');
@@ -347,7 +347,7 @@ function stopCountPhase1() {
 }
 
 function stopCountPhase2() {
-    var participantID = localStorage['partID'];P
+    var participantID = localStorage['partID'];
     if (currentExpl != 0) {
         ended = true;
         if (!moveChosen) {
@@ -379,7 +379,7 @@ function stopCountPhase2() {
         document.getElementById('phase').textContent = 'Well done for completing Part 2!';
         document.getElementById('instruction1').textContent = 'In Part 3, you will answer ' + TOTAL_QUESTIONS + ' questions '
                                                     + 'for which you play against an OPTIMAL opponent.';
-        document.getElementById('instruction2').textContent = 'You should choose what you think to be the best move to WIN.'
+        document.getElementById('instruction2').textContent = 'You should select what you think is the best territory to WIN.'
                                                     + ' You have ONE CHANCE for each question and should try your best.';
         document.getElementById('instruction3').textContent = '';
         document.getElementById('instruction4').textContent = '';
@@ -497,9 +497,9 @@ function board1Click() {
         var currentBoard = convertBoxesTOBoard(boxes);
 
     //    removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
-        var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'P1 points', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
-        button.style.top = '90%';
-        button.style.right = '19%';
+    //    var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'Green points', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
+    //    button.style.top = '90%';
+    //    button.style.right = '19%';
         
     }
 }
@@ -523,7 +523,7 @@ function boardClicked() {
         console.log(timeTaken);
         console.log(scores);
 
-        var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+        var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
         var div1 = document.createElement('div');
         document.getElementById('game').appendChild(div1);
         div1.setAttribute('id', 'game' + 'p1CountTable');
@@ -648,7 +648,7 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
     var div1 = document.createElement('div');
     document.getElementById('game').appendChild(div1);
     div1.setAttribute('id', 'game' + 'p1CountTable');
@@ -756,7 +756,7 @@ function phase0() {
     			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
     document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. <br />' +
     			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
-    			'For every move, press a <b>WHITE</b> cell you want to select. ' +
+    			'Press the <b>EMPTY</b> territory you want to select. ' +
                 'You have only one shot for each of your move.<br /> <br />';
     document.getElementById('instruction2').innerHTML =  '<span style="text-decoration: underline"> NOTE: While answering questions, do not feel rushed and take your time.</span> <br />'
                      + '<span style="text-decoration: underline"> Please follow the instructions given. </span> <br />'
@@ -772,7 +772,7 @@ function prephase1() {
     document.getElementById('phase').textContent = '';
     document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span>: it always chooses the best possible move. <br /><br />' +
     			'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions.';
-    document.getElementById('instruction2').innerHTML = 'Choose what you think to be the best move to WIN.<br />'
+    document.getElementById('instruction2').innerHTML = 'You should select what you think is the best territory to WIN.<br />'
                                                     + ' You have ONE CHANCE for each question and you should try your best.<br /><br />';
     createButton('nextPhaseButton', 'nextPhase', 'Next', phase1);
 
@@ -1186,6 +1186,16 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
         boxes.push(cell3);
 
     }
+
+    var arrow = document.createElement('img');
+    document.getElementById('cell2_1').appendChild(arrow);
+    arrow.src = 'imgs/arrow.png';
+    arrow.style.height = '25%';
+    arrow.style.width = '200%';
+    arrow.style.position = 'absolute';
+    arrow.style.top = '150%';
+    arrow.style.left = '50%';
+
  //   var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, iniboard, '90%', '17%', '36%', '36%', '60%', '60%');});
  //   button.style.top = '90%';
  //   button.style.right = '17%';
@@ -1345,7 +1355,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Green points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '65%';
     button.style.right = '0%';
 
@@ -1432,7 +1442,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'P1 points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Green points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '90%';
     button.style.right = '0%';
 }
@@ -1480,7 +1490,7 @@ function showPosExamples(game, parentId, pos){
         var strong1 = findPosStrongOption(game[0], 1);
         var strong2 = findPosStrongOption(game[2], 1);
 
-        createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
+        createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
         createBoardExpl(game[1], 'posboard1', parentId, 'Opponent would block (' + strong1 + ')', TEXT_GREEN);
         createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs of "'
                                                         + findPosStrongOption(game[2], 1)
@@ -1504,8 +1514,8 @@ function showPosExamples(game, parentId, pos){
     } else if (game[0].filter(x => x === 0).length === 4) {
         // Depth 2
         var strong = findPosStrongOption(game[0], 1);
-	    createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 2 pairs (' + strong + ')', TEXT_GREEN);
-        createBoardExpl(game[0], 'posboard1', parentId, 'Opponent should have no pair', TEXT_GREEN);
+	    createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 2 pairs (' + strong + ')', TEXT_GREEN);
+        createBoardExpl(game[0], 'posboard1', parentId, 'Opponent has no pair', TEXT_GREEN);
         highlightAttr('posboard0', strong, GREEN, 'x');
         highlightAttr('posboard1',
                       [...new Set(game[0]
@@ -1517,7 +1527,7 @@ function showPosExamples(game, parentId, pos){
 
     } else if (game[0].filter(x => x === 0).length === 2) {
         // Depth 1
-        createBoardExpl(game[0], 'posboard0', parentId, 'You should move and obtain 1 triplet (' + winLine(game[0],1) + ')', TEXT_GREEN);
+        createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 1 triplet (' + winLine(game[0],1) + ')', TEXT_GREEN);
         highlightAttr('posboard0', [winLine(game[0],1)], GREEN, 'x');
     }
 }
@@ -1587,7 +1597,7 @@ function showNegExamples(board, parentId, pos){
 
 function p1CountTable(parentId, board, top, right, toptable, righttable, width, height) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
 
     document.getElementById(parentId + 'Island1').style.visibility  = 'hidden';
@@ -1636,14 +1646,14 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
     }
 
     removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'P2 points', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'Orange points', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
 }
 
 function p2CountTable(parentId, board, top, right, toptable, righttable, width, height) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Animal', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
     var parent = document.getElementById(parentId);
 
     document.getElementById(parentId + 'p1CountTable').style.visibility = "hidden";
@@ -1704,7 +1714,7 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     document.getElementById(parentId + 'Island3').style.visibility = "visible";
 
     removeChild(parentId + 'boardView', parentId);
-    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'P1 points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'Green points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+
+  <!--  <div align="center">
+        <scan style="font-size:2vw"> <u>Rules of the game</u> </scan>
+
+        <p> <br /> First, here are some basics of the game. The Island game is a two-player game. <br />
+            The two players, <span style="background-color: #9aeda1">Green</span> and <span style="background-color: #f7cd92">Orange</span>, take turns conquering territories. <br />
+            Any untaken territory can be conquered until the game terminates. <br />
+            You will play <span style="background-color: #9aeda1">Green</span>. <br />
+            </p>
+    </div>  -->
+<div style="clear:both" align="center">
+    <scan style="font-size:2vw"> <u>Rules of the game</u> </scan>
+    <p>     The Island game is a two-player game. <br />
+            The two players, <span style="background-color: #9aeda1">Green</span> and <span style="background-color: #f7cd92">Orange</span>, take turns conquering territories. <br />
+            You will play <span style="background-color: #9aeda1">Green</span>. <br />
+    </p>
+</div>
+
+<div style="clear:both" align="center">
+         <p> The goal is to win <span style="font-weight:bold">all three territories of one island</span> or to win <span style="font-weight:bold">all three resources of one type across islands</span>. <br />
+         	Examples of winning states are shown below.
+            </p>
+             <br /> <br />
+        </div>
+
+<div align="center"><div id="triplets1" style="height:280px;" class="center"></div></div>
+    <script>
+    createBoard_withtriplet([0,1,0,1,0,2,2,2,1], 'triplet1', 'triplets1','Orange has won because it has all three territories of Island 3', 2);
+    </script> <br /> <br />
+<div align="center"><div id="triplets2" style="height:280px;" class="center"></div></div>
+    <script>
+    createBoard_withtriplet([0,1,0,2,2,1,2,1,1], 'triplet2', 'triplets2','Green has won because it has all three resources of type Castle', 1); 
+    </script>
+
+
+	<!--		When it is your turn, you can select any untaken territory. <br /> 
+            Below is the initial world. <u>Select one territory (white cell) to get some resources.</u> <br />
+            </p>
+            </div> 
+    <br />
+    <br />	-->
+
+<div style="clear:both" align="center">
+         <p> 
+             You can press the button at the corner of each board to view a table showing the points each player has. <br />
+             Pressing <span style="font-weight:bold">"Green points"</span> will show the points <span style="background-color: #9aeda1">Green</span> has obtained so far,<br />
+            then pressing <span style="font-weight:bold">"Orange points"</span> will show the points <span style="background-color: #f7cd92">Orange</span> has obtained so far.<br />
+            Pressing <span style="font-weight:bold">"Board"</span> will get you back to the current board. <br />
+             <u>Please press the corner button on the boards above to see the points obtained by each player.</u>
+            <br /> <br />
+            </p>
+            </div>
+
+    <div align="center">
+      <form action="">
+          <input type="button" class="introButton" value="Back" onclick="window.location.href='index.html';"/>
+          <input type="button" class="introButton" value="Continue" onclick="window.location.href='triplets.html';"/>
+      </form>
+    </div> 
+
+</body>
+</html>
