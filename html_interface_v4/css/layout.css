@@ -193,13 +193,19 @@ div.center1:hover{
 }
 
 .iconImgXS {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
 }
 
 .iconImgS {
     width: 20px;
     height: 20px;
+}
+
+
+.iconImgXXS {
+    width: 12px;
+    height: 12px;
 }
 
 .iconImgL {

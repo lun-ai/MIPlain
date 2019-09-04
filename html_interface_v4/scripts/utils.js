@@ -7,6 +7,7 @@ var YELLOW = '#ffcc00',
     TRANSPAR = 'transparent',
     WHITE = 'white';
     GREY = 'grey',
+    N_SIZE = 3,
     DEFAULT_C = '#cbced4',
     P1_COLOR = '#9aeda1',
     P2_COLOR = '#f7cd92',
@@ -448,29 +449,25 @@ function formatHTMLText(text) {
 
 function highlightAttr(boardId, positions, color, mark) {
 
+    console.log(positions);
+
     for (var i = 0; i < 3; i++) {
 
         for (var k = 0; k < positions.length; k++) {
-
-            var attr;
-
             if (positions[k] === 'Island1' || positions[k] === 'Island2' || positions[k] === 'Island3') {
 
-                for (var q = 0; q < ATTR.length; q++) {
-                    attr = document.getElementById(boardId + positions[k] + ATTR[q] + mark);
+                for (var q = 1; q <= N_SIZE; q++) {
+                    var cell = document.getElementById(boardId + positions[k] + 'Cell' + q);
+                    console.log(boardId);
                     if (attr !== null) {
-                        attr.style.fontWeight = 'bold';
-                        attr.style.textDecoration = 'underline';
-//                        attr.style.backgroundColor = color;
+                        cell.style.borderWidth = '2px';
                     }
                 }
 
             } else {
-                attr = document.getElementById(boardId + 'Island' + (i + 1) + positions[k] + mark);
+                var attr = document.getElementById(boardId + 'Island' + (i + 1) + positions[k] + mark);
                 if (attr !== null) {
-                    attr.style.fontWeight = 'bold';
-                    attr.style.textDecoration = 'underline';
-//                    attr.style.backgroundColor = color;
+                    attr.src = attr.src.split('_taken')[0].split('.')[0] + '_taken.png';
                 }
             }
         }
@@ -480,24 +477,21 @@ function highlightAttr(boardId, positions, color, mark) {
 
 function highlightIslandCell(boardId, cellIdx, color, mark) {
 
-    console.log(cellIdx);
-
     var attrs = ISLAND_ATTR[cellIdx].split(', ');
-    console.log(attrs);
 
     for (var k = 0; k < attrs.length; k++) {
 
-        console.log(boardId + 'Island' + (Math.floor(cellIdx / N_SIZE) + 1) + attrs[k] + mark)
         var attr = document.getElementById(boardId
                                           + 'Island'
                                           + (Math.floor(cellIdx / N_SIZE) + 1)
                                           + ISLAND_ATTR_MAP[attrs[k]]
                                           + mark);
         if (attr !== null) {
-            attr.style.fontWeight = 'bold';
-//            attr.style.textDecoration = 'underline';
-//            attr.style.backgroundColor = color;
-            attr.style.border = '1px solid ' + color;
+            attr.src = attr.src.split('_taken')[0].split('.')[0] + '_taken.png';
         }
     }
+}
+
+function attrToIconImg(iconName) {
+    return '<img class="iconImgXS" src="imgs/' + iconName + '.png">'
 }

@@ -161,7 +161,7 @@ function stopCountPhase0() {
 
             var island = document.createElement('div');
             board.appendChild(island);
-            var islandID = boardID + 'island' + (i + 1);
+            var islandID = boardID + 'Island' + (i + 1);
             island.setAttribute('id', islandID);
             island.style.height = '30%';
             island.style.width = '25%';
@@ -215,9 +215,23 @@ function stopCountPhase0() {
             boxes.push(cell3);
         }
 
-        removeChild('gamep1CountTable','game');
-        removeChild('gamep2CountTable','game');
-        createCountTables('game', boardToPlay);
+        var boardForView = boardToPlay.slice(0);
+        removeChild(boardID + 'p1CountTableButton', boardID);
+        var button = createTableViewButton(boardID + 'p1CountTableButton',
+                                           boardID,
+                                           'Green points',
+                                           function() {
+                                                        p1CountTable(boardID,
+                                                                     boardForView,
+                                                                     '90%',
+                                                                     '0%',
+                                                                     '20%',
+                                                                     '20%',
+                                                                     '60%',
+                                                                     '60%');
+                                                        });
+        button.style.top = '90%';
+        button.style.right = '0%';
 
         boardToPlay = currentBoard;
     }
@@ -499,12 +513,6 @@ function board1Click() {
         comment.innerHTML = 'You have captured ' + resources(this.id) + '!';
 
         var currentBoard = convertBoxesTOBoard(boxes);
-
-    //    removeChild('emptyWorldp1CountTableButton', 'emptyWorld');
-    //    var button = createTableViewButton('emptyWorldp1CountTableButton', 'emptyWorld', 'Green points', function() {p1CountTable('emptyWorld', currentBoard, '90%', '19%', '36%','36%', '60%', '60%');});
-    //    button.style.top = '90%';
-    //    button.style.right = '19%';
-        
     }
 }
 
@@ -519,52 +527,15 @@ function boardClicked() {
         ended = true;
 
         var currentBoard = convertBoxesTOBoard(boxes);
-        console.log(currentBoard);
         answers[currentQuestion - 1].push(currentBoard);
 
         scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
         timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
-        console.log(timeTaken);
+        console.log(currentBoard);
         console.log(scores);
+        console.log(timeTaken);
 
-        var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
-        var div1 = document.createElement('div');
-        document.getElementById('game').appendChild(div1);
-        div1.setAttribute('id', 'game' + 'p1CountTable');
-        div1.style.position = 'absolute';
-        div1.style.width = '10%';
-        div1.style.height = '50%';
-        div1.style.top = '20%';
-        div1.style.right = '21%';
-        removeChild('gamep1CountTable', 'game');
-        add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
-        var table1 = document.createElement('table');
-        table1.classList.add('table3');
-        div1.appendChild(table1);
-
-        var count = countAttrs(currentBoard, 1);
-
-        for (var i = 0; i < 8; i++) {
-
-            var row = document.createElement('tr');
-            table1.appendChild(row);
-
-            for (var j = 0; j < 2; j++) {
-
-                var cell = document.createElement('td');
-                row.appendChild(cell);
-                cell.style.align = 'center';
-
-                if (j % 2 === 0) {
-                    cell.style.backgroundColor = P1_COLOR;
-                    cell.innerHTML = attr[i];
-                } else {
-                    cell.innerHTML = count[i];
-                }
-
-            }
-        }
-
+        removeChild('gameBoardp1CountTableButton', 'gameBoard');
         createButton('nextQuestionButton', 'gameBoard', 'Next Question', stopCount);
         var button = document.getElementById('nextQuestionButton');
         button.style.position = 'absolute';
@@ -580,6 +551,7 @@ function nextQuestion() {
 
     ended = false;
     prevBoard = test_boards[currentQuestion - 1];
+
     // available moves / num of winning moves
     difficulty.push(computeBoardDifficulty(prevBoard));
     answers.push([]);
@@ -606,7 +578,7 @@ function nextQuestion() {
 
         var island = document.createElement('div');
         board.appendChild(island);
-        var islandID = boardID + 'island' + (i + 1);
+        var islandID = boardID + 'Island' + (i + 1);
         island.setAttribute('id', islandID);
         island.style.height = '30%';
         island.style.width = '25%';
@@ -628,11 +600,13 @@ function nextQuestion() {
         cell1.style.top = '0%';
         cell1.style.left = '0%';
         cell1.addEventListener('click', boardClicked);
+
         var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
         island.appendChild(cell2);
         cell2.style.top = '0%';
         cell2.style.right = '0%';
         cell2.addEventListener('click', boardClicked);
+
         var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
         island.appendChild(cell3);
         cell3.style.bottom = '0%';
@@ -655,86 +629,24 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
-    var button = createTableViewButton(boardID + 'p1CountTableButton', boardID, 'Green points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    console.log(prevBoard);
+    removeChild(boardID + 'p1CountTableButton', boardID);
+    var button = createTableViewButton(boardID + 'p1CountTableButton',
+                                       boardID,
+                                       'Green points',
+                                       function() {
+                                                   p1CountTable(boardID,
+                                                                prevBoard,
+                                                                '90%',
+                                                                '0%',
+                                                                '20%',
+                                                                '20%',
+                                                                '60%',
+                                                                '60%');
+                                                   });
     button.style.top = '90%';
     button.style.right = '0%';
 
-//    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
-//    var div1 = document.createElement('div');
-//    document.getElementById('game').appendChild(div1);
-//    div1.setAttribute('id', 'game' + 'p1CountTable');
-//    div1.style.position = 'absolute';
-//    div1.style.width = '10%';
-//    div1.style.height = '50%';
-//    div1.style.top = '20%';
-//    div1.style.right = '21%';
-//
-//    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
-//
-//    var table1 = document.createElement('table');
-//    table1.classList.add('table3');
-//    div1.appendChild(table1);
-//
-//    var count = countAttrs(prevBoard, 1);
-//
-//    for (var i = 0; i < 8; i++) {
-//
-//        var row = document.createElement('tr');
-//        table1.appendChild(row);
-//
-//        for (var j = 0; j < 2; j++) {
-//
-//            var cell = document.createElement('td');
-//            row.appendChild(cell);
-//            cell.style.align = 'center';
-//
-//            if (j % 2 === 0) {
-//                cell.style.backgroundColor = P1_COLOR;
-//                cell.innerHTML = attr[i];
-//            } else {
-//                cell.innerHTML = count[i];
-//            }
-//
-//        }
-//    }
-//
-//    var div2 = document.createElement('div');
-//    document.getElementById('game').appendChild(div2);
-//    div2.setAttribute('id', 'game' + 'p2CountTable');
-//    div2.style.position = 'absolute';
-//    div2.style.width = '10%';
-//    div2.style.height = '50%';
-//    div2.style.top = '20%';
-//    div2.style.right = '11%';
-//
-//    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
-//
-//    var table2 = document.createElement('table');
-//    table2.classList.add('table3');
-//    div2.appendChild(table2);
-//
-//    count = countAttrs(prevBoard, 2);
-//
-//    for (var i = 0; i < 8; i++) {
-//
-//        var row = document.createElement('tr');
-//        table2.appendChild(row);
-//
-//        for (var j = 0; j < 2; j++) {
-//
-//            var cell = document.createElement('td');
-//            row.appendChild(cell);
-//            cell.style.align = 'center';
-//
-//            if (j % 2 === 0) {
-//                cell.style.backgroundColor = P2_COLOR;
-//                cell.innerHTML = attr[i];
-//            } else {
-//                cell.innerHTML = count[i];
-//            }
-//
-//        }
-//    }
 }
 
 function endExpr() {
@@ -755,7 +667,7 @@ function endExpr() {
 function phase0() {
     //var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
     var participantID = (new Date).getTime();
-    participantID = 2*participantID+1;
+    participantID = 2 * participantID + 1;
     localStorage.setItem( 'partID', participantID);
 
 	
@@ -863,9 +775,10 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    'You are given time to study the comments from MIGO AI.';
-        document.getElementById('instruction4').innerHTML = '<span style="text-decoration: underline">'
-                    + 'You can press button at the corner of each board to view the table of points obtained so far.</span> <br /> <br />'
+                    '<br /> You are given time to learn from comments of MIGO AI, '
+                    + 'which explain why the right move is better than the wrong move. ';
+        document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
+                    + 'You can press button at the corner of each board to view the table of points.</span> <br /> <br />'
     }
 
     stopCount();
@@ -989,10 +902,12 @@ function showExample() {
         createMoveButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
 
-    document.getElementById("rightMove"+rightIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
-                        + ISLAND_ATTR[rightIdx] + '</span>');
-    document.getElementById("wrongMove"+wrongIdx).innerHTML = formatHTMLText('<span style="background-color: yellow">'
-                        + ISLAND_ATTR[wrongIdx] + '</span>');
+    document.getElementById('rightMoveIsland' + rightIdx).style.borderColor = 'yellow';
+    document.getElementById('rightMoveIsland' + rightIdx).style.borderWidth = '2px';
+    document.getElementById('rightMoveIsland' + rightIdx).style.zIndex = 2;
+    document.getElementById('wrongMoveIsland' + wrongIdx).style.borderColor = 'yellow';
+    document.getElementById('wrongMoveIsland' + wrongIdx).style.borderWidth = '2px';
+    document.getElementById('wrongMoveIsland' + wrongIdx).style.zIndex = 3;
 }
 
 function showExpl() {
@@ -1013,9 +928,6 @@ function showExpl() {
 
     var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
-
-//    document.getElementById('wrongMove' + wrongIdx).style.color = 'red';
-//    document.getElementById('rightMove' + rightIdx).style.color = 'green';
 
     moveChosen = true;
     totalTime = EXPL_TIME;
@@ -1054,10 +966,10 @@ function wrongMoveChosen() {
 
 }
 
-function createParitalBoard(originalBoard, board, boardId, parentId) {
+function createParitalBoard(originalBoard, board, boardID, parentId) {
 
     var div = document.createElement('div');
-    div.setAttribute('id', boardId);
+    div.setAttribute('id', boardID);
     div.classList.add('center1');
     div.style.position = 'relative';
     div.style.height = '250px';
@@ -1072,7 +984,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         var islandNum = Math.floor(diffIdx / N_SIZE);
 
         var island = document.createElement('div');
-        var islandID = boardId + 'Island';
+        var islandID = boardID + 'Island';
         island.setAttribute('id', islandID);
         div.appendChild(island);
         island.style.height = '30%';
@@ -1081,23 +993,26 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         island.style.top = '20%';
         island.style.left = '30%';
 
-        var cell1 = createIsland(newBoard[islandNum * 3], islandID, ISLAND_ATTR[islandNum * 3]);
+        var cellID = islandID + (islandNum * 3);
+        var cell1 = createIslandAux(newBoard[islandNum * 3], cellID, ISLAND_ATTR[islandNum * 3], 'iconImgXS');
         cell1.style.top = '0%';
         cell1.style.left = '0%';
         cell1.style.fontSize = '10px';
-        cell1.setAttribute('id', boardId + (islandNum * 3));
+        cell1.setAttribute('id', cellID);
 
-        var cell2 = createIsland(newBoard[islandNum * 3 + 1], islandID, ISLAND_ATTR[islandNum * 3 + 1]);
+        cellID = islandID + (islandNum * 3 + 1);
+        var cell2 = createIslandAux(newBoard[islandNum * 3 + 1], cellID, ISLAND_ATTR[islandNum * 3 + 1], 'iconImgXS');
         cell2.style.top = '0%';
         cell2.style.right = '0%';
         cell2.style.fontSize = '10px';
-        cell2.setAttribute('id', boardId + (islandNum * 3 + 1));
+        cell2.setAttribute('id', cellID);
 
-        var cell3 = createIsland(newBoard[islandNum * 3 + 2], islandID, ISLAND_ATTR[islandNum * 3 + 2]);
+        cellID = islandID + (islandNum * 3 + 2);
+        var cell3 = createIslandAux(newBoard[islandNum * 3 + 2], cellID, ISLAND_ATTR[islandNum * 3 + 2], 'iconImgXS');
         cell3.style.bottom = '0%';
         cell3.style.left = '25%';
         cell3.style.fontSize = '10px';
-        cell3.setAttribute('id', boardId + (islandNum * 3 + 2));
+        cell3.setAttribute('id', cellID);
         island.appendChild(cell3);
         island.appendChild(cell2);
         island.appendChild(cell1);
@@ -1111,6 +1026,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         islandTag.style.left = '35%';
         islandTag.style.fontSize = '10px';
         islandTag.style.backgroundColor = DEFAULT_C;
+        islandTag.style.zIndex = 3;
         islandTag.innerHTML = 'Island ' + (islandNum + 1);
 
         var comment = document.createElement('div');
@@ -1118,7 +1034,7 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         comment.style.position = 'absolute';
         comment.style.bottom = '30%';
         comment.style.width = '100%';
-        comment.setAttribute('id', boardId+'Comment');
+        comment.setAttribute('id', boardID+'Comment');
         comment.align = 'center';
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
@@ -1211,10 +1127,6 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
     arrow.style.position = 'absolute';
     arrow.style.top = '150%';
     arrow.style.left = '50%';
-
- //   var button = createTableViewButton(boardid + 'p1CountTableButton', boardid, 'P1 resources', function() {p1CountTable(boardid, iniboard, '90%', '17%', '36%', '36%', '60%', '60%');});
- //   button.style.top = '90%';
- //   button.style.right = '17%';
 }
 
 function createBoard_withtriplet(board, id, parentId, text, player) {
@@ -1299,19 +1211,19 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                 island.style.top = '40%';
                 island.style.left = '27.5%';
             }
-            var cell1 = createIsland(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
+            var cell1 = createIslandAux(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3], 'iconImgXXS');
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.style.fontSize = '8px';
             cell1.setAttribute('id', islandID + 'Cell1');
 
-            var cell2 = createIsland(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
+            var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXXS');
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '8px';
             cell2.setAttribute('id', islandID + 'Cell2');
 
-            var cell3 = createIsland(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
+            var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXXS');
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '8px';
@@ -1404,15 +1316,15 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
                 island.style.left = '30%';
             }
 
-            var cell1 = createIsland(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
+            var cell1 = createIslandAux(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3], 'iconImgXS');
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.style.fontSize = '10px';
-            var cell2 = createIsland(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
+            var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXS');
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
-            var cell3 = createIsland(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
+            var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXS');
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '10px';
@@ -1441,17 +1353,21 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
 }
 
 function createIsland(elem, islandID, text) {
+    return createIslandAux(elem, islandID, text, 'iconImgS');
+}
+
+function createIslandAux(elem, islandID, text, iconClass) {
     var cell = document.createElement('div');
     cell.classList.add('islandCell');
     cell.style.height = '48.2%';
     cell.style.width = '49%';
 
-    cell.innerHTML = '<p>'
+    cell.innerHTML = '<p id="' + islandID + 'Attr">'
                         + text.split(', ')
                               .map(a => '<img id="' + islandID + ISLAND_ATTR_MAP[a]
                                                      + elem
                                                      + '" src="imgs/' + ISLAND_ATTR_MAP[a]
-                                                     + '.png" class="iconImgS">')
+                                                     + '.png" class="' + iconClass + '">')
                               .join(', ')
                         + '</p>';
     cell.style.backgroundColor = elem === 'e' ?
@@ -1491,39 +1407,41 @@ function showPosExamples(game, parentId, pos){
         var strong2 = findPosStrongOption(game[2], 1);
 
         createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 1 pair (' + strong1 + ')', TEXT_GREEN);
-        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent blocks (' + strong1 + ')', TEXT_GREEN);
-        createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs of "'
+        createBoardExpl(game[1], 'posboard1', parentId, 'Opponent conquers and prevents you from getting a triplet (' + strong1 + ')', TEXT_GREEN);
+        createBoardExpl(game[2], 'posboard2', parentId, 'You obtain 2 pairs ('
                                                         + findPosStrongOption(game[2], 1)
-                                                        + '" and opponent has no pair', TEXT_GREEN);
+                                                        + ') and opponent has no pair', TEXT_GREEN);
 
         highlightAttr('posboard0', strong1, GREEN, 'x');
-        highlightAttr('posboard1', strong1, GREEN, 'x');
-        highlightIslandCell('posboard1', game[1]
-                                         .map((x,i) => x !== game[0][i] ? changeIndex(i) : -1)
-                                         .filter(x => x !== -1)[0],
-                            'yellow', 'o');
-        highlightAttr('posboard2',
-                      [...new Set(game[0]
-                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
-                                  .filter(x => x !== -1)
-                                  .join(', ')
-                                  .split(', '))],
-                      'yellow', 'o');
+//        highlightAttr('posboard1', strong1, GREEN, 'x');
+//        highlightIslandCell('posboard1', game[1]
+//                                         .map((x,i) => x !== game[0][i] ? changeIndex(i) : -1)
+//                                         .filter(x => x !== -1)[0],
+//                            'yellow', 'o');
+//        highlightAttr('posboard2',
+//                      [...new Set(game[0]
+//                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
+//                                  .filter(x => x !== -1)
+//                                  .join(', ')
+//                                  .split(', '))],
+//                      'yellow', 'o');
         highlightAttr('posboard2', strong2, GREEN, 'x');
 
     } else if (game[0].filter(x => x === 0).length === 4) {
         // Depth 2
         var strong = findPosStrongOption(game[0], 1);
-	    createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 2 pairs (' + strong + ')', TEXT_GREEN);
+	    createBoardExpl(game[0], 'posboard0', parentId, 'You select this territory and obtain 2 pairs ('
+	                    + strong[0] + ', '
+	                    + strong[1] + ')', TEXT_GREEN);
         createBoardExpl(game[0], 'posboard1', parentId, 'Opponent has no pair', TEXT_GREEN);
         highlightAttr('posboard0', strong, GREEN, 'x');
-        highlightAttr('posboard1',
-                      [...new Set(game[0]
-                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
-                                  .filter(x => x !== -1)
-                                  .join(', ')
-                                  .split(', '))],
-                      'yellow', 'o');
+//        highlightAttr('posboard1',
+//                      [...new Set(game[0]
+//                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
+//                                  .filter(x => x !== -1)
+//                                  .join(', ')
+//                                  .split(', '))],
+//                      'yellow', 'o');
 
     } else if (game[0].filter(x => x === 0).length === 2) {
         // Depth 1
@@ -1546,10 +1464,10 @@ function showNegExamples(board, parentId, pos){
 
         nextBoard = computeNextMove(board, 2);
 	    createBoardExpl(nextBoard,'negboard1', parentId, EMPTY, TEXT_RED);
-	    highlightIslandCell('negboard1', nextBoard
-                                         .map((x,i) => x !== board[i] ? changeIndex(i) : -1)
-                                         .filter(x => x !== -1)[0],
-                            'yellow', 'o');
+//	    highlightIslandCell('negboard1', nextBoard
+//                                         .map((x,i) => x !== board[i] ? changeIndex(i) : -1)
+//                                         .filter(x => x !== -1)[0],
+//                            'yellow', 'o');
 	    nextBoard = computeNextMove(nextBoard, 1);
         strong2 = findPosStrongOption(nextBoard, 1);
 
@@ -1582,7 +1500,7 @@ function showNegExamples(board, parentId, pos){
         var opponentStrong = findPosStrongOption(board, 2);
         if (opponentStrong.length === 0) {
 		    createBoardExpl(board, 'negboard1', parentId, EMPTY, TEXT_RED);
-		    highlightAttr('negboard1', ATTR, 'yellow', 'o');
+//		    highlightAttr('negboard1', ATTR, 'yellow', 'o');
 		} else {
 	        createBoardExpl(board, 'negboard1', parentId, 'Contrast: opponent has 1 pair', TEXT_RED);
 	        highlightAttr('negboard1', opponentStrong, 'yellow', 'o');
@@ -1591,7 +1509,7 @@ function showNegExamples(board, parentId, pos){
 	} else if (board.filter(x => x === 0).length === 2) {
 	    // depth 1
         createBoardExpl(board, 'negboard0', parentId, 'Contrast: No triplet', TEXT_RED);
-        highlightAttr('negboard0', ATTR, 'yellow', 'x');
+//        highlightAttr('negboard0', ATTR, 'yellow', 'x');
     }
 }
 
@@ -1599,6 +1517,9 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
 
     var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
     var parent = document.getElementById(parentId);
+
+    removeChild(parentId + 'p1TableView', parentId);
+    removeChild(parentId + 'gameBoardp2TableView', parentId);
 
     document.getElementById(parentId + 'Island1').style.visibility  = 'hidden';
     document.getElementById(parentId + 'Island2').style.visibility  = 'hidden';
@@ -1611,6 +1532,7 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
         var div = document.createElement('div');
         parent.appendChild(div);
         div.style.position = 'absolute';
+        div.setAttribute('id', parentId + 'p1TableView');
         div.style.width = width;
         div.style.height = height;
         div.style.top = toptable;
@@ -1665,6 +1587,7 @@ function p2CountTable(parentId, board, top, right, toptable, righttable, width, 
         var div = document.createElement('div');
         parent.appendChild(div);
         div.style.position = 'absolute';
+        div.setAttribute('id', parentId + 'p2TableView');
         div.style.width = '60%';
         div.style.height = '60%';
         div.style.top = toptable;
@@ -1714,6 +1637,9 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     document.getElementById(parentId + 'Island3').style.visibility = "visible";
 
     removeChild(parentId + 'boardView', parentId);
+    removeChild(parentId + 'p1TableView', parentId);
+    removeChild(parentId + 'p2TableView', parentId);
+
     var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'Green points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
