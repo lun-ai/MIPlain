@@ -150,7 +150,8 @@ function stopCountPhase0() {
         var currentBoard = changeLabelsOnBoard(boardToPlay);
         var board = document.createElement('div');
         document.getElementById('game').appendChild(board);
-        board.setAttribute('id', 'gameBoard');
+        var boardID = 'gameBoard';
+        board.setAttribute('id', boardID);
         board.style.position = 'absolute';
         board.style.left = '20%';
         board.style.height = '60%';
@@ -160,7 +161,8 @@ function stopCountPhase0() {
 
             var island = document.createElement('div');
             board.appendChild(island);
-            island.setAttribute('id', 'island');
+            var islandID = boardID + 'island' + (i + 1);
+            island.setAttribute('id', islandID);
             island.style.height = '30%';
             island.style.width = '25%';
             island.style.position = 'absolute';
@@ -176,19 +178,21 @@ function stopCountPhase0() {
                 island.style.left = '37.5%';
             }
 
-            var cell1 = createIsland(currentBoard[i * 3], ISLAND_ATTR[i * 3]);
+            var cell1 = createIsland(currentBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
             island.appendChild(cell1);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.setAttribute('id', 'cell1_'+i);
             cell1.addEventListener('click', boardClickedGame);
-            var cell2 = createIsland(currentBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+
+            var cell2 = createIsland(currentBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
             island.appendChild(cell2);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.setAttribute('id', 'cell2_'+i);
             cell2.addEventListener('click', boardClickedGame);
-            var cell3 = createIsland(currentBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+
+            var cell3 = createIsland(currentBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
             island.appendChild(cell3);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
@@ -222,7 +226,7 @@ function stopCountPhase0() {
 
 function createCountTables(parentId, board) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
     var div1 = document.createElement('div');
     document.getElementById(parentId).appendChild(div1);
     div1.setAttribute('id', parentId + 'p1CountTable');
@@ -523,7 +527,7 @@ function boardClicked() {
         console.log(timeTaken);
         console.log(scores);
 
-        var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
+        var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
         var div1 = document.createElement('div');
         document.getElementById('game').appendChild(div1);
         div1.setAttribute('id', 'game' + 'p1CountTable');
@@ -591,7 +595,8 @@ function nextQuestion() {
 
     var board = document.createElement('div');
     document.getElementById('game').appendChild(board);
-    board.setAttribute('id', 'gameBoard');
+    var boardID = 'gameBoard';
+    board.setAttribute('id', boardID);
     board.style.position = 'absolute';
     board.style.left = '20%';
     board.style.height = '60%';
@@ -601,6 +606,8 @@ function nextQuestion() {
 
         var island = document.createElement('div');
         board.appendChild(island);
+        var islandID = boardID + 'island' + (i + 1);
+        island.setAttribute('id', islandID);
         island.style.height = '30%';
         island.style.width = '25%';
         island.style.position = 'absolute';
@@ -616,17 +623,17 @@ function nextQuestion() {
             island.style.left = '37.5%';
         }
 
-        var cell1 = createIsland(rightIndexAndLabel[i * 3], ISLAND_ATTR[i * 3]);
+        var cell1 = createIsland(rightIndexAndLabel[i * 3], islandID, ISLAND_ATTR[i * 3]);
         island.appendChild(cell1);
         cell1.style.top = '0%';
         cell1.style.left = '0%';
         cell1.addEventListener('click', boardClicked);
-        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
         island.appendChild(cell2);
         cell2.style.top = '0%';
         cell2.style.right = '0%';
         cell2.addEventListener('click', boardClicked);
-        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
         island.appendChild(cell3);
         cell3.style.bottom = '0%';
         cell3.style.left = '25%';
@@ -648,82 +655,86 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
-    var div1 = document.createElement('div');
-    document.getElementById('game').appendChild(div1);
-    div1.setAttribute('id', 'game' + 'p1CountTable');
-    div1.style.position = 'absolute';
-    div1.style.width = '10%';
-    div1.style.height = '50%';
-    div1.style.top = '20%';
-    div1.style.right = '21%';
+    var button = createTableViewButton(boardID + 'p1CountTableButton', boardID, 'Green points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    button.style.top = '90%';
+    button.style.right = '0%';
 
-    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
-
-    var table1 = document.createElement('table');
-    table1.classList.add('table3');
-    div1.appendChild(table1);
-
-    var count = countAttrs(prevBoard, 1);
-
-    for (var i = 0; i < 8; i++) {
-
-        var row = document.createElement('tr');
-        table1.appendChild(row);
-
-        for (var j = 0; j < 2; j++) {
-
-            var cell = document.createElement('td');
-            row.appendChild(cell);
-            cell.style.align = 'center';
-
-            if (j % 2 === 0) {
-                cell.style.backgroundColor = P1_COLOR;
-                cell.innerHTML = attr[i];
-            } else {
-                cell.innerHTML = count[i];
-            }
-
-        }
-    }
-
-    var div2 = document.createElement('div');
-    document.getElementById('game').appendChild(div2);
-    div2.setAttribute('id', 'game' + 'p2CountTable');
-    div2.style.position = 'absolute';
-    div2.style.width = '10%';
-    div2.style.height = '50%';
-    div2.style.top = '20%';
-    div2.style.right = '11%';
-
-    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
-
-    var table2 = document.createElement('table');
-    table2.classList.add('table3');
-    div2.appendChild(table2);
-
-    count = countAttrs(prevBoard, 2);
-
-    for (var i = 0; i < 8; i++) {
-
-        var row = document.createElement('tr');
-        table2.appendChild(row);
-
-        for (var j = 0; j < 2; j++) {
-
-            var cell = document.createElement('td');
-            row.appendChild(cell);
-            cell.style.align = 'center';
-
-            if (j % 2 === 0) {
-                cell.style.backgroundColor = P2_COLOR;
-                cell.innerHTML = attr[i];
-            } else {
-                cell.innerHTML = count[i];
-            }
-
-        }
-    }
+//    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
+//    var div1 = document.createElement('div');
+//    document.getElementById('game').appendChild(div1);
+//    div1.setAttribute('id', 'game' + 'p1CountTable');
+//    div1.style.position = 'absolute';
+//    div1.style.width = '10%';
+//    div1.style.height = '50%';
+//    div1.style.top = '20%';
+//    div1.style.right = '21%';
+//
+//    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+//
+//    var table1 = document.createElement('table');
+//    table1.classList.add('table3');
+//    div1.appendChild(table1);
+//
+//    var count = countAttrs(prevBoard, 1);
+//
+//    for (var i = 0; i < 8; i++) {
+//
+//        var row = document.createElement('tr');
+//        table1.appendChild(row);
+//
+//        for (var j = 0; j < 2; j++) {
+//
+//            var cell = document.createElement('td');
+//            row.appendChild(cell);
+//            cell.style.align = 'center';
+//
+//            if (j % 2 === 0) {
+//                cell.style.backgroundColor = P1_COLOR;
+//                cell.innerHTML = attr[i];
+//            } else {
+//                cell.innerHTML = count[i];
+//            }
+//
+//        }
+//    }
+//
+//    var div2 = document.createElement('div');
+//    document.getElementById('game').appendChild(div2);
+//    div2.setAttribute('id', 'game' + 'p2CountTable');
+//    div2.style.position = 'absolute';
+//    div2.style.width = '10%';
+//    div2.style.height = '50%';
+//    div2.style.top = '20%';
+//    div2.style.right = '11%';
+//
+//    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
+//
+//    var table2 = document.createElement('table');
+//    table2.classList.add('table3');
+//    div2.appendChild(table2);
+//
+//    count = countAttrs(prevBoard, 2);
+//
+//    for (var i = 0; i < 8; i++) {
+//
+//        var row = document.createElement('tr');
+//        table2.appendChild(row);
+//
+//        for (var j = 0; j < 2; j++) {
+//
+//            var cell = document.createElement('td');
+//            row.appendChild(cell);
+//            cell.style.align = 'center';
+//
+//            if (j % 2 === 0) {
+//                cell.style.backgroundColor = P2_COLOR;
+//                cell.innerHTML = attr[i];
+//            } else {
+//                cell.innerHTML = count[i];
+//            }
+//
+//        }
+//    }
 }
 
 function endExpr() {
@@ -1061,7 +1072,8 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         var islandNum = Math.floor(diffIdx / N_SIZE);
 
         var island = document.createElement('div');
-        island.setAttribute('id', boardId + 'Island');
+        var islandID = boardId + 'Island';
+        island.setAttribute('id', islandID);
         div.appendChild(island);
         island.style.height = '30%';
         island.style.width = '40%';
@@ -1069,17 +1081,19 @@ function createParitalBoard(originalBoard, board, boardId, parentId) {
         island.style.top = '20%';
         island.style.left = '30%';
 
-        var cell1 = createIsland(newBoard[islandNum * 3], ISLAND_ATTR[islandNum * 3]);
+        var cell1 = createIsland(newBoard[islandNum * 3], islandID, ISLAND_ATTR[islandNum * 3]);
         cell1.style.top = '0%';
         cell1.style.left = '0%';
         cell1.style.fontSize = '10px';
         cell1.setAttribute('id', boardId + (islandNum * 3));
-        var cell2 = createIsland(newBoard[islandNum * 3 + 1], ISLAND_ATTR[islandNum * 3 + 1]);
+
+        var cell2 = createIsland(newBoard[islandNum * 3 + 1], islandID, ISLAND_ATTR[islandNum * 3 + 1]);
         cell2.style.top = '0%';
         cell2.style.right = '0%';
         cell2.style.fontSize = '10px';
         cell2.setAttribute('id', boardId + (islandNum * 3 + 1));
-        var cell3 = createIsland(newBoard[islandNum * 3 + 2], ISLAND_ATTR[islandNum * 3 + 2]);
+
+        var cell3 = createIsland(newBoard[islandNum * 3 + 2], islandID, ISLAND_ATTR[islandNum * 3 + 2]);
         cell3.style.bottom = '0%';
         cell3.style.left = '25%';
         cell3.style.fontSize = '10px';
@@ -1152,19 +1166,21 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
             island.style.left = '37.5%';
             }
 
-        var cell1 = createIsland(currentBoard[i * 3], ISLAND_ATTR[i * 3]);
+        var cell1 = createIsland(currentBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
         island.appendChild(cell1);
         cell1.style.top = '0%';
         cell1.style.left = '0%';
         cell1.setAttribute('id', 'cell1_'+i);
         cell1.addEventListener('click', board1Click);
-        var cell2 = createIsland(currentBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+
+        var cell2 = createIsland(currentBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
         island.appendChild(cell2);
         cell2.style.top = '0%';
         cell2.style.right = '0%';
         cell2.setAttribute('id', 'cell2_'+i);
         cell2.addEventListener('click', board1Click);
-        var cell3 = createIsland(currentBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+
+        var cell3 = createIsland(currentBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
         island.appendChild(cell3);
         cell3.style.bottom = '0%';
         cell3.style.left = '25%';
@@ -1283,47 +1299,23 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                 island.style.top = '40%';
                 island.style.left = '27.5%';
             }
-            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            var cell1 = createIsland(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.style.fontSize = '8px';
             cell1.setAttribute('id', islandID + 'Cell1');
-            cell1.innerHTML = '<p>'
-                            + ISLAND_ATTR[i * 3]
-                                .split(', ')
-                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
-                                                       + newBoard[i * 3]
-                                                       + '">' + a + '</span>')
-                                .join(', ')
-                            + '</p>';
 
-            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            var cell2 = createIsland(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '8px';
             cell2.setAttribute('id', islandID + 'Cell2');
-            cell2.innerHTML = '<p>'
-                            + ISLAND_ATTR[i * 3 + 1]
-                                .split(', ')
-                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
-                                                       + newBoard[i * 3 + 1]
-                                                       + '">' + a + '</span>')
-                                .join(', ')
-                            + '</p>';
 
-            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            var cell3 = createIsland(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '8px';
             cell3.setAttribute('id', islandID + 'Cell3');
-            cell3.innerHTML = '<p>'
-                            + ISLAND_ATTR[i * 3 + 2]
-                                .split(', ')
-                                .map(a => '<span id="' + islandID + ISLAND_ATTR_MAP[a]
-                                                       + newBoard[i * 3 + 2]
-                                                       + '">' + a + '</span>')
-                                .join(', ')
-                            + '</p>';
 
             island.appendChild(cell3);
             island.appendChild(cell2);
@@ -1394,7 +1386,8 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         for (var i = 0; i < N_SIZE; i++) {
 
             var island = document.createElement('div');
-            island.setAttribute('id', boardId + 'Island' + (i + 1));
+            var islandID = boardId + 'Island' + (i + 1);
+            island.setAttribute('id', islandID);
             div.appendChild(island);
             island.style.height = '25%';
             island.style.width = '40%';
@@ -1411,15 +1404,15 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
                 island.style.left = '30%';
             }
 
-            var cell1 = createIsland(newBoard[i * 3], ISLAND_ATTR[i * 3]);
+            var cell1 = createIsland(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
             cell1.style.top = '0%';
             cell1.style.left = '0%';
             cell1.style.fontSize = '10px';
-            var cell2 = createIsland(newBoard[i * 3 + 1], ISLAND_ATTR[i * 3 + 1]);
+            var cell2 = createIsland(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
             cell2.style.top = '0%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
-            var cell3 = createIsland(newBoard[i * 3 + 2], ISLAND_ATTR[i * 3 + 2]);
+            var cell3 = createIsland(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '10px';
@@ -1447,13 +1440,20 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
     button.style.right = '0%';
 }
 
-function createIsland(elem, text) {
+function createIsland(elem, islandID, text) {
     var cell = document.createElement('div');
     cell.classList.add('islandCell');
     cell.style.height = '48.2%';
     cell.style.width = '49%';
 
-    cell.innerHTML = formatHTMLText(text);
+    cell.innerHTML = '<p>'
+                        + text.split(', ')
+                              .map(a => '<img id="' + islandID + ISLAND_ATTR_MAP[a]
+                                                     + elem
+                                                     + '" src="imgs/' + ISLAND_ATTR_MAP[a]
+                                                     + '.png" class="iconImgS">')
+                              .join(', ')
+                        + '</p>';
     cell.style.backgroundColor = elem === 'e' ?
                                  WHITE :
                                  elem === 'x' ?
@@ -1597,7 +1597,7 @@ function showNegExamples(board, parentId, pos){
 
 function p1CountTable(parentId, board, top, right, toptable, righttable, width, height) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
     var parent = document.getElementById(parentId);
 
     document.getElementById(parentId + 'Island1').style.visibility  = 'hidden';
@@ -1653,7 +1653,7 @@ function p1CountTable(parentId, board, top, right, toptable, righttable, width, 
 
 function p2CountTable(parentId, board, top, right, toptable, righttable, width, height) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'River'];
+    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
     var parent = document.getElementById(parentId);
 
     document.getElementById(parentId + 'p1CountTable').style.visibility = "hidden";
