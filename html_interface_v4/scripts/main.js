@@ -365,7 +365,9 @@ function stopCountPhase1() {
 }
 
 function stopCountPhase2() {
+
     var participantID = localStorage['partID'];
+
     if (currentExpl != 0) {
         ended = true;
         if (!moveChosen) {
