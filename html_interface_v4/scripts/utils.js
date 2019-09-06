@@ -449,16 +449,13 @@ function formatHTMLText(text) {
 
 function highlightAttr(boardId, positions, color, mark) {
 
-    console.log(positions);
+    for (var i = 0; i < 3; i ++) {
 
-    for (var i = 0; i < 3; i++) {
-
-        for (var k = 0; k < positions.length; k++) {
+        for (var k = 0; k < positions.length; k ++) {
             if (positions[k] === 'Island1' || positions[k] === 'Island2' || positions[k] === 'Island3') {
 
-                for (var q = 1; q <= N_SIZE; q++) {
+                for (var q = 1; q <= N_SIZE; q ++) {
                     var cell = document.getElementById(boardId + positions[k] + 'Cell' + q);
-                    console.log(boardId);
                     if (attr !== null) {
                         cell.style.borderWidth = '2px';
                     }
