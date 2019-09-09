@@ -777,10 +777,11 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    '<br /> You are given time to learn from comments of MIGO AI, '
-                    + 'which explain why the right move is better than the wrong move. ';
+                    '<br /> <b>You are given time to learn from comments of MIGO AI, '
+                    + 'which explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
-                    + 'You can press button at the corner of each board to view the table of points.</span> <br /> <br />'
+                    + 'You can press button at the corner of each board to view the table of points. <br />'
+                    + 'Please pay attention to the highlighted resources and islands of comments. </span><br /><br />'
     }
 
     stopCount();
