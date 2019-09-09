@@ -467,7 +467,7 @@ function highlightAttr(boardId, positions, color, mark) {
             } else {
                 var attr = document.getElementById(boardId + 'Island' + (i + 1) + positions[k] + mark);
                 if (attr !== null) {
-                    attr.src = attr.src.split('_taken')[0].split('.')[0] + '_taken.png';
+                    attr.src = attr.src.split('_taken')[0].split('.png')[0] + '_taken.png';
                 }
             }
         }
@@ -487,7 +487,7 @@ function highlightIslandCell(boardId, cellIdx, color, mark) {
                                           + ISLAND_ATTR_MAP[attrs[k]]
                                           + mark);
         if (attr !== null) {
-            attr.src = attr.src.split('_taken')[0].split('.')[0] + '_taken.png';
+            attr.src = attr.src.split('_taken')[0].split('.png')[0] + '_taken.png';
         }
     }
 }
