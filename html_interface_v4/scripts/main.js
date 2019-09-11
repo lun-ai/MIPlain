@@ -726,7 +726,7 @@ function prephase2() {
     
     phase = 2;
     document.getElementById('instruction1').textContent =
-                'In Part 2, examples are given by the Great Wizard.<br />'
+                'In Part 2, examples are given by the Great Wizard.'
                 + 'You need choose between two potential moves the one'
                  + 'you think to be the best to WIN against the Great Wizard.';
     document.getElementById('instruction2').textContent =
@@ -1180,12 +1180,12 @@ function createBoardExpl(board, boardId, parentId, text, color) {
     div.classList.add('center1');
     div.setAttribute('id', boardId);
     div.style.position = 'relative';
-    div.style.height = '250px';
+    div.style.height = '245px';
     var frame = document.createElement('div');
     div.appendChild(frame);
     frame.style.position = 'absolute';
-    frame.style.height = '68%';
-    frame.style.width = '100%';
+    frame.style.height = '66%';
+    frame.style.width = '97%';
     frame.style.border = '1px solid black';
     frame.style.top = '5%';
     frame.style.backgroundColor = "white";
@@ -1200,35 +1200,35 @@ function createBoardExpl(board, boardId, parentId, text, color) {
             var islandID = boardId + 'Island' + (i + 1);
             island.setAttribute('id', islandID);
             div.appendChild(island);
-            island.style.height = '25%';
-            island.style.width = '46%';
+            island.style.height = '22%';
+            island.style.width = '44%';
             island.style.position = 'absolute';
 
             if (i === 0) {
                 island.style.top = '10%';
-                island.style.left = '3%';
+                island.style.left = '2%';
             } else if (i == 1) {
                 island.style.top = '10%';
-                island.style.right = '2%';
+                island.style.right = '3%';
             } else {
                 island.style.top = '40%';
-                island.style.left = '27.5%';
+                island.style.left = '26%';
             }
             var cell1 = createIslandAux(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3], 'iconImgXXS');
             cell1.style.top = '1%';
-            cell1.style.left = '1%';
+            cell1.style.left = '0%';
             cell1.style.fontSize = '8px';
             cell1.setAttribute('id', islandID + 'Cell1');
 
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXXS');
             cell2.style.top = '1%';
-            cell2.style.right = '0%';
+            cell2.style.right = '1%';
             cell2.style.fontSize = '8px';
             cell2.setAttribute('id', islandID + 'Cell2');
 
             var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXXS');
             cell3.style.bottom = '0%';
-            cell3.style.left = '25%';
+            cell3.style.left = '24%';
             cell3.style.fontSize = '8px';
             cell3.setAttribute('id', islandID + 'Cell3');
 
