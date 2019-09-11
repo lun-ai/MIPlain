@@ -726,18 +726,18 @@ function prephase2() {
     
     phase = 2;
     document.getElementById('instruction1').textContent =
-                'In Part 2, examples are given by the Great Wizard'
-                + ' and you need choose between two potential moves for what '
-                 + 'you think to be the best move to WIN the Great Wizard.';
+                'In Part 2, examples are given by the Great Wizard.<br />'
+                + 'You need choose between two potential moves the one'
+                 + 'you think to be the best to WIN against the Great Wizard.';
     document.getElementById('instruction2').textContent =
-                  'The Great Wizard tells you which one is the right move and which is not.';
+                  'Then, the Great Wizard will tell you which one is the right move and which is not.';
     document.getElementById('Great_Wizard_intro').style.display = 'block';
 
     document.getElementById('phase').textContent = 'Part ' + phase;
 
     if (participantID % TOTAL_GROUP == 0) {
         document.getElementById('instruction3').textContent =
-                    'Then, you are given 2 minutes to think about your choice.'
+                    'You will be given 2 minutes to think about your choice.'
     } else {
         document.getElementById('instruction3').textContent =
                  'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
@@ -777,8 +777,8 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    '<br /> <b>You are given time to learn from comments of MIGO AI, '
-                    + 'which explain why the right move is better than the wrong move. </b>';
+                    '<br /> <b>You are given time to read comments of MIGO AI.'
+                    + 'They explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
                     + 'You can press button at the corner of each board to view the table of points. <br />'
                     + 'Please pay attention to the highlighted resources and islands of comments. </span><br /><br />'
@@ -1087,14 +1087,14 @@ function createBoard_oneclick(iniboard, boardid, parentId, text, color) {
 
         var cell1 = createIsland(currentBoard[i * 3], islandID, ISLAND_ATTR[i * 3]);
         island.appendChild(cell1);
-        cell1.style.top = '0%';
-        cell1.style.left = '0%';
+        cell1.style.top = '1%';
+        cell1.style.left = '1%';
         cell1.setAttribute('id', 'cell1_'+i);
         cell1.addEventListener('click', board1Click);
 
         var cell2 = createIsland(currentBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
         island.appendChild(cell2);
-        cell2.style.top = '0%';
+        cell2.style.top = '1%';
         cell2.style.right = '0%';
         cell2.setAttribute('id', 'cell2_'+i);
         cell2.addEventListener('click', board1Click);
@@ -1215,13 +1215,13 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                 island.style.left = '27.5%';
             }
             var cell1 = createIslandAux(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3], 'iconImgXXS');
-            cell1.style.top = '0%';
-            cell1.style.left = '0%';
+            cell1.style.top = '1%';
+            cell1.style.left = '1%';
             cell1.style.fontSize = '8px';
             cell1.setAttribute('id', islandID + 'Cell1');
 
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXXS');
-            cell2.style.top = '0%';
+            cell2.style.top = '1%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '8px';
             cell2.setAttribute('id', islandID + 'Cell2');
@@ -1320,11 +1320,11 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             }
 
             var cell1 = createIslandAux(newBoard[i * 3], islandID, ISLAND_ATTR[i * 3], 'iconImgXS');
-            cell1.style.top = '0%';
-            cell1.style.left = '0%';
+            cell1.style.top = '1%';
+            cell1.style.left = '1%';
             cell1.style.fontSize = '10px';
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXS');
-            cell2.style.top = '0%';
+            cell2.style.top = '1%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
             var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXS');
