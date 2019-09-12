@@ -215,23 +215,23 @@ function stopCountPhase0() {
             boxes.push(cell3);
         }
 
-        var boardForView = boardToPlay.slice(0);
-        removeChild(boardID + 'p1CountTableButton', boardID);
-        var button = createTableViewButton(boardID + 'p1CountTableButton',
-                                           boardID,
-                                           'Blue points',
-                                           function() {
-                                                        p1CountTable(boardID,
-                                                                     boardForView,
-                                                                     '90%',
-                                                                     '0%',
-                                                                     '20%',
-                                                                     '20%',
-                                                                     '60%',
-                                                                     '60%');
-                                                        });
-        button.style.top = '90%';
-        button.style.right = '0%';
+//        var boardForView = boardToPlay.slice(0);
+//        removeChild(boardID + 'p1CountTableButton', boardID);
+//        var button = createTableViewButton(boardID + 'p1CountTableButton',
+//                                           boardID,
+//                                           'Blue points',
+//                                           function() {
+//                                                        p1CountTable(boardID,
+//                                                                     boardForView,
+//                                                                     '90%',
+//                                                                     '0%',
+//                                                                     '20%',
+//                                                                     '20%',
+//                                                                     '60%',
+//                                                                     '60%');
+//                                                        });
+//        button.style.top = '90%';
+//        button.style.right = '0%';
 
         boardToPlay = currentBoard;
     }
@@ -631,23 +631,22 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
-    console.log(prevBoard);
-    removeChild(boardID + 'p1CountTableButton', boardID);
-    var button = createTableViewButton(boardID + 'p1CountTableButton',
-                                       boardID,
-                                       'Blue points',
-                                       function() {
-                                                   p1CountTable(boardID,
-                                                                prevBoard,
-                                                                '90%',
-                                                                '0%',
-                                                                '20%',
-                                                                '20%',
-                                                                '60%',
-                                                                '60%');
-                                                   });
-    button.style.top = '90%';
-    button.style.right = '0%';
+//    removeChild(boardID + 'p1CountTableButton', boardID);
+//    var button = createTableViewButton(boardID + 'p1CountTableButton',
+//                                       boardID,
+//                                       'Blue points',
+//                                       function() {
+//                                                   p1CountTable(boardID,
+//                                                                prevBoard,
+//                                                                '90%',
+//                                                                '0%',
+//                                                                '20%',
+//                                                                '20%',
+//                                                                '60%',
+//                                                                '60%');
+//                                                   });
+//    button.style.top = '90%';
+//    button.style.right = '0%';
 
 }
 
@@ -677,8 +676,8 @@ function phase0() {
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
     document.getElementById('instruction1').innerHTML =
-    			'Lets now play a training game to get familiar with the rules of the game. <br />' + 
-    			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
+    			'Let\'s now play a training game to get familiar with the rules of the game. <br />' +
+    			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span> and it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
     document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Blue</span> player. <br />' +
     			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
     			'Press the <b>EMPTY</b> territory you want to select. ' +
@@ -1262,9 +1261,9 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
-    button.style.top = '65%';
-    button.style.right = '0%';
+//    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
+//    button.style.top = '65%';
+//    button.style.right = '0%';
 
     return div;
 }
@@ -1350,9 +1349,9 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
-    button.style.top = '90%';
-    button.style.right = '0%';
+//    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+//    button.style.top = '90%';
+//    button.style.right = '0%';
 }
 
 function createIsland(elem, islandID, text) {
