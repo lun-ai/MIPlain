@@ -725,9 +725,9 @@ function prephase2() {
  //   localStorage.removeItem( 'partID' ); // Clear the localStorage
     
     phase = 2;
-    document.getElementById('instruction1').textContent =
-                'In Part 2, examples are given by the Great Wizard.'
-                + 'You need choose between two potential moves the one '
+    document.getElementById('instruction1').innerHTML =
+                '<br />In Part 2, examples are given by the Great Wizard. <br />'
+                + 'You have to choose between two potential moves the one '
                  + 'you think to be the best to WIN against the Great Wizard.';
     document.getElementById('instruction2').textContent =
                   'Then, the Great Wizard will tell you which one is the right move and which is not.';
@@ -740,7 +740,7 @@ function prephase2() {
                     'You will be given 2 minutes to think about your choice.'
     } else {
         document.getElementById('instruction3').textContent =
-                 'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
+                 'You will be given 2 minutes to study the explanation from MIGO, an AI agent.'
         document.getElementById('MIGO_intro').style.display = 'block';
     }
 
@@ -777,11 +777,11 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    '<br /> <b>You are given time to read comments of MIGO AI.'
+                    '<br /> <b>You are given time to read comments of MIGO AI. '
                     + 'They explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
                     + 'You can press button at the corner of each board to view the table of points. <br />'
-                    + 'Please pay attention to the highlighted resources and islands of comments. </span><br /><br />'
+                    + 'Please pay attention to the highlighted resources and comments. </span><br /><br />'
     }
 
     stopCount();
@@ -1047,7 +1047,7 @@ function createParitalBoard(originalBoard, board, boardID, parentId) {
         islandTag.style.fontSize = '10px';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.style.zIndex = 3;
-        islandTag.innerHTML = 'Island' + (islandNum + 1);
+        islandTag.innerHTML = 'Island ' + (islandNum + 1);
 
         var comment = document.createElement('div');
         div.appendChild(comment);
@@ -1059,7 +1059,7 @@ function createParitalBoard(originalBoard, board, boardID, parentId) {
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
 
-        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island' + (islandNum + 1);
+        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island ' + (islandNum + 1);
     }
 }
 
