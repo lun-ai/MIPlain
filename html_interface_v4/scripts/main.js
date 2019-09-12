@@ -883,6 +883,7 @@ function nextExample() {
 function showExample() {
 
     createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [], WHITE,10);
+
     removeChild('rightMove','move1');
     removeChild('rightMove','move1');
 
@@ -892,6 +893,14 @@ function showExample() {
 
     var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
+
+    var diffIdxright = initial.map((_,i) => initial[i] === right[i] ? -1 : i).filter(x => x !== -1)[0];
+    var islandNumright = Math.floor(diffIdxright / N_SIZE)+1;
+    var cellNumright = diffIdxright % N_SIZE+1;
+
+    var diffIdxwrong = initial.map((_,i) => initial[i] === wrong[i] ? -1 : i).filter(x => x !== -1)[0];
+    var islandNumwrong = Math.floor(diffIdxwrong / N_SIZE)+1;
+    var cellNumwrong = diffIdxwrong % N_SIZE+1;
 
     if (Math.random() > 0.5) {
         var text1 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1');
@@ -904,6 +913,14 @@ function showExample() {
         createMoveButton('wrongMoveButton', 'wrongMoveComment', text1, wrongMoveChosen);
         createMoveButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
+
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderColor = 'yellow';
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderWidth = '2px';
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.zIndex = 0;
+
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderColor = 'yellow';
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderWidth = '2px';
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.zIndex = 0;
 
     document.getElementById('rightMoveIsland' + rightIdx).style.borderColor = 'yellow';
     document.getElementById('rightMoveIsland' + rightIdx).style.borderWidth = '2px';
@@ -1030,7 +1047,7 @@ function createParitalBoard(originalBoard, board, boardID, parentId) {
         islandTag.style.fontSize = '10px';
         islandTag.style.backgroundColor = DEFAULT_C;
         islandTag.style.zIndex = 3;
-        islandTag.innerHTML = 'Island ' + (islandNum + 1);
+        islandTag.innerHTML = 'Island' + (islandNum + 1);
 
         var comment = document.createElement('div');
         div.appendChild(comment);
@@ -1042,7 +1059,7 @@ function createParitalBoard(originalBoard, board, boardID, parentId) {
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
 
-        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island '+ (islandNum + 1);
+        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island' + (islandNum + 1);
     }
 }
 
@@ -1323,14 +1340,17 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             cell1.style.top = '1%';
             cell1.style.left = '1%';
             cell1.style.fontSize = '10px';
+            cell1.setAttribute('id', islandID+1);
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXS');
             cell2.style.top = '1%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
+            cell2.setAttribute('id', islandID+2);
             var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXS');
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '10px';
+            cell3.setAttribute('id', islandID+3);
             island.appendChild(cell3);
             island.appendChild(cell2);
             island.appendChild(cell1);
