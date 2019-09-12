@@ -219,7 +219,7 @@ function stopCountPhase0() {
         removeChild(boardID + 'p1CountTableButton', boardID);
         var button = createTableViewButton(boardID + 'p1CountTableButton',
                                            boardID,
-                                           'Green points',
+                                           'Blue points',
                                            function() {
                                                         p1CountTable(boardID,
                                                                      boardForView,
@@ -250,7 +250,7 @@ function createCountTables(parentId, board) {
     div1.style.top = '10%';
     div1.style.right = '21%';
 
-    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Green</span>\n\n');
+    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Blue</span>\n\n');
 
     var table1 = document.createElement('table');
     table1.classList.add('table3');
@@ -635,7 +635,7 @@ function nextQuestion() {
     removeChild(boardID + 'p1CountTableButton', boardID);
     var button = createTableViewButton(boardID + 'p1CountTableButton',
                                        boardID,
-                                       'Green points',
+                                       'Blue points',
                                        function() {
                                                    p1CountTable(boardID,
                                                                 prevBoard,
@@ -679,7 +679,7 @@ function phase0() {
     document.getElementById('instruction1').innerHTML =
     			'Lets now play a training game to get familiar with the rules of the game. <br />' + 
     			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span>: it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
-    document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Green</span> player. <br />' +
+    document.getElementById('instruction2').innerHTML = 'You play first as the <span style="background-color:' + P1_COLOR + '">Blue</span> player. <br />' +
     			'Your opponent plays as <span style="background-color:' + P2_COLOR + '">Orange</span>.<br />' + 
     			'Press the <b>EMPTY</b> territory you want to select. ' +
                 'You have only one shot for each of your move.<br /> <br />';
@@ -712,7 +712,7 @@ function phase1() {
 
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, '
+                        + P1_COLOR + '">Blue</span>, '
                         + 'and please press a <b>WHITE</b> cell' +
                         ' to capture resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question.';
@@ -727,7 +727,7 @@ function prephase2() {
     phase = 2;
     document.getElementById('instruction1').textContent =
                 'In Part 2, examples are given by the Great Wizard.'
-                + 'You need choose between two potential moves the one'
+                + 'You need choose between two potential moves the one '
                  + 'you think to be the best to WIN against the Great Wizard.';
     document.getElementById('instruction2').textContent =
                   'Then, the Great Wizard will tell you which one is the right move and which is not.';
@@ -763,7 +763,7 @@ function phase2() {
     document.getElementById('phase').textContent = 'Part ' + phase;
 	
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, and opponent plays <span style="background-color: '
+                        + P1_COLOR + '">Blue</span>, and opponent plays <span style="background-color: '
                         + P2_COLOR + '">Orange</span>. '
     document.getElementById('instruction2').innerHTML = 'Given an initial board, choose between two potential moves '
                         + 'highlighted in <span style="background-color: yellow">Yellow</span>, '
@@ -806,7 +806,7 @@ function phase3() {
 
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Green</span>, '
+                        + P1_COLOR + '">Blue</span>, '
                         + 'and please press a <b>WHITE</b> cell' +
                         ' to capture resources that you think can lead to WIN';
     document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question. ';
@@ -1262,7 +1262,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
                         + text + '</span>';
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Green points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '65%';
     button.style.right = '0%';
 
@@ -1350,7 +1350,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Green points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
+    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
     button.style.top = '90%';
     button.style.right = '0%';
 }
@@ -1643,7 +1643,7 @@ function boardView(parentId, board, top, right, toptable, righttable, width, hei
     removeChild(parentId + 'p1TableView', parentId);
     removeChild(parentId + 'p2TableView', parentId);
 
-    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'Green points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
+    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'Blue points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
     button.style.top = top;
     button.style.right = right;
 }
