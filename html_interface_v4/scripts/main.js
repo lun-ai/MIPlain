@@ -724,9 +724,9 @@ function prephase2() {
  //   localStorage.removeItem( 'partID' ); // Clear the localStorage
     
     phase = 2;
-    document.getElementById('instruction1').textContent =
-                'In Part 2, examples are given by the Great Wizard.'
-                + 'You need choose between two potential moves the one '
+    document.getElementById('instruction1').innerHTML =
+                '<br />In Part 2, examples are given by the Great Wizard. <br />'
+                + 'You have to choose between two potential moves the one '
                  + 'you think to be the best to WIN against the Great Wizard.';
     document.getElementById('instruction2').textContent =
                   'Then, the Great Wizard will tell you which one is the right move and which is not.';
@@ -739,7 +739,7 @@ function prephase2() {
                     'You will be given 2 minutes to think about your choice.'
     } else {
         document.getElementById('instruction3').textContent =
-                 'Then, you are given 2 minutes to study the explanation from MIGO, an AI agent.'
+                 'You will be given 2 minutes to study the explanation from MIGO, an AI agent.'
         document.getElementById('MIGO_intro').style.display = 'block';
     }
 
@@ -776,11 +776,11 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    '<br /> <b>You are given time to read comments of MIGO AI.'
+                    '<br /> <b>You are given time to read comments of MIGO AI. '
                     + 'They explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
                     + 'You can press button at the corner of each board to view the table of points. <br />'
-                    + 'Please pay attention to the highlighted resources and islands of comments. </span><br /><br />'
+                    + 'Please pay attention to the highlighted resources and comments. </span><br /><br />'
     }
 
     stopCount();
@@ -882,6 +882,7 @@ function nextExample() {
 function showExample() {
 
     createBoard(examples[currentExpl - 1], 'initialBoard', 'initialState', 'Initial Board', [], WHITE,10);
+
     removeChild('rightMove','move1');
     removeChild('rightMove','move1');
 
@@ -891,6 +892,14 @@ function showExample() {
 
     var rightIdx = initial.map((_, i) => initial[i] == right[i] ? -1 : i).filter(x => x != -1)[0];
     var wrongIdx = initial.map((_, i) => initial[i] == wrong[i] ? -1 : i).filter(x => x != -1)[0];
+
+    var diffIdxright = initial.map((_,i) => initial[i] === right[i] ? -1 : i).filter(x => x !== -1)[0];
+    var islandNumright = Math.floor(diffIdxright / N_SIZE)+1;
+    var cellNumright = diffIdxright % N_SIZE+1;
+
+    var diffIdxwrong = initial.map((_,i) => initial[i] === wrong[i] ? -1 : i).filter(x => x !== -1)[0];
+    var islandNumwrong = Math.floor(diffIdxwrong / N_SIZE)+1;
+    var cellNumwrong = diffIdxwrong % N_SIZE+1;
 
     if (Math.random() > 0.5) {
         var text1 = createParitalBoard(examples[currentExpl - 1], rightMoves[currentExpl - 1], 'rightMove', 'move1');
@@ -903,6 +912,14 @@ function showExample() {
         createMoveButton('wrongMoveButton', 'wrongMoveComment', text1, wrongMoveChosen);
         createMoveButton('rightMoveButton', 'rightMoveComment', text2, rightMoveChosen);
     }
+
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderColor = 'yellow';
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderWidth = '2px';
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.zIndex = 0;
+
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderColor = 'yellow';
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderWidth = '2px';
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.zIndex = 0;
 
     document.getElementById('rightMoveIsland' + rightIdx).style.borderColor = 'yellow';
     document.getElementById('rightMoveIsland' + rightIdx).style.borderWidth = '2px';
@@ -1041,7 +1058,7 @@ function createParitalBoard(originalBoard, board, boardID, parentId) {
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
 
-        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island '+ (islandNum + 1);
+        return 'Take (' + ISLAND_ATTR[islandNum * 3 + (diffIdx % 3)] + ') on Island ' + (islandNum + 1);
     }
 }
 
@@ -1322,14 +1339,17 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             cell1.style.top = '1%';
             cell1.style.left = '1%';
             cell1.style.fontSize = '10px';
+            cell1.setAttribute('id', islandID+1);
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXS');
             cell2.style.top = '1%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
+            cell2.setAttribute('id', islandID+2);
             var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXS');
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
             cell3.style.fontSize = '10px';
+            cell3.setAttribute('id', islandID+3);
             island.appendChild(cell3);
             island.appendChild(cell2);
             island.appendChild(cell1);
