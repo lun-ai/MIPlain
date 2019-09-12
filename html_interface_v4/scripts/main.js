@@ -779,7 +779,6 @@ function phase2() {
                     '<br /> <b>You are given time to read comments of MIGO AI. '
                     + 'They explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
-                    + 'You can press button at the corner of each board to view the table of points. <br />'
                     + 'Please pay attention to the highlighted resources and comments. </span><br /><br />'
     }
 
@@ -915,18 +914,18 @@ function showExample() {
 
     document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderColor = 'yellow';
     document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.borderWidth = '2px';
-    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.zIndex = 0;
+    document.getElementById('initialBoard' + 'Island' + islandNumright + cellNumright).style.zIndex = 2;
 
     document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderColor = 'yellow';
     document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.borderWidth = '2px';
-    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.zIndex = 0;
+    document.getElementById('initialBoard' + 'Island' + islandNumwrong + cellNumwrong).style.zIndex = 2;
 
     document.getElementById('rightMoveIsland' + rightIdx).style.borderColor = 'yellow';
     document.getElementById('rightMoveIsland' + rightIdx).style.borderWidth = '2px';
     document.getElementById('rightMoveIsland' + rightIdx).style.zIndex = 2;
     document.getElementById('wrongMoveIsland' + wrongIdx).style.borderColor = 'yellow';
     document.getElementById('wrongMoveIsland' + wrongIdx).style.borderWidth = '2px';
-    document.getElementById('wrongMoveIsland' + wrongIdx).style.zIndex = 3;
+    document.getElementById('wrongMoveIsland' + wrongIdx).style.zIndex = 2;
 }
 
 function showExpl() {
@@ -1363,6 +1362,7 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             islandTag.style.top = '40%';
             islandTag.style.left = '35%';
             islandTag.style.fontSize = '10px';
+            islandTag.style.zIndex = 3;
             islandTag.style.backgroundColor = DEFAULT_C;
             islandTag.innerHTML = 'Island ' + (i + 1);
 
@@ -1390,7 +1390,7 @@ function createIslandAux(elem, islandID, text, iconClass) {
                                                      + elem
                                                      + '" src="imgs/' + ISLAND_ATTR_MAP[a]
                                                      + '.png" class="' + iconClass + '">')
-                              .join(', ')
+                              .join(' ')
                         + '</p>';
     cell.style.backgroundColor = elem === 'e' ?
                                  WHITE :
