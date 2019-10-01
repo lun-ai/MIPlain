@@ -1,0 +1,38 @@
+Control selected:
+--------------------
+depth 2:
+{'second': 11, 'success': 46, 'first': 43}
+{'second': 9, 'success': 50, 'first': 41}
+depth 3:
+{'second': 27, 'success': 59, 'first': 14}
+{'second': 19, 'success': 58, 'first': 23}
+
+
+Treatment selected:
+--------------------
+depth 2:
+{'second': 11, 'success': 32, 'first': 47}
+{'second': 5, 'success': 45, 'first': 40}
+depth 3:
+{'second': 12, 'success': 58, 'first': 20}
+{'second': 18, 'success': 48, 'first': 24}
+
+
+Control removed:
+--------------------
+depth 2:
+{'second': 4, 'success': 39, 'first': 7}
+{'second': 3, 'success': 31, 'first': 16}
+depth 3:
+{'second': 11, 'success': 36, 'first': 3}
+{'second': 7, 'success': 33, 'first': 10}
+
+
+Treatment removed:
+--------------------
+depth 2:
+{'second': 5, 'success': 48, 'first': 7}
+{'second': 2, 'success': 47, 'first': 11}
+depth 3:
+{'second': 10, 'success': 45, 'first': 5}
+{'second': 17, 'success': 31, 'first': 12}

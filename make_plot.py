@@ -40,7 +40,7 @@ def read_nth_line(file, n):
 
 
 def strip_arr_text(attr, text):
-    return list(map(float, text.strip(attr + ':').strip('\n').strip(' ').strip('[').strip(']').split(',')))
+    return list(map(float, text.strip(attr + ':').strip(' ').strip('[').split(']')[0].split(',')))
 
 
 def bar_graph(axis, data, t, total_participants):
@@ -315,76 +315,76 @@ def create_time_bar_graph():
     # plt.show()
 
 
-for i in [502, 504, 506, 508, 510, 512]:
-    with open('./records/Grade-5/' + str(i) + '.txt', 'r') as file:
-        grade_5.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        grade_5_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-for i in [501, 503, 505, 507, 509, 511, 513]:
-    with open('./records/Grade-5/' + str(i) + '.txt', 'r') as file:
-        t_grade_5.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        t_grade_5_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-for i in [602, 610]:
-    with open('./records/Grade-6/' + str(i) + '.txt', 'r') as file:
-        grade_6.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        grade_6_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-for i in [601, 603, 609]:
-    with open('./records/Grade-6/' + str(i) + '.txt', 'r') as file:
-        t_grade_6.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        t_grade_6_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-for i in [702, 704, 706, 708]:
-    with open('./records/Grade-7/' + str(i) + '.txt', 'r') as file:
-        grade_7.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        grade_7_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-for i in [701, 703, 705, 707]:
-    with open('./records/Grade-7/' + str(i) + '.txt', 'r') as file:
-        t_grade_7.append(strip_arr_text('scores', read_nth_line(file, 20)))
-        # read_nth_line(file, 34)
-        t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
-        t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
-        t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
-        t_grade_7_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
-
-time_before = np.array(time_before)
-time_exp = np.array(time_exp)
-time_after = np.array(time_after)
-
-t_time_before = np.array(t_time_before)
-t_time_exp = np.array(t_time_exp)
-t_time_after = np.array(t_time_after)
-
-# create_bar_graph_all2(grade_5, grade_5_after, 'Control 5th Grader')
-# create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 5th Grader')
-# create_bar_graph_all2(grade_6, grade_6_after, 'Control 6th Grader')
-# create_bar_graph_all2(t_grade_6, t_grade_6_after, 'Treatment 6th Grader')
-# create_bar_graph_all2(grade_7, grade_7_after, 'Control 7th Grader')
-# create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 7th Grader')
+# for i in [502, 504, 506, 508, 510, 512]:
+#     with open('./records/Grade-5/' + str(i) + '.txt', 'r') as file:
+#         grade_5.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         grade_5_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
 #
-# create_bar_graph_all((lambda x: x == 10))
-# create_bar_graph_all3((lambda x: x != 10))
-# population_pie_chart()
-create_time_bar_graph()
+# for i in [501, 503, 505, 507, 509, 511, 513]:
+#     with open('./records/Grade-5/' + str(i) + '.txt', 'r') as file:
+#         t_grade_5.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         t_grade_5_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
+#
+# for i in [602, 610]:
+#     with open('./records/Grade-6/' + str(i) + '.txt', 'r') as file:
+#         grade_6.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         grade_6_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
+#
+# for i in [601, 603, 609]:
+#     with open('./records/Grade-6/' + str(i) + '.txt', 'r') as file:
+#         t_grade_6.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         t_grade_6_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
+#
+# for i in [702, 704, 706, 708]:
+#     with open('./records/Grade-7/' + str(i) + '.txt', 'r') as file:
+#         grade_7.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         grade_7_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
+#
+# for i in [701, 703, 705, 707]:
+#     with open('./records/Grade-7/' + str(i) + '.txt', 'r') as file:
+#         t_grade_7.append(strip_arr_text('scores', read_nth_line(file, 20)))
+#         # read_nth_line(file, 34)
+#         t_time_before.append(strip_arr_text('time', read_nth_line(file, 21)))
+#         t_time_exp.append(strip_arr_text('time on expl', read_nth_line(file, 36)))
+#         t_time_after.append(strip_arr_text('time', read_nth_line(file, 57)))
+#         t_grade_7_after.append(strip_arr_text('scores', read_nth_line(file, 56)))
+#
+# time_before = np.array(time_before)
+# time_exp = np.array(time_exp)
+# time_after = np.array(time_after)
+#
+# t_time_before = np.array(t_time_before)
+# t_time_exp = np.array(t_time_exp)
+# t_time_after = np.array(t_time_after)
+#
+# # create_bar_graph_all2(grade_5, grade_5_after, 'Control 5th Grader')
+# # create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 5th Grader')
+# # create_bar_graph_all2(grade_6, grade_6_after, 'Control 6th Grader')
+# # create_bar_graph_all2(t_grade_6, t_grade_6_after, 'Treatment 6th Grader')
+# # create_bar_graph_all2(grade_7, grade_7_after, 'Control 7th Grader')
+# # create_bar_graph_all2(t_grade_5, t_grade_5_after, 'Treatment 7th Grader')
+# #
+# # create_bar_graph_all((lambda x: x == 10))
+# # create_bar_graph_all3((lambda x: x != 10))
+# # population_pie_chart()
+# create_time_bar_graph()
