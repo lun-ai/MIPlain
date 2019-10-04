@@ -1,38 +1,38 @@
 Control selected:
 --------------------
 depth 2:
-{'second': 11, 'success': 46, 'first': 43}
-{'second': 9, 'success': 50, 'first': 41}
+{'second literal failed': 11, 'success': 46, 'first literal failed': 43}
+{'second literal failed': 9, 'success': 50, 'first literal failed': 41}
 depth 3:
-{'second': 27, 'success': 59, 'first': 14}
-{'second': 19, 'success': 58, 'first': 23}
+{'win_2 failed': 24, 'success': 62, 'first literal failed': 14}
+{'win_2 failed': 23, 'success': 54, 'first literal failed': 23}
 
 
 Treatment selected:
 --------------------
 depth 2:
-{'second': 11, 'success': 32, 'first': 47}
-{'second': 5, 'success': 45, 'first': 40}
+{'second literal failed': 11, 'success': 32, 'first literal failed': 47}
+{'second literal failed': 5, 'success': 45, 'first literal failed': 40}
 depth 3:
-{'second': 12, 'success': 58, 'first': 20}
-{'second': 18, 'success': 48, 'first': 24}
+{'win_2 failed': 10, 'success': 60, 'first literal failed': 20}
+{'win_2 failed': 10, 'success': 56, 'first literal failed': 24}
 
 
 Control removed:
 --------------------
 depth 2:
-{'second': 4, 'success': 39, 'first': 7}
-{'second': 3, 'success': 31, 'first': 16}
+{'second literal failed': 4, 'success': 39, 'first literal failed': 7}
+{'second literal failed': 3, 'success': 31, 'first literal failed': 16}
 depth 3:
-{'second': 11, 'success': 36, 'first': 3}
-{'second': 7, 'success': 33, 'first': 10}
+{'win_2 failed': 6, 'success': 41, 'first literal failed': 3}
+{'win_2 failed': 4, 'success': 36, 'first literal failed': 10}
 
 
 Treatment removed:
 --------------------
 depth 2:
-{'second': 5, 'success': 48, 'first': 7}
-{'second': 2, 'success': 47, 'first': 11}
+{'second literal failed': 5, 'success': 48, 'first literal failed': 7}
+{'second literal failed': 2, 'success': 47, 'first literal failed': 11}
 depth 3:
-{'second': 10, 'success': 45, 'first': 5}
-{'second': 17, 'success': 31, 'first': 12}
+{'win_2 failed': 3, 'success': 52, 'first literal failed': 5}
+{'win_2 failed': 7, 'success': 41, 'first literal failed': 12}

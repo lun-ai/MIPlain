@@ -84,27 +84,30 @@ def count_occ(l, m):
 
 def check_win_2(B):
     if len(find_strong_option(B, 1)) != 2:
-        return 'first'
+        return 'first condition failed'
     elif len(find_strong_option(B, 2)) != 0:
-        return 'second'
+        return 'second condition failed'
     return 'success'
 
 
 def check_win_3(B):
     l = find_strong_option(B, 1)
-    # print('\n' + str(B))
+
     if len(l) != 1:
-        # print(B)
-        return 'first'
+        print(B)
+        return 'first condition failed'
+
     B_c = list(B)
     for c in l[0]:
         if B_c[c] != 1:
             B_c[c] = 2
+
     for idx in range(len(B_c)):
-        if B_c[idx] == 0:
-            B_c[idx] = 1
-            if len(find_strong_option(B_c, 1)) == 2 and len(find_strong_option(B_c, 2)) == 0:
-                return 'success'
+        B_c_c = list(B_c)
+        if B_c_c[idx] == 0:
+            B_c_c[idx] = 1
+            if len(find_strong_option(B_c_c, 1)) == 2 and len(find_strong_option(B_c_c, 2)) == 0:
+                return 'success condition failed'
     return 'second'
 
 
@@ -112,7 +115,7 @@ def check_for_mistakes(answers1, answers2):
 
     print('--------------------')
 
-    mistakes = {'first': 0, 'second': 0, 'success': 0}
+    mistakes = {'first condition failed': 0, 'second condition failted': 0, 'success': 0}
 
     mistakes_pre2 = mistakes.copy()
     mistakes_post2 = mistakes.copy()
