@@ -9,4 +9,5 @@ var examples =   ['100211022','212101020','112200012','100010202','010002012','0
                        .concat(['110002002','012100002','122001000','012000021','220100010'].sort((a, b)=> sortTestBoardsAscend(a,b)))
                        .concat(['010000002','000100020','000100200','102000000','000010200'].sort((a, b)=> sortTestBoardsAscend(a,b)))
                        .map(x=>boardRepreToBoardRotated(x));
+    PHASE4_QUESTIONS = ['112202010','110002002','010000002'].map(x=>boardRepreToBoardRotated(x));
 

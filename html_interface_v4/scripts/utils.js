@@ -51,6 +51,11 @@ function countAttrs(board, player) {
 }
 
 
+function floatRoundTo2(f) {
+    return Math.round(f * 100) / 100
+}
+
+
 function win(board, player) {
     if (board[0] === board[1] && board[1] === board[5] && board[5] === player) {
         return true;

@@ -32,11 +32,18 @@ var t,
     answers = [],
     scores = [],
     timeTaken = [],
-    record = '';
+    record = '',
+    verbalResponses = [];
 
 var texts = String(window.location).split('=');
 
-// var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+
+
+function getParticipantID() {
+    var pid = localStorage['partID'];
+    return isNaN(pid) ? 1 : pid;
+}
+
 function flushLocalCache() {
     prevBoard = [0,0,0,0,0,0,0,0,0],
     difficulty = [],
@@ -59,10 +66,11 @@ function flushLocalCache() {
 function applyStrategy(board) {
 
     var session = pl.create(RESOLUTION_DEPTH);
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
 
     session.consult(PL_FILE_NAME + (participantID % TOTAL_GROUP) + '.pl');
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
+    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
@@ -215,108 +223,12 @@ function stopCountPhase0() {
             boxes.push(cell3);
         }
 
-//        var boardForView = boardToPlay.slice(0);
-//        removeChild(boardID + 'p1CountTableButton', boardID);
-//        var button = createTableViewButton(boardID + 'p1CountTableButton',
-//                                           boardID,
-//                                           'Blue points',
-//                                           function() {
-//                                                        p1CountTable(boardID,
-//                                                                     boardForView,
-//                                                                     '90%',
-//                                                                     '0%',
-//                                                                     '20%',
-//                                                                     '20%',
-//                                                                     '60%',
-//                                                                     '60%');
-//                                                        });
-//        button.style.top = '90%';
-//        button.style.right = '0%';
-
         boardToPlay = currentBoard;
     }
 
 }
 
-function createCountTables(parentId, board) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
-    var div1 = document.createElement('div');
-    document.getElementById(parentId).appendChild(div1);
-    div1.setAttribute('id', parentId + 'p1CountTable');
-    div1.style.position = 'absolute';
-    div1.style.width = '10%';
-    div1.style.height = '50%';
-    div1.style.top = '10%';
-    div1.style.right = '21%';
-
-    add_table_title(div1, 'Comment1', 'Points won by <span style="background-color: ' + P1_COLOR + '">Blue</span>\n\n');
-
-    var table1 = document.createElement('table');
-    table1.classList.add('table3');
-    div1.appendChild(table1);
-
-    var count = countAttrs(board, 1);
-
-    for (var i = 0; i < 8; i++) {
-
-        var row = document.createElement('tr');
-        table1.appendChild(row);
-
-        for (var j = 0; j < 2; j++) {
-
-            var cell = document.createElement('td');
-            row.appendChild(cell);
-            cell.style.align = 'center';
-
-            if (j % 2 === 0) {
-                cell.style.backgroundColor = P1_COLOR;
-                cell.innerHTML = attr[i];
-            } else {
-                cell.innerHTML = count[i];
-            }
-
-        }
-    }
-
-    var div2 = document.createElement('div');
-    document.getElementById(parentId).appendChild(div2);
-    div2.setAttribute('id', parentId + 'p2CountTable');
-    div2.style.position = 'absolute';
-    div2.style.width = '10%';
-    div2.style.height = '50%';
-    div2.style.top = '10%';
-    div2.style.right = '11%';
-
-    add_table_title(div2, 'Comment2', 'Points won by <span style="background-color: ' + P2_COLOR + '">Orange</span>\n\n');
-
-    var table2 = document.createElement('table');
-    table2.classList.add('table3');
-    div2.appendChild(table2);
-
-    count = countAttrs(board, 2);
-
-    for (var i = 0; i < 8; i++) {
-
-        var row = document.createElement('tr');
-        table2.appendChild(row);
-
-        for (var j = 0; j < 2; j++) {
-
-            var cell = document.createElement('td');
-            row.appendChild(cell);
-            cell.style.align = 'center';
-
-            if (j % 2 === 0) {
-                cell.style.backgroundColor = P2_COLOR;
-                cell.innerHTML = attr[i];
-            } else {
-                cell.innerHTML = count[i];
-            }
-
-        }
-    }
-}
 
 function stopCountPhase1() {
 
@@ -328,7 +240,7 @@ function stopCountPhase1() {
     currentQuestion += 1;
     
    if (currentQuestion > TOTAL_QUESTIONS) {
-        var participantID = localStorage['partID'];
+        var participantID = getParticipantID();
 
         record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -366,7 +278,7 @@ function stopCountPhase1() {
 
 function stopCountPhase2() {
 
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
 
     if (currentExpl != 0) {
         ended = true;
@@ -419,7 +331,7 @@ function stopCountPhase3() {
         clearTimeout(t);
         sec = 0;
     }
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
     currentQuestion += 1;
 
     if (currentQuestion > TOTAL_QUESTIONS) {
@@ -433,10 +345,12 @@ function stopCountPhase3() {
         document.getElementById('phase').textContent =
                 'Well done for completing Part 3!'
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'Please now complete the following short survey';
-        document.getElementById('instruction2').textContent = '';
+        document.getElementById('instruction1').textContent = 'In Part 4, you will answer ' + TOTAL_QUESTIONS + ' questions '
+                                                    + 'for which you play against an OPTIMAL opponent.';
+        document.getElementById('instruction2').textContent = 'You should select what you think is the best territory to WIN.'
+                                                    + ' You have ONE CHANCE for each question and should try your best.';
         document.getElementById('instruction3').textContent = '';
-        document.getElementById('numQuestion').textContent = '';
+        document.getElementById('instruction4').textContent = '';
 
 	    record += '\n\nPart 3: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -450,6 +364,47 @@ function stopCountPhase3() {
         startCount();
     }
 
+}
+
+function stopCountPhase4() {
+
+    if (t != null) {
+        clearTimeout(t);
+        sec = 0;
+    }
+    var participantID = getParticipantID();
+    currentQuestion += 1;
+
+    if (currentQuestion > 3) {
+
+        removeChild('nextQuestionButton', 'nextQuestion');
+        removeChild('nextExampleButton', 'nextExample');
+        removeChild('gameBoard', 'game');
+        removeChild('gamep1CountTable', 'game');
+        removeChild('gamep2CountTable', 'game');
+        removeChild('nextPhaseButton', 'nextPhase');
+        removeChild('answerExp','game');
+        document.getElementById('phase').textContent = 'Well done for completing Part 4!'
+        document.getElementById('timer').textContent = '';
+        document.getElementById('instruction1').textContent = 'Please now complete the following short survey';
+        document.getElementById('instruction2').textContent = '';
+        document.getElementById('instruction3').textContent = '';
+        document.getElementById('instruction4').textContent = '';
+        document.getElementById('instruction5').textContent = '';
+        document.getElementById('numQuestion').textContent = '';
+
+	    record += '\n\nPart 4: \n'
+               + answers.map(g => '[[' + g.join('],[') + ']]\n')
+               + 'difficulty: [' + difficulty + ']\n'
+               + 'responses: [' + verbalResponses + ']\n'
+               + 'time: [' + timeTaken + ']\n'
+               + 'time on expl: [' + timeTakenExpl + ']\n';
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
+
+    } else {
+        nextQuestionWithExp();
+        startCount();
+    }
 }
 
 function boardClickedGame() {
@@ -518,6 +473,62 @@ function board1Click() {
     }
 }
 
+function boardClickedPart4() {
+    if (this.style.backgroundColor !== WHITE) {
+        return;
+    } else if (!ended) {
+
+        this.style.backgroundColor = P1_COLOR;
+
+        var currentBoard = convertBoxesTOBoard(boxes);
+        answers[currentQuestion - 1].push(currentBoard);
+
+        scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
+        timeTaken.push(floatRoundTo2(Math.max(0, sec - 1)));
+//        console.log(currentBoard);
+//        console.log(scores);
+//        console.log(timeTaken);
+
+        var newInstruction = document.getElementById('instruction5')
+        newInstruction.innerHTML = '</br> Now imagine you need to <b>EXPLAIN</b> to a close friend why you have chosen this move';
+        newInstruction.style.position = 'absolute';
+        newInstruction.style.bottom = '25%';
+        newInstruction.style.left = '30%';
+
+        var textInput = document.createElement('textarea');
+        textInput.setAttribute('id', 'answerExp');
+        textInput.setAttribute('required', 'true');
+        textInput.setAttribute('placeHolder', 'Please write an explanation for your strategy ...');
+        textInput.setAttribute('row', 5);
+        textInput.setAttribute('col', 30);
+        document.getElementById('game').appendChild(textInput);
+        textInput.setAttribute('type', 'text');
+        textInput.style.height = '10%';
+        textInput.style.width = '20%';
+        textInput.style.position = 'absolute';
+        textInput.style.bottom = '10%';
+        textInput.style.left = '40%';
+        createButton('nextQuestionButton', 'nextQuestion', 'Submit explanation', recordExplanationPart4);
+
+        var button = document.getElementById('nextQuestionButton');
+        button.style.position = 'absolute';
+        button.style.height = '5%';
+        button.style.width = '10%';
+        button.style.bottom = '0%';
+        button.style.left = '45%';
+    }
+
+}
+
+function recordExplanationPart4() {
+    if (document.getElementById('answerExp').value != '') {
+        verbalResponses.push(document.getElementById('answerExp').value);
+        timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1) - timeTaken[currentQuestion - 1]), 0));
+//        console.log(timeTakenExpl);
+        ended = true;
+        stopCount();
+    }
+}
 
 function boardClicked() {
 
@@ -538,7 +549,7 @@ function boardClicked() {
         console.log(timeTaken);
 
         removeChild('gameBoardp1CountTableButton', 'gameBoard');
-        createButton('nextQuestionButton', 'gameBoard', 'Next Question', stopCount);
+        createButton('nextQuestionButton', 'nextQuestion', 'Next Question', stopCount);
         var button = document.getElementById('nextQuestionButton');
         button.style.position = 'absolute';
         button.style.height = '10%';
@@ -631,28 +642,95 @@ function nextQuestion() {
         boxes.push(cell3);
     }
 
-//    removeChild(boardID + 'p1CountTableButton', boardID);
-//    var button = createTableViewButton(boardID + 'p1CountTableButton',
-//                                       boardID,
-//                                       'Blue points',
-//                                       function() {
-//                                                   p1CountTable(boardID,
-//                                                                prevBoard,
-//                                                                '90%',
-//                                                                '0%',
-//                                                                '20%',
-//                                                                '20%',
-//                                                                '60%',
-//                                                                '60%');
-//                                                   });
-//    button.style.top = '90%';
-//    button.style.right = '0%';
+}
 
+function nextQuestionWithExp() {
+    ended = false;
+    prevBoard = test_boards[currentQuestion - 1];
+
+    // available moves / num of winning moves
+    difficulty.push(computeBoardDifficulty(prevBoard));
+    answers.push([]);
+    answers[currentQuestion - 1].push(prevBoard);
+
+    var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
+    removeChild('gameBoard', 'game');
+    removeChild('nextQuestionButton', 'nextQuestion');
+    removeChild('gamep1CountTable', 'game');
+    removeChild('gamep2CountTable', 'game');
+    removeChild('answerExp', 'game');
+    boxes = [];
+    document.getElementById('instruction5').innerHTML = '';
+    document.getElementById('numQuestion').textContent = 'Question NO.' + currentQuestion;
+
+    var board = document.createElement('div');
+    document.getElementById('game').appendChild(board);
+    var boardID = 'gameBoard';
+    board.setAttribute('id', boardID);
+    board.style.position = 'absolute';
+    board.style.left = '20%';
+    board.style.height = '60%';
+    board.style.width = '60%';
+
+    for (var i = 0; i < N_SIZE; i++) {
+
+        var island = document.createElement('div');
+        board.appendChild(island);
+        var islandID = boardID + 'Island' + (i + 1);
+        island.setAttribute('id', islandID);
+        island.style.height = '30%';
+        island.style.width = '25%';
+        island.style.position = 'absolute';
+
+        if (i === 0) {
+            island.style.top = '10%';
+            island.style.left = '20%';
+        } else if (i == 1) {
+            island.style.top = '10%';
+            island.style.right = '20%';
+        } else {
+            island.style.top = '50%';
+            island.style.left = '37.5%';
+        }
+
+        var cell1 = createIsland(rightIndexAndLabel[i * 3], islandID, ISLAND_ATTR[i * 3]);
+        island.appendChild(cell1);
+        cell1.style.top = '0%';
+        cell1.style.left = '0%';
+        cell1.addEventListener('click', boardClickedPart4);
+
+        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
+        island.appendChild(cell2);
+        cell2.style.top = '0%';
+        cell2.style.right = '0%';
+        cell2.addEventListener('click', boardClickedPart4);
+
+        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
+        island.appendChild(cell3);
+        cell3.style.bottom = '0%';
+        cell3.style.left = '25%';
+        cell3.addEventListener('click', boardClickedPart4);
+
+
+        var islandTag = document.createElement('div');
+        islandTag.classList.add('islandTag');
+        island.appendChild(islandTag);
+        islandTag.style.height = '20%';
+        islandTag.style.width = '30%';
+        islandTag.style.top = '40%';
+        islandTag.style.left = '35%';
+        islandTag.style.backgroundColor = DEFAULT_C;
+        islandTag.innerHTML = 'Island ' + (i + 1);
+
+        boxes.push(cell1);
+        boxes.push(cell2);
+        boxes.push(cell3);
+    }
 }
 
 function endExpr() {
 
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(record));
     element.setAttribute('download', participantID + '#' + formattedDate() + '.txt');
@@ -666,13 +744,10 @@ function endExpr() {
 }
 
 function phase0() {
-    //var participantID = isNaN(texts[texts.length - 1]) ? 1 : Number(texts[texts.length - 1]);
+
     var participantID = (new Date).getTime();
-   //   participantID = 2 * participantID + 1;
     localStorage.setItem( 'partID', participantID);
 
-	
-	//  removeChild('nextPhaseButton', 'nextPhase');
     phase = 0;
     document.getElementById('phase').textContent = 'Phase No.' + phase;
     document.getElementById('instruction1').innerHTML =
@@ -720,7 +795,7 @@ function phase1() {
 
 function prephase2() {
 
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
  //   localStorage.removeItem( 'partID' ); // Clear the localStorage
     
     phase = 2;
@@ -752,7 +827,7 @@ function phase2() {
 
     removeChild('nextPhaseButton', 'nextPhase');
     removeChild('gameBoard', 'game');
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
     totalTime = QUESTION_TIME;
 
     document.getElementById('explanation').style.display = 'block';
@@ -788,7 +863,7 @@ function phase2() {
 function phase3() {
 
     removeChild('nextPhaseButton', 'nextPhase');
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
     record += '\n\nPart 2: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'scores: [' + scores + ']\n'
@@ -814,40 +889,56 @@ function phase3() {
 }
 
 function phase4() {
-    var participantID = localStorage['partID'];
+
+    removeChild('nextPhaseButton', 'nextPhase');
+
+    flushLocalCache();
+
+    phase = 4,
+    totalTime = QUESTION_TIME;
+
+    document.getElementById('phase').textContent = 'Part ' + phase;
+    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
+                        + P1_COLOR + '">Blue</span>, '
+                        + 'and please press a <b>WHITE</b> cell' +
+                        ' to capture resources that you think can lead to WIN';
+    document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question. ';
+
+    test_boards = PHASE4_QUESTIONS;
+    stopCount();
+
+}
+
+function phase5() {
+    var participantID = getParticipantID();
     console.log(record);
     flushLocalCache();
 
-    phase = 4;
+    phase = 5;
     var u;
     if (S > th) {
 	u = 2;
-    } else {u = 4;
+    } else {u = phase;
     }
 
     // localStorage.setItem("expResult", record);
     var element = document.getElementById("postrecord");
-    element.value = record
+    element.value = record;
     document.getElementById('phase').textContent = 'Part ' + u;
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';
     document.getElementById('participantid').value = participantID
 
-	//localStorage.setItem("participantID"; participantID);
-   // record += '\n\nPart 4: \n'
-    //    + answers.map(g => '[[' + g.join('],[') + ']]\n')
-     //   + 'scores: [' + scores + ']\n'
-      //  + 'time: [' + timeTaken + ']\n'
-      //  + 'time on expl: [' + timeTakenExpl + ']\n';
-
 }
 
 function checkform() {
-    if (!document.genderform.gender[0].checked && !document.genderform.gender[1].checked && !document.genderform.gender[2].checked) {
-	// no radio button is selected
-	return false;
+    if (!document.genderform.gender[0].checked &&
+        !document.genderform.gender[1].checked &&
+        !document.genderform.gender[2].checked) {
+	    // no radio button is selected
+	    return false;
     } else {
-    return true;
+        return true;
     }
 }
 
@@ -862,6 +953,8 @@ function stopCount() {
         stopCountPhase3();
     } else if (phase == 4) {
         stopCountPhase4();
+    } else if (phase == 5) {
+        stopCountPhase5();
     }
 }
 
@@ -950,7 +1043,7 @@ function showExpl() {
     moveChosen = true;
     totalTime = EXPL_TIME;
     sec = 0;
-    var participantID = localStorage['partID'];
+    var participantID = getParticipantID();
 
     if (participantID % TOTAL_GROUP != 0) {
 
@@ -1369,9 +1462,6 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
         }
     }
 
-//    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '90%', '0%','20%','20%', '60%', '60%');});
-//    button.style.top = '90%';
-//    button.style.right = '0%';
 }
 
 function createIsland(elem, islandID, text) {
@@ -1435,18 +1525,6 @@ function showPosExamples(game, parentId, pos){
                                                         + ') and opponent has no pair', TEXT_GREEN);
 
         highlightAttr('posboard0', strong1, GREEN, 'x');
-//        highlightAttr('posboard1', strong1, GREEN, 'x');
-//        highlightIslandCell('posboard1', game[1]
-//                                         .map((x,i) => x !== game[0][i] ? changeIndex(i) : -1)
-//                                         .filter(x => x !== -1)[0],
-//                            'yellow', 'o');
-//        highlightAttr('posboard2',
-//                      [...new Set(game[0]
-//                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
-//                                  .filter(x => x !== -1)
-//                                  .join(', ')
-//                                  .split(', '))],
-//                      'yellow', 'o');
         highlightAttr('posboard2', strong2, GREEN, 'x');
 
     } else if (game[0].filter(x => x === 0).length === 4) {
@@ -1457,13 +1535,6 @@ function showPosExamples(game, parentId, pos){
 	                    + strong[1] + ')', TEXT_GREEN);
         createBoardExpl(game[0], 'posboard1', parentId, 'Opponent has no pair', TEXT_GREEN);
         highlightAttr('posboard0', strong, GREEN, 'x');
-//        highlightAttr('posboard1',
-//                      [...new Set(game[0]
-//                                  .map((x,i) => x === 2 ? ISLAND_ATTR[changeIndex(i)] : -1)
-//                                  .filter(x => x !== -1)
-//                                  .join(', ')
-//                                  .split(', '))],
-//                      'yellow', 'o');
 
     } else if (game[0].filter(x => x === 0).length === 2) {
         // Depth 1
@@ -1486,10 +1557,6 @@ function showNegExamples(board, parentId, pos){
 
         nextBoard = computeNextMove(board, 2);
 	    createBoardExpl(nextBoard,'negboard1', parentId, EMPTY, TEXT_RED);
-//	    highlightIslandCell('negboard1', nextBoard
-//                                         .map((x,i) => x !== board[i] ? changeIndex(i) : -1)
-//                                         .filter(x => x !== -1)[0],
-//                            'yellow', 'o');
 	    nextBoard = computeNextMove(nextBoard, 1);
         strong2 = findPosStrongOption(nextBoard, 1);
 
@@ -1522,7 +1589,6 @@ function showNegExamples(board, parentId, pos){
         var opponentStrong = findPosStrongOption(board, 2);
         if (opponentStrong.length === 0) {
 		    createBoardExpl(board, 'negboard1', parentId, EMPTY, TEXT_RED);
-//		    highlightAttr('negboard1', ATTR, 'yellow', 'o');
 		} else {
 	        createBoardExpl(board, 'negboard1', parentId, 'Contrast: opponent has 1 pair', TEXT_RED);
 	        highlightAttr('negboard1', opponentStrong, 'yellow', 'o');
@@ -1531,7 +1597,6 @@ function showNegExamples(board, parentId, pos){
 	} else if (board.filter(x => x === 0).length === 2) {
 	    // depth 1
         createBoardExpl(board, 'negboard0', parentId, 'Contrast: No triplet', TEXT_RED);
-//        highlightAttr('negboard0', ATTR, 'yellow', 'x');
     }
 }
 
