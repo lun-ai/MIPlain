@@ -350,7 +350,7 @@ function stopCountPhase3() {
                                                     + 'for which you play against an OPTIMAL opponent.';
         document.getElementById('instruction2').textContent = 'You should select what you think is the best territory to WIN.'
                                                     + ' You have ONE CHANCE for each question and should try your best.';
-        document.getElementById('instruction3').textContent = 'You need to provide a short explanation for each of your responses.';
+        document.getElementById('instruction3').textContent = 'You need to provide a short explanation for each response.';
         document.getElementById('instruction4').textContent = '';
         document.getElementById('numQuestion').textContent = '';
 
