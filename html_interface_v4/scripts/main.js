@@ -315,6 +315,7 @@ function stopCountPhase2() {
                                                     + ' You have ONE CHANCE for each question and should try your best.';
         document.getElementById('instruction3').textContent = '';
         document.getElementById('instruction4').textContent = '';
+        document.getElementById('numQuestion').textContent = '';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase3);
 
     } else {
@@ -345,12 +346,13 @@ function stopCountPhase3() {
         document.getElementById('phase').textContent =
                 'Well done for completing Part 3!'
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'In Part 4, you will answer ' + TOTAL_QUESTIONS + ' questions '
+        document.getElementById('instruction1').textContent = 'In Part 4, you will answer 3 questions '
                                                     + 'for which you play against an OPTIMAL opponent.';
         document.getElementById('instruction2').textContent = 'You should select what you think is the best territory to WIN.'
                                                     + ' You have ONE CHANCE for each question and should try your best.';
-        document.getElementById('instruction3').textContent = '';
+        document.getElementById('instruction3').textContent = 'You need to provide a short explanation for each of your responses.';
         document.getElementById('instruction4').textContent = '';
+        document.getElementById('numQuestion').textContent = '';
 
 	    record += '\n\nPart 3: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -497,17 +499,16 @@ function boardClickedPart4() {
 
         var textInput = document.createElement('textarea');
         textInput.setAttribute('id', 'answerExp');
-        textInput.setAttribute('required', 'true');
-        textInput.setAttribute('placeHolder', 'Please write an explanation for your strategy ...');
+        textInput.setAttribute('placeHolder', 'Please write an explanation for your strategy (required)');
         textInput.setAttribute('row', 5);
         textInput.setAttribute('col', 30);
         document.getElementById('game').appendChild(textInput);
-        textInput.setAttribute('type', 'text');
         textInput.style.height = '10%';
         textInput.style.width = '20%';
         textInput.style.position = 'absolute';
         textInput.style.bottom = '10%';
         textInput.style.left = '40%';
+        textInput.required = true;
         createButton('nextQuestionButton', 'nextQuestion', 'Submit explanation', recordExplanationPart4);
 
         var button = document.getElementById('nextQuestionButton');
@@ -524,7 +525,6 @@ function recordExplanationPart4() {
     if (document.getElementById('answerExp').value != '') {
         verbalResponses.push(document.getElementById('answerExp').value);
         timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1) - timeTaken[currentQuestion - 1]), 0));
-//        console.log(timeTakenExpl);
         ended = true;
         stopCount();
     }
