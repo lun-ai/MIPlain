@@ -214,7 +214,8 @@ def filter(f1, f2):
     c_pre_d3 = get_correct_question(control_pre[:, 10:15], f1)
     c_pre_average = np.average(get_correct_question(control_pre[:, :], f1))
     c_pre_std = np.std(get_correct_question(control_pre[:, :], f1))
-    perfect_c_player = [i for i in range(30) if f2(c_pre_d1[i] + c_pre_d2[i] + c_pre_d3[i])]
+    perfect_c_player = [i for i in range(30) if f2(c_pre_d1[i] + c_pre_d2[i] + c_pre_d3[i], c_pre_average - c_pre_std, c_pre_average + c_pre_std)]
+    print('***************************')
     print('Control group pretest average correct: ' + str(c_pre_average))
     print('Control group pretest std: ' + str(c_pre_std))
     print('Removed from control group data: ' + str(len(perfect_c_player)))
@@ -224,10 +225,12 @@ def filter(f1, f2):
     t_pre_d3 = get_correct_question(treatment_pre[:, 10:15], f1)
     t_pre_average = np.average(get_correct_question(treatment_pre[:, :], f1))
     t_pre_std = np.std(get_correct_question(treatment_pre[:, :], f1))
-    perfect_t_player = [i for i in range(30) if f2(t_pre_d1[i] + t_pre_d2[i] + t_pre_d3[i])]
+    perfect_t_player = [i for i in range(30) if f2(t_pre_d1[i] + t_pre_d2[i] + t_pre_d3[i], t_pre_average - t_pre_std, t_pre_average + t_pre_std)]
     print('Treatment group pretest average correct: ' + str(t_pre_average))
     print('Treatment group pretest std: ' + str(t_pre_std))
     print('Removed from treatment group data: ' + str(len(perfect_t_player)))
+    print('Total subject number: ' + str(len(c_pre_d1) + len(t_pre_d1) - len(perfect_t_player) - len(perfect_c_player)))
+    print('***************************')
     return perfect_c_player, perfect_t_player, [c_pre_d1, c_pre_d2, c_pre_d3], [t_pre_d1, t_pre_d2, t_pre_d3]
 
 def create_time_graph_for_depth(f1, f2, title):
@@ -444,6 +447,7 @@ def ttest_with_threshold(f1, f2, title):
     print('depth 3 - control p: ' + str(stats.ttest_rel(c_pre_d3, c_post_d3)[1]))
     print('depth 1 - treatment p: ' + str(stats.ttest_rel(t_pre_d1, t_post_d1)[1]))
     print('depth 2 - treatment p: ' + str(stats.ttest_rel(t_pre_d2, t_post_d2)[1]))
+    print('depth 2 - treatment p: ' + str(stats.ranksums(t_pre_d2, t_post_d2)[1]))
     print('depth 3 - treatment p: ' + str(stats.ttest_rel(t_pre_d3, t_post_d3)[1]))
 
     print('depth 1 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d1, t_pre_d1)[1]))
@@ -493,6 +497,7 @@ def ttest_with_threshold(f1, f2, title):
     width = 0.35
 
     fig, ax = plt.subplots()
+    print(control_pre_mean)
     ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
            label='Control Pre-test', yerr=control_pre_std, color='r', ecolor='black')
     ax.bar(np.arange(0, 3) + width / 2, control_post_mean, width,
@@ -632,11 +637,13 @@ def population_pie_original(f):
 
     plt.show()
 
+
 # ttest((lambda x: x == 10))
-# ttest_with_threshold((lambda x: x == 10), (lambda x: x >= 12), 'Mean No. correct answer of selected participants')
-# ttest_with_threshold((lambda x: x == 10), (lambda x: x < 12), 'Mean No. correct answer of filtered participants')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants, u - sigma <= initial accuracy < u + sigma ')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean No. correct answer of participants, u + sigma <= initial accuracy')
+ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x > lo), 'Mean No. correct answer of participants, initial accuracy < u - sigma')
 # population_pie_chart((lambda x: x == 10), (lambda x: x >= 12))
 # population_pie_original((lambda x: x == 10))
 # create_time_graph_for_depth()
-create_time_graph_for_depth((lambda x: x == 10), (lambda x: x >= 12), 'Mean response time of selected participants')
+# create_time_graph_for_depth((lambda x: x == 10), (lambda x: x >= 12), 'Mean response time of selected participants')
 # create_time_graph_for_depth((lambda x: x == 10), (lambda x: x < 12),'Mean response time of filtered participants')

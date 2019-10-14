@@ -33,10 +33,8 @@ var t,
     scores = [],
     timeTaken = [],
     record = '',
-    verbalResponses = [];
-
-var texts = String(window.location).split('=');
-
+    verbalResponses = [],
+    part4Examples = [];
 
 
 function getParticipantID() {
@@ -229,6 +227,65 @@ function stopCountPhase0() {
 }
 
 
+function getAnswerSamplesFromTest(ans, s, resT) {
+
+    var incor = [[], [], []];
+    var cor = [[], [], []];
+    var incorT = [[], [], []];
+    var corT = [[], [], []];
+
+    var sample = [];
+
+    // partition answers based on correctness and question type
+    for (var sp = 0; sp < s.length; ++ sp) {
+
+        var type = 0;
+
+        if (5 <= sp && sp < 10) {
+            type = 1;
+        } else if (10 <= sp && sp < s.length) {
+            type = 2;
+        }
+
+        if (s[sp] == -10) {
+            incor[type].push(ans);
+            incorT[type].push([resT, sp]);
+        } else {
+            cor[type].push(ans);
+            corT[type].push([resT, sp]);
+        }
+    }
+
+    // sample answers based on response time for each type
+    for (var inc = 0; inc < incor.length; ++ inc) {
+
+        var elem = incor[inc];
+
+        // get one incorrect question-response pair
+        // if there exists at least one incorrect answer
+        if (elem.length != 0) {
+            if (elem.length == 1) sample.push(elem);
+            else {
+                incorT[inc].sort((a, b) => b[0] - a[0]);
+                var maxTIdx = incorT[inc][0][1];
+                sample.push(elem[maxTIdx]);
+            }
+        // else get one correct question-response pair
+        } else {
+            corT[inc].sort((a, b) => b[0] - a[0]);
+            var maxTIdx = corT[inc][0][1];
+            sample.push(cor[inc][maxTIdx]);
+        }
+    }
+
+    console.log(cor);
+    console.log(corT);
+    console.log(incor);
+    console.log(incorT);
+    console.log(sample);
+    return sample;
+}
+
 
 function stopCountPhase1() {
 
@@ -242,11 +299,14 @@ function stopCountPhase1() {
    if (currentQuestion > TOTAL_QUESTIONS) {
         var participantID = getParticipantID();
 
+        part4Examples.push(getAnswerSamplesFromTest(answers, scores, timeTaken));
+
         record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'difficulty: [' + difficulty + ']\n'
         + 'scores: [' + scores + ']\n'
         + 'time: [' + timeTaken + ']\n';
+
 
         document.getElementById('participantid').value = participantID;
 
@@ -354,6 +414,8 @@ function stopCountPhase3() {
         document.getElementById('instruction4').textContent = '';
         document.getElementById('numQuestion').textContent = '';
 
+        part4Examples.push(getAnswerSamplesFromTest(answers, scores, timeTaken));
+
 	    record += '\n\nPart 3: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
                + 'difficulty: [' + difficulty + ']\n'
@@ -377,7 +439,7 @@ function stopCountPhase4() {
     var participantID = getParticipantID();
     currentQuestion += 1;
 
-    if (currentQuestion > 3) {
+    if (currentQuestion > part4Examples.length) {
 
         removeChild('nextQuestionButton', 'nextQuestion');
         removeChild('nextExampleButton', 'nextExample');
@@ -404,7 +466,7 @@ function stopCountPhase4() {
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
 
     } else {
-        nextQuestionWithExp();
+        nextQuestionPart4();
         startCount();
     }
 }
@@ -475,56 +537,10 @@ function board1Click() {
     }
 }
 
-function boardClickedPart4() {
-    if (this.style.backgroundColor !== WHITE) {
-        return;
-    } else if (!ended) {
-
-        this.style.backgroundColor = P1_COLOR;
-
-        var currentBoard = convertBoxesTOBoard(boxes);
-        answers[currentQuestion - 1].push(currentBoard);
-
-        scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
-        timeTaken.push(floatRoundTo2(Math.max(0, sec - 1)));
-//        console.log(currentBoard);
-//        console.log(scores);
-//        console.log(timeTaken);
-
-        var newInstruction = document.getElementById('instruction5')
-        newInstruction.innerHTML = '</br> Now imagine you need to <b>EXPLAIN</b> to a close friend why you have chosen this move';
-        newInstruction.style.position = 'absolute';
-        newInstruction.style.bottom = '25%';
-        newInstruction.style.left = '30%';
-
-        var textInput = document.createElement('textarea');
-        textInput.setAttribute('id', 'answerExp');
-        textInput.setAttribute('placeHolder', 'Please write an explanation for your strategy (required)');
-        textInput.setAttribute('row', 5);
-        textInput.setAttribute('col', 30);
-        document.getElementById('game').appendChild(textInput);
-        textInput.style.height = '10%';
-        textInput.style.width = '20%';
-        textInput.style.position = 'absolute';
-        textInput.style.bottom = '10%';
-        textInput.style.left = '40%';
-        textInput.required = true;
-        createButton('nextQuestionButton', 'nextQuestion', 'Submit explanation', recordExplanationPart4);
-
-        var button = document.getElementById('nextQuestionButton');
-        button.style.position = 'absolute';
-        button.style.height = '5%';
-        button.style.width = '10%';
-        button.style.bottom = '0%';
-        button.style.left = '45%';
-    }
-
-}
-
 function recordExplanationPart4() {
     if (document.getElementById('answerExp').value != '') {
         verbalResponses.push(document.getElementById('answerExp').value);
-        timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1) - timeTaken[currentQuestion - 1]), 0));
+        timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1)), 0));
         ended = true;
         stopCount();
     }
@@ -644,14 +660,12 @@ function nextQuestion() {
 
 }
 
-function nextQuestionWithExp() {
+function nextQuestionPart4() {
     ended = false;
-    prevBoard = test_boards[currentQuestion - 1];
 
     // available moves / num of winning moves
     difficulty.push(computeBoardDifficulty(prevBoard));
-    answers.push([]);
-    answers[currentQuestion - 1].push(prevBoard);
+    answers.push(part4Examples[currentQuestion - 1]);
 
     var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
     removeChild('gameBoard', 'game');
@@ -663,69 +677,73 @@ function nextQuestionWithExp() {
     document.getElementById('instruction5').innerHTML = '';
     document.getElementById('numQuestion').textContent = 'Question NO.' + currentQuestion;
 
-    var board = document.createElement('div');
-    document.getElementById('game').appendChild(board);
-    var boardID = 'gameBoard';
-    board.setAttribute('id', boardID);
-    board.style.position = 'absolute';
-    board.style.left = '20%';
-    board.style.height = '60%';
-    board.style.width = '60%';
+    var div = document.createElement('div');
+    document.getElementById('game').appendChild(div);
+    div.classList.add('row');
+    div.setAttribute('id', 'gameBoard');
+    var div1 = document.createElement('div');
+    div1.setAttribute('id', 'initialBoard');
+    div1.style.position = 'absolute';
+    div1.style.width = '30%';
+    div1.style.float = 'left';
+    div1.style.left = '10%';
+    div1.style.top = '20%';
+    var div2 = document.createElement('div');
+    div2.setAttribute('id', 'afterMove');
+    div2.style.position = 'absolute';
+    div2.style.width = '30%';
+    div2.style.float = 'right';
+    div2.style.right = '10%';
+    div2.style.top = '20%';
+    div.appendChild(div1);
+    div.appendChild(div2);
 
-    for (var i = 0; i < N_SIZE; i++) {
+    createBoard(part4Examples[currentQuestion - 1][0], 'initial', 'initialBoard', 'Initial Board', [], WHITE, 10);
+    createBoard(part4Examples[currentQuestion - 1][1], 'move', 'afterMove', 'Your move', [], WHITE, 10);
+//    document.getElementById('initial').classList.remove('center1');
+//    document.getElementById('move').classList.remove('center1');
+    var initial = changeLabelsOnBoard(part4Examples[currentQuestion - 1][0]);
+    var move = changeLabelsOnBoard(part4Examples[currentQuestion - 1][1]);
+    var moveIdx = initial.map((_, i) => initial[i] == move[i] ? -1 : i).filter(x => x != -1)[0];
+    var cell = document.getElementById('move' + 'Island' + (Math.floor(moveIdx / N_SIZE) + 1) + '' + (moveIdx % N_SIZE + 1));
+    cell.style.border = '2px solid yellow';
+    cell.style.zIndex = 2;
 
-        var island = document.createElement('div');
-        board.appendChild(island);
-        var islandID = boardID + 'Island' + (i + 1);
-        island.setAttribute('id', islandID);
-        island.style.height = '30%';
-        island.style.width = '25%';
-        island.style.position = 'absolute';
+    var arrow = document.createElement('img');
+    div.appendChild(arrow);
+    arrow.src = 'imgs/arrowPart4.png';
+    arrow.style.height = '10%';
+    arrow.style.width = '10%';
+    arrow.style.position = 'absolute';
+    arrow.style.top = '40%';
+    arrow.style.left = '45%';
 
-        if (i === 0) {
-            island.style.top = '10%';
-            island.style.left = '20%';
-        } else if (i == 1) {
-            island.style.top = '10%';
-            island.style.right = '20%';
-        } else {
-            island.style.top = '50%';
-            island.style.left = '37.5%';
-        }
+    var newInstruction = document.getElementById('instruction5')
+    newInstruction.innerHTML = '</br> Now imagine you need to <b>EXPLAIN</b> to a close friend why you have chosen this move';
+    newInstruction.style.position = 'absolute';
+    newInstruction.style.bottom = '22%';
+    newInstruction.style.left = '30%';
 
-        var cell1 = createIsland(rightIndexAndLabel[i * 3], islandID, ISLAND_ATTR[i * 3]);
-        island.appendChild(cell1);
-        cell1.style.top = '0%';
-        cell1.style.left = '0%';
-        cell1.addEventListener('click', boardClickedPart4);
+    var textInput = document.createElement('textarea');
+    textInput.setAttribute('id', 'answerExp');
+    textInput.setAttribute('placeHolder', 'Please write an explanation for your strategy (required)');
+    textInput.setAttribute('row', 10);
+    textInput.setAttribute('col', 30);
+    document.getElementById('game').appendChild(textInput);
+    textInput.style.height = '10%';
+    textInput.style.width = '20%';
+    textInput.style.position = 'absolute';
+    textInput.style.bottom = '10%';
+    textInput.style.left = '40%';
+    textInput.required = true;
+    createButton('nextQuestionButton', 'nextQuestion', 'Submit explanation', recordExplanationPart4);
 
-        var cell2 = createIsland(rightIndexAndLabel[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1]);
-        island.appendChild(cell2);
-        cell2.style.top = '0%';
-        cell2.style.right = '0%';
-        cell2.addEventListener('click', boardClickedPart4);
-
-        var cell3 = createIsland(rightIndexAndLabel[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2]);
-        island.appendChild(cell3);
-        cell3.style.bottom = '0%';
-        cell3.style.left = '25%';
-        cell3.addEventListener('click', boardClickedPart4);
-
-
-        var islandTag = document.createElement('div');
-        islandTag.classList.add('islandTag');
-        island.appendChild(islandTag);
-        islandTag.style.height = '20%';
-        islandTag.style.width = '30%';
-        islandTag.style.top = '40%';
-        islandTag.style.left = '35%';
-        islandTag.style.backgroundColor = DEFAULT_C;
-        islandTag.innerHTML = 'Island ' + (i + 1);
-
-        boxes.push(cell1);
-        boxes.push(cell2);
-        boxes.push(cell3);
-    }
+    var button = document.getElementById('nextQuestionButton');
+    button.style.position = 'absolute';
+    button.style.height = '8%';
+    button.style.width = '10%';
+    button.style.bottom = '0%';
+    button.style.left = '45%';
 }
 
 function endExpr() {
@@ -896,6 +914,7 @@ function phase4() {
 
     phase = 4,
     totalTime = QUESTION_TIME;
+    if (part4Examples.length == 0) {part4Examples = PHASE4_QUESTIONS;}
 
     document.getElementById('phase').textContent = 'Part ' + phase;
     document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
@@ -1432,11 +1451,13 @@ function createBoard(board, boardId, parentId, text, positions, color, borderWid
             cell1.style.left = '1%';
             cell1.style.fontSize = '10px';
             cell1.setAttribute('id', islandID+1);
+
             var cell2 = createIslandAux(newBoard[i * 3 + 1], islandID, ISLAND_ATTR[i * 3 + 1], 'iconImgXS');
             cell2.style.top = '1%';
             cell2.style.right = '0%';
             cell2.style.fontSize = '10px';
             cell2.setAttribute('id', islandID+2);
+
             var cell3 = createIslandAux(newBoard[i * 3 + 2], islandID, ISLAND_ATTR[i * 3 + 2], 'iconImgXS');
             cell3.style.bottom = '0%';
             cell3.style.left = '25%';
@@ -1600,134 +1621,4 @@ function showNegExamples(board, parentId, pos){
     }
 }
 
-function p1CountTable(parentId, board, top, right, toptable, righttable, width, height) {
 
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
-    var parent = document.getElementById(parentId);
-
-    removeChild(parentId + 'p1TableView', parentId);
-    removeChild(parentId + 'gameBoardp2TableView', parentId);
-
-    document.getElementById(parentId + 'Island1').style.visibility  = 'hidden';
-    document.getElementById(parentId + 'Island2').style.visibility  = 'hidden';
-    document.getElementById(parentId + 'Island3').style.visibility  = 'hidden';
-
-    var table = document.getElementById(parentId + 'p1CountTable');
-
-    if (table === null) {
-
-        var div = document.createElement('div');
-        parent.appendChild(div);
-        div.style.position = 'absolute';
-        div.setAttribute('id', parentId + 'p1TableView');
-        div.style.width = width;
-        div.style.height = height;
-        div.style.top = toptable;
-        div.style.left = righttable;
-        table = document.createElement('table');
-        table.classList.add('table4');
-        table.setAttribute('id', parentId + 'p1CountTable');
-        div.appendChild(table);
-
-        var count = countAttrs(board, 1);
-
-        for (var i = 0; i < 4; i++) {
-
-            var row = document.createElement('tr');
-            table.appendChild(row);
-
-            for (var j = 0; j < 4; j++) {
-
-                var cell = document.createElement('td');
-                row.appendChild(cell);
-                cell.style.align = 'center';
-
-                if ((i * 4 + j) % 2 == 0) {
-                    cell.style.backgroundColor = P1_COLOR;
-                    cell.innerHTML = attr[Math.floor((i * 4 + j) / 2)];
-                } else {
-                    cell.innerHTML = count[Math.floor((i * 4 + j - 1) / 2)];
-                }
-            }
-        }
-    } else {
-        document.getElementById(parentId + 'p1CountTable').style.visibility = "visible";
-    }
-
-    removeChild(parentId + 'p1CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'p2CountTableButton', parentId, 'Orange points', function() {p2CountTable(parentId, board, top, right, toptable, righttable, width, height);});
-    button.style.top = top;
-    button.style.right = right;
-}
-
-function p2CountTable(parentId, board, top, right, toptable, righttable, width, height) {
-
-    var attr = ['Island1', 'Island2', 'Island3', 'Fish', 'Castle', 'Cornfield', 'Forest', 'Water'];
-    var parent = document.getElementById(parentId);
-
-    document.getElementById(parentId + 'p1CountTable').style.visibility = "hidden";
-
-    var table = document.getElementById(parentId + 'p2CountTable');
-
-    if (table === null) {
-
-        var div = document.createElement('div');
-        parent.appendChild(div);
-        div.style.position = 'absolute';
-        div.setAttribute('id', parentId + 'p2TableView');
-        div.style.width = '60%';
-        div.style.height = '60%';
-        div.style.top = toptable;
-        div.style.left = righttable;
-        table = document.createElement('table');
-        table.classList.add('table4');
-        table.setAttribute('id', parentId + 'p2CountTable');
-        div.appendChild(table);
-
-        var count = countAttrs(board, 2);
-
-        for (var i = 0; i < 4; i++) {
-
-            var row = document.createElement('tr');
-            table.appendChild(row);
-
-            for (var j = 0; j < 4; j++) {
-
-                var cell = document.createElement('td');
-                row.appendChild(cell);
-                cell.style.align = 'center';
-
-                if ((i * 4 + j) % 2 == 0) {
-                    cell.style.backgroundColor = P2_COLOR;
-                    cell.innerHTML = attr[Math.floor((i * 4 + j) / 2)];
-                } else {
-                    cell.innerHTML = count[Math.floor((i * 4 + j - 1) / 2)];
-                }
-
-            }
-        }
-    } else {
-        document.getElementById(parentId + 'p2CountTable').style.visibility = "visible";
-    }
-
-    removeChild(parentId + 'p2CountTableButton', parentId);
-    var button = createTableViewButton(parentId + 'boardView', parentId, 'Board', function() {boardView(parentId, board, top, right, toptable, righttable, width, height);});
-    button.style.top = top;
-    button.style.right = right;
-}
-
-function boardView(parentId, board, top, right, toptable, righttable, width, height) {
-
-    document.getElementById(parentId + 'p2CountTable').style.visibility = "hidden";
-    document.getElementById(parentId + 'Island1').style.visibility = "visible";
-    document.getElementById(parentId + 'Island2').style.visibility = "visible";
-    document.getElementById(parentId + 'Island3').style.visibility = "visible";
-
-    removeChild(parentId + 'boardView', parentId);
-    removeChild(parentId + 'p1TableView', parentId);
-    removeChild(parentId + 'p2TableView', parentId);
-
-    var button = createTableViewButton(parentId + 'p1CountTableButton', parentId, 'Blue points', function() {p1CountTable(parentId, board, top, right, toptable, righttable, width, height);});
-    button.style.top = top;
-    button.style.right = right;
-}
