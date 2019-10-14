@@ -550,7 +550,7 @@ function board1Click() {
 }
 
 function recordExplanationPart4() {
-    if (document.getElementById('answerExp').value != '') {
+    if (document.getElementById('answerExp').value.length >= 10) {
         verbalResponses.push(document.getElementById('answerExp').value);
         timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1)), 0));
         ended = true;
