@@ -34,8 +34,16 @@ var t,
     timeTaken = [],
     record = '',
     verbalResponses = [],
-    part4Examples = [];
+    part4Examples = [],
+    part4Scores = [];
 
+function getPart1Examples() {
+
+    var samples = localStorage['samples'];
+
+    // condition hold during local test, dumb test values are assigned
+    return samples == null ? [PHASE4_QUESTIONS, [0,0,0]] : [samples[0], samples[1]];
+}
 
 function getParticipantID() {
     var pid = localStorage['partID'];
@@ -68,7 +76,6 @@ function applyStrategy(board) {
 
     session.consult(PL_FILE_NAME + (participantID % TOTAL_GROUP) + '.pl');
     var depth = Math.floor((board.filter(c => c == 0).length - 1) / 2);
-    console.log('win_' + depth + '(' + composeStrategyState(board) + ', B).');
 
     var queryWin;
     session.query('win_' + depth + '(' + composeStrategyState(board) + ', B).');
@@ -235,6 +242,7 @@ function getAnswerSamplesFromTest(ans, s, resT) {
     var corT = [[], [], []];
 
     var sample = [];
+    var sampleScores = [];
 
     // partition answers based on correctness and question type
     for (var sp = 0; sp < s.length; ++ sp) {
@@ -247,34 +255,36 @@ function getAnswerSamplesFromTest(ans, s, resT) {
             type = 2;
         }
 
-        if (s[sp] == -10) {
-            incor[type].push(ans);
-            incorT[type].push([resT, sp]);
+        if (s[sp] == 10) {
+            cor[type].push(ans[sp]);
+            corT[type].push([resT[sp], corT[type].length]);
         } else {
-            cor[type].push(ans);
-            corT[type].push([resT, sp]);
+            incor[type].push(ans[sp]);
+            incorT[type].push([resT[sp], incorT[type].length]);
         }
     }
 
     // sample answers based on response time for each type
-    for (var inc = 0; inc < incor.length; ++ inc) {
+    for (var inc = 0; inc < 3; ++ inc) {
 
         var elem = incor[inc];
 
         // get one incorrect question-response pair
         // if there exists at least one incorrect answer
         if (elem.length != 0) {
-            if (elem.length == 1) sample.push(elem);
+            if (elem.length == 1) {sample.push(elem[0]);}
             else {
                 incorT[inc].sort((a, b) => b[0] - a[0]);
                 var maxTIdx = incorT[inc][0][1];
                 sample.push(elem[maxTIdx]);
             }
+            sampleScores.push(-10);
         // else get one correct question-response pair
         } else {
             corT[inc].sort((a, b) => b[0] - a[0]);
             var maxTIdx = corT[inc][0][1];
             sample.push(cor[inc][maxTIdx]);
+            sampleScores.push(10);
         }
     }
 
@@ -282,8 +292,8 @@ function getAnswerSamplesFromTest(ans, s, resT) {
     console.log(corT);
     console.log(incor);
     console.log(incorT);
-    console.log(sample);
-    return sample;
+
+    return [sample, sampleScores];
 }
 
 
@@ -297,41 +307,40 @@ function stopCountPhase1() {
     currentQuestion += 1;
     
    if (currentQuestion > TOTAL_QUESTIONS) {
-        var participantID = getParticipantID();
+       var participantID = getParticipantID();
 
-        part4Examples.push(getAnswerSamplesFromTest(answers, scores, timeTaken));
+       var samples = getAnswerSamplesFromTest(answers, scores, timeTaken);
+       document.getElementById('participantid').value = participantID;
+       localStorage.setItem('samples', samples);
 
-        record += '\n\nPart 1: \n'
+       // save just in case
+       part4Examples.push(samples[0]);
+
+       record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'difficulty: [' + difficulty + ']\n'
         + 'scores: [' + scores + ']\n'
         + 'time: [' + timeTaken + ']\n';
 
+       var element = document.getElementById("postrecord");
+       element.value = record;
+	   removeChild('nextQuestionButton', 'nextQuestion');
+	   removeChild('gamep1CountTable', 'game');
+       removeChild('gamep2CountTable', 'game');
+       document.getElementById('phase').textContent = 'Well done for completing Part 1!';
+       document.getElementById('timer').textContent = '';
 
-        document.getElementById('participantid').value = participantID;
+       document.getElementById('goconcepts2').style.display = 'block';
 
-       // console.log(record);
-       // flushLocalCache();
+       document.getElementById('instruction1').textContent = '';
+       document.getElementById('instruction2').textContent = '';
 
-        var element = document.getElementById("postrecord");
-        element.value = record;
-	    removeChild('nextQuestionButton', 'nextQuestion');
-	    removeChild('gamep1CountTable', 'game');
-        removeChild('gamep2CountTable', 'game');
-        document.getElementById('phase').textContent = 'Well done for completing Part 1!';
-        document.getElementById('timer').textContent = '';
-
-        document.getElementById('goconcepts2').style.display = 'block';
-
-        document.getElementById('instruction1').textContent = '';
-        document.getElementById('instruction2').textContent = '';
-
-        document.getElementById('numQuestion').textContent = '';
-        removeChild('gameBoard', 'game');
+       document.getElementById('numQuestion').textContent = '';
+       removeChild('gameBoard', 'game');
 
    } else {
-        nextQuestion();
-        startCount();
+       nextQuestion();
+       startCount();
    }
 
 }
@@ -387,11 +396,11 @@ function stopCountPhase2() {
 }
 
 function stopCountPhase3() {
-
     if (t != null) {
         clearTimeout(t);
         sec = 0;
     }
+
     var participantID = getParticipantID();
     currentQuestion += 1;
 
@@ -406,15 +415,22 @@ function stopCountPhase3() {
         document.getElementById('phase').textContent =
                 'Well done for completing Part 3!'
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'In Part 4, you will answer 3 questions '
-                                                    + 'for which you play against an OPTIMAL opponent.';
-        document.getElementById('instruction2').textContent = 'You should select what you think is the best territory to WIN.'
-                                                    + ' You have ONE CHANCE for each question and should try your best.';
-        document.getElementById('instruction3').textContent = 'You need to provide a short explanation for each response.';
-        document.getElementById('instruction4').textContent = '';
-        document.getElementById('numQuestion').textContent = '';
+        document.getElementById('instruction1').innerHTML = '</br>In Part 4, you will answer 6 questions '
+                                                    + 'all of which are based on your answers to previous sections.';
+        document.getElementById('instruction2').innerHTML = 'For each question, you will review one move you made and ';
+        document.getElementById('instruction3').innerHTML = 'need to provide a short explanation for each move.';
+        document.getElementById('instruction4').innerHTML = '';
+        document.getElementById('numQuestion').innerHTML = '';
 
-        part4Examples.push(getAnswerSamplesFromTest(answers, scores, timeTaken));
+        var samples = getAnswerSamplesFromTest(answers, scores, timeTaken);
+
+        // fetch saved samples from part 1 and load into current session
+        var prevSamples = getPart1Examples();
+        part4Examples.push(prevSamples[0]);
+        part4Examples.push(samples[0]);
+        part4Scores.push(prevSamples[1]);
+        part4Scores.push(samples[1]);
+        console.log(part4Examples);
 
 	    record += '\n\nPart 3: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -431,15 +447,18 @@ function stopCountPhase3() {
 }
 
 function stopCountPhase4() {
-
     if (t != null) {
         clearTimeout(t);
         sec = 0;
     }
+
     var participantID = getParticipantID();
     currentQuestion += 1;
 
-    if (currentQuestion > part4Examples.length) {
+    // three questions from part 1 responses, three from part 2 responses
+    var totalN = part4Examples[0].length + part4Examples[1].length;
+
+    if (currentQuestion > totalN) {
 
         removeChild('nextQuestionButton', 'nextQuestion');
         removeChild('nextExampleButton', 'nextExample');
@@ -459,9 +478,8 @@ function stopCountPhase4() {
 
 	    record += '\n\nPart 4: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
-               + 'difficulty: [' + difficulty + ']\n'
                + 'responses: [' + verbalResponses + ']\n'
-               + 'time: [' + timeTaken + ']\n'
+               + 'scores: [' + part4Scores[0] + ',\n' + part4Scores[1] + ']\n'
                + 'time on expl: [' + timeTakenExpl + ']\n';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
 
@@ -478,27 +496,21 @@ function boardClickedGame() {
     } else if (!ended) {
 
         this.style.backgroundColor = P1_COLOR;
-
         document.getElementById('instruction2').textContent = 'You have captured ' + resources(this.id) + '!';
 
         var currentBoard = convertBoxesTOBoard(boxes);
         
         if(win(currentBoard,1)) {
-
             ended = true;
             document.getElementById('instruction1').textContent = 'You have won the game!';
             stopCount();
-
         } else if (currentBoard.filter(x => x === 0).length === 0) {
-
             ended = true;
             document.getElementById('instruction1').textContent = 'The game is drawn.';
             stopCount();
-
         } else {
 
             var board2 = randomMove(currentBoard,2);
-
             if (win(board2, 2)) {
                 ended = true;
                 document.getElementById('instruction1').textContent = 'You have lost the game!';
@@ -560,9 +572,6 @@ function boardClicked() {
 
         scores.push(getMiniMaxScore(prevBoard, currentBoard, 1));
         timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
-        console.log(currentBoard);
-        console.log(scores);
-        console.log(timeTaken);
 
         removeChild('gameBoardp1CountTableButton', 'gameBoard');
         createButton('nextQuestionButton', 'nextQuestion', 'Next Question', stopCount);
@@ -665,7 +674,11 @@ function nextQuestionPart4() {
 
     // available moves / num of winning moves
     difficulty.push(computeBoardDifficulty(prevBoard));
-    answers.push(part4Examples[currentQuestion - 1]);
+
+    // odd numbered questions are from part 1, even from part 2
+    var move = part4Examples[(currentQuestion - 1) % 2][Math.floor((currentQuestion - 1) / 2)];
+    console.log(move);
+    answers.push(move);
 
     var rightIndexAndLabel = changeLabelsOnBoard(prevBoard);
     removeChild('gameBoard', 'game');
@@ -698,12 +711,11 @@ function nextQuestionPart4() {
     div.appendChild(div1);
     div.appendChild(div2);
 
-    createBoard(part4Examples[currentQuestion - 1][0], 'initial', 'initialBoard', 'Initial Board', [], WHITE, 10);
-    createBoard(part4Examples[currentQuestion - 1][1], 'move', 'afterMove', 'Your move', [], WHITE, 10);
-//    document.getElementById('initial').classList.remove('center1');
-//    document.getElementById('move').classList.remove('center1');
-    var initial = changeLabelsOnBoard(part4Examples[currentQuestion - 1][0]);
-    var move = changeLabelsOnBoard(part4Examples[currentQuestion - 1][1]);
+    createBoard(move[0], 'initial', 'initialBoard', 'Initial Board', [], WHITE, 10);
+    createBoard(move[1], 'move', 'afterMove', 'Your move', [], WHITE, 10);
+
+    var initial = changeLabelsOnBoard(move[0]);
+    var move = changeLabelsOnBoard(move[1]);
     var moveIdx = initial.map((_, i) => initial[i] == move[i] ? -1 : i).filter(x => x != -1)[0];
     var cell = document.getElementById('move' + 'Island' + (Math.floor(moveIdx / N_SIZE) + 1) + '' + (moveIdx % N_SIZE + 1));
     cell.style.border = '2px solid yellow';
@@ -719,7 +731,8 @@ function nextQuestionPart4() {
     arrow.style.left = '45%';
 
     var newInstruction = document.getElementById('instruction5')
-    newInstruction.innerHTML = '</br> Now imagine you need to <b>EXPLAIN</b> to a close friend why you have chosen this move';
+    newInstruction.innerHTML = '</br> Now imagine you need to <b>EXPLAIN</b> to a close friend why you chose this move '
+                             + '</br> <b> WITH AT LEAST TWO SENTENCES </b>';
     newInstruction.style.position = 'absolute';
     newInstruction.style.bottom = '22%';
     newInstruction.style.left = '30%';
@@ -764,10 +777,10 @@ function endExpr() {
 function phase0() {
 
     var participantID = (new Date).getTime();
-    localStorage.setItem( 'partID', participantID);
+    localStorage.setItem('partID', participantID);
 
     phase = 0;
-    document.getElementById('phase').textContent = 'Phase No.' + phase;
+    document.getElementById('phase').textContent = 'Phase ' + phase + ' / 5';
     document.getElementById('instruction1').innerHTML =
     			'Let\'s now play a training game to get familiar with the rules of the game. <br />' +
     			'Your opponent plays <span style="font-weight:bold">RANDOMLY</span> and it does <span style="font-weight:bold">NOT</span> always choose optimal moves.<br /> <br />';
@@ -814,7 +827,6 @@ function phase1() {
 function prephase2() {
 
     var participantID = getParticipantID();
- //   localStorage.removeItem( 'partID' ); // Clear the localStorage
     
     phase = 2;
     document.getElementById('instruction1').innerHTML =
@@ -878,6 +890,7 @@ function phase2() {
     stopCount();
 }
 
+
 function phase3() {
 
     removeChild('nextPhaseButton', 'nextPhase');
@@ -906,6 +919,7 @@ function phase3() {
     stopCount();
 }
 
+
 function phase4() {
 
     removeChild('nextPhaseButton', 'nextPhase');
@@ -914,14 +928,10 @@ function phase4() {
 
     phase = 4,
     totalTime = QUESTION_TIME;
-    if (part4Examples.length == 0) {part4Examples = PHASE4_QUESTIONS;}
 
     document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').innerHTML = 'You play <span style="background-color: '
-                        + P1_COLOR + '">Blue</span>, '
-                        + 'and please press a <b>WHITE</b> cell' +
-                        ' to capture resources that you think can lead to WIN';
-    document.getElementById('instruction2').innerHTML = 'You have <b>ONE CHANCE</b> for each question. ';
+    document.getElementById('instruction1').innerHTML = 'For each question, you will see one move you made in one of the previous sections and';
+    document.getElementById('instruction2').innerHTML = 'you need to <b>EXPLAIN</b> briefly why you chose that move as you would say to a friend';
 
     test_boards = PHASE4_QUESTIONS;
     stopCount();
@@ -929,7 +939,9 @@ function phase4() {
 }
 
 function phase5() {
+
     var participantID = getParticipantID();
+
     console.log(record);
     flushLocalCache();
 
@@ -951,10 +963,10 @@ function phase5() {
 }
 
 function checkform() {
+	// no radio button is selected
     if (!document.genderform.gender[0].checked &&
         !document.genderform.gender[1].checked &&
         !document.genderform.gender[2].checked) {
-	    // no radio button is selected
 	    return false;
     } else {
         return true;
@@ -978,7 +990,6 @@ function stopCount() {
 }
 
 function nextExample() {
-
     clearBoards();
     moveChosen = false;
     ended = false;
@@ -987,7 +998,6 @@ function nextExample() {
     answers.push([]);
     answers[currentExpl - 1].push(examples[currentExpl - 1]);
     showExample();
-
 }
 
 function showExample() {
@@ -1044,7 +1054,6 @@ function showExpl() {
 
     timeTaken.push(Math.round(Math.max(0, sec - 1) * 100) / 100);
     totalTime = EXPL_TIME;
-    console.log(timeTaken);
 
     removeChild('wrongMoveButton', 'wrongMoveComment');
     removeChild('rightMoveButton', 'rightMoveComment');
@@ -1079,21 +1088,17 @@ function showExpl() {
 }
 
 function rightMoveChosen() {
-
     answers[currentExpl - 1].push(rightMoves[currentExpl - 1]);
     scores.push(10);
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
-
 }
 
 function wrongMoveChosen() {
-
     answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
     scores.push(getMiniMaxScore(answers[currentExpl - 1][0], answers[currentExpl - 1][1], 1));
     showExpl();
     createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
-
 }
 
 function createParitalBoard(originalBoard, board, boardID, parentId) {
@@ -1388,10 +1393,6 @@ function createBoardExpl(board, boardId, parentId, text, color) {
         comment.innerHTML = '<span style="color: ' + color + '">'
                         + text + '</span>';
     }
-
-//    var button = createTableViewButton(boardId + 'p1CountTableButton', boardId, 'Blue points', function() {p1CountTable(boardId, board, '65%', '0%','20%','20%', '60%', '60%');});
-//    button.style.top = '65%';
-//    button.style.right = '0%';
 
     return div;
 }
