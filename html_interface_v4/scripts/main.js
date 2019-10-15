@@ -39,8 +39,9 @@ var t,
 
 function getPart1Examples() {
 
-    var samples = localStorage['samples'];
-
+   // var samples = localStorage['samples'];
+    var samples1 = localStorage['samples'];
+    var samples = JSON.parse(samples1);
     // condition hold during local test, dumb test values are assigned
     return samples == null ? [PHASE4_QUESTIONS, [0,0,0]] : [samples[0], samples[1]];
 }
@@ -311,11 +312,11 @@ function stopCountPhase1() {
 
        var samples = getAnswerSamplesFromTest(answers, scores, timeTaken);
        document.getElementById('participantid').value = participantID;
-       localStorage.setItem('samples', samples);
-
-       // save just in case
+              localStorage.setItem('samples', JSON.stringify(samples));
+	   // save just in case
        part4Examples.push(samples[0]);
-
+       var samplesdiv = document.getElementById("samples");
+       samplesdiv.value = samples;
        record += '\n\nPart 1: \n'
         + answers.map(g => '[[' + g.join('],[') + ']]\n')
         + 'difficulty: [' + difficulty + ']\n'
@@ -426,7 +427,7 @@ function stopCountPhase3() {
 
         // fetch saved samples from part 1 and load into current session
         var prevSamples = getPart1Examples();
-        part4Examples.push(prevSamples[0]);
+	part4Examples.push(prevSamples[0]);
         part4Examples.push(samples[0]);
         part4Scores.push(prevSamples[1]);
         part4Scores.push(samples[1]);
@@ -479,7 +480,7 @@ function stopCountPhase4() {
 	    record += '\n\nPart 4: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
                + 'responses: [' + verbalResponses + ']\n'
-               + 'scores: [' + part4Scores[0] + ',\n' + part4Scores[1] + ']\n'
+               + 'scores: [' + part4Scores[0] + ',' + part4Scores[1] + ']\n'
                + 'time on expl: [' + timeTakenExpl + ']\n';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
 
@@ -671,10 +672,8 @@ function nextQuestion() {
 
 function nextQuestionPart4() {
     ended = false;
-
     // available moves / num of winning moves
     difficulty.push(computeBoardDifficulty(prevBoard));
-
     // odd numbered questions are from part 1, even from part 2
     var move = part4Examples[(currentQuestion - 1) % 2][Math.floor((currentQuestion - 1) / 2)];
     console.log(move);
