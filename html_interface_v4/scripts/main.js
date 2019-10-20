@@ -37,13 +37,12 @@ var t,
     part4Examples = [],
     part4Scores = [];
 
-function getPart1Examples() {
+function getPart1Scores() {
+    var samplesStore = localStorage['samples'];
+    if (samplesStore == null) {return [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];}
 
-   // var samples = localStorage['samples'];
-    var samples1 = localStorage['samples'];
-    var samples = JSON.parse(samples1);
-    // condition hold during local test, dumb test values are assigned
-    return samples == null ? [PHASE4_QUESTIONS, [0,0,0]] : [samples[0], samples[1]];
+    var samples = JSON.parse(samplesStore);
+    return samples == null ? [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] : samples;
 }
 
 function getParticipantID() {
@@ -235,12 +234,16 @@ function stopCountPhase0() {
 }
 
 
-function getAnswerSamplesFromTest(ans, s, resT) {
+function getAnswerSamplesFromTest(ans, s, prevS, resT) {
 
+    // cor/incor :- type, move
+    // corT/incorT :- T, idx to cor/incor
+    // cases :- pre-post answer case, type, idx to cor/incor
     var incor = [[], [], []];
     var cor = [[], [], []];
     var incorT = [[], [], []];
     var corT = [[], [], []];
+    var cases = [[], [], [], []];
 
     var sample = [];
     var sampleScores = [];
@@ -256,36 +259,76 @@ function getAnswerSamplesFromTest(ans, s, resT) {
             type = 2;
         }
 
-        if (s[sp] == 10) {
+
+        if (s[sp] != 10 && prevS[sp] != 10) {
+            cases[0].push([type, incorT[type].length]);
+            incor[type].push(ans[sp]);
+            incorT[type].push([resT[sp], incorT[type].length]);
+        } else if (s[sp] == 10 && prevS[sp] != 10) {
+            cases[1].push([type, incorT[type].length]);
+            incor[type].push(ans[sp]);
+            incorT[type].push([resT[sp], incorT[type].length]);
+        } else if (s[sp] != 10 && prevS[sp] == 10) {
+            cases[2].push([type, corT[type].length]);
             cor[type].push(ans[sp]);
             corT[type].push([resT[sp], corT[type].length]);
         } else {
-            incor[type].push(ans[sp]);
-            incorT[type].push([resT[sp], incorT[type].length]);
+            cases[3].push([type, corT[type].length]);
+            cor[type].push(ans[sp]);
+            corT[type].push([resT[sp], corT[type].length]);
         }
     }
 
     // sample answers based on response time for each type
+    // fill in by type from depth 1 to depth 3
+    var wrongInBothTests = cases[0];
     for (var inc = 0; inc < 3; ++ inc) {
 
-        var elem = incor[inc];
+        var idxs = wrongInBothTests.filter(x => x[0] == inc).map(y => y[1]);
 
         // get one incorrect question-response pair
         // if there exists at least one incorrect answer
-        if (elem.length != 0) {
-            if (elem.length == 1) {sample.push(elem[0]);}
-            else {
+        if (idxs.length != 0) {
+            if (idxs.length == 1) {
+                sample.push(incor[inc][idxs[0]]);
+                sampleScores.push(0);
+            } else {
                 incorT[inc].sort((a, b) => b[0] - a[0]);
-                var maxTIdx = incorT[inc][0][1];
-                sample.push(elem[maxTIdx]);
+                for (var ti = 0; ti < incorT[inc].length; ++ ti) {
+                    var i = idxs.indexOf(incorT[inc][ti][1]);
+                    if (i != -1){
+                        sample.push(incor[inc][idxs[i]]);
+                        sampleScores.push(0);
+                        break;
+                    }
+                }
             }
-            sampleScores.push(-10);
-        // else get one correct question-response pair
-        } else {
-            corT[inc].sort((a, b) => b[0] - a[0]);
-            var maxTIdx = corT[inc][0][1];
-            sample.push(cor[inc][maxTIdx]);
-            sampleScores.push(10);
+        }
+    }
+
+
+    var wrongInPostTest = cases[1];
+    for (var inc = 0; inc < 3; ++ inc) {
+
+        var idxs = wrongInPostTest.filter(x => x[0] == inc).map(y => y[1]);
+
+        // get one incorrect question-response pair
+        // if there exists at least one incorrect answer
+        if (idxs.length != 0) {
+            if (idxs.length == 1) {
+                sample.push(incor[inc][idxs[0]]);
+                sampleScores.push(1);
+            } else {
+                incorT[inc].sort((a, b) => b[0] - a[0]);
+                for (var ti = 0; ti < incorT[inc].length; ++ ti) {
+                    var i = idxs.indexOf(incorT[inc][ti][1]);
+                    if (i != -1){
+                        sample.push(incor[inc][idxs[i]]);
+                        sampleScores.push(1);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -308,40 +351,36 @@ function stopCountPhase1() {
     currentQuestion += 1;
     
    if (currentQuestion > TOTAL_QUESTIONS) {
-       var participantID = getParticipantID();
+        var participantID = getParticipantID();
 
-       var samples = getAnswerSamplesFromTest(answers, scores, timeTaken);
-       document.getElementById('participantid').value = participantID;
-              localStorage.setItem('samples', JSON.stringify(samples));
-	   // save just in case
-       part4Examples.push(samples[0]);
-       var samplesdiv = document.getElementById("samples");
-       samplesdiv.value = samples;
-       record += '\n\nPart 1: \n'
-        + answers.map(g => '[[' + g.join('],[') + ']]\n')
-        + 'difficulty: [' + difficulty + ']\n'
-        + 'scores: [' + scores + ']\n'
-        + 'time: [' + timeTaken + ']\n';
+        document.getElementById('participantid').value = participantID;
+        localStorage.setItem('samples', JSON.stringify(scores));
 
-       var element = document.getElementById("postrecord");
-       element.value = record;
-	   removeChild('nextQuestionButton', 'nextQuestion');
-	   removeChild('gamep1CountTable', 'game');
-       removeChild('gamep2CountTable', 'game');
-       document.getElementById('phase').textContent = 'Well done for completing Part 1!';
-       document.getElementById('timer').textContent = '';
+        record += '\n\nPart 1: \n'
+            + answers.map(g => '[[' + g.join('],[') + ']]\n')
+            + 'difficulty: [' + difficulty + ']\n'
+            + 'scores: [' + scores + ']\n'
+            + 'time: [' + timeTaken + ']\n';
 
-       document.getElementById('goconcepts2').style.display = 'block';
+        var element = document.getElementById("postrecord");
+        element.value = record;
+	    removeChild('nextQuestionButton', 'nextQuestion');
+	    removeChild('gamep1CountTable', 'game');
+        removeChild('gamep2CountTable', 'game');
+        document.getElementById('phase').textContent = 'Well done for completing Part 1!';
+        document.getElementById('timer').textContent = '';
 
-       document.getElementById('instruction1').textContent = '';
-       document.getElementById('instruction2').textContent = '';
+        document.getElementById('goconcepts2').style.display = 'block';
 
-       document.getElementById('numQuestion').textContent = '';
-       removeChild('gameBoard', 'game');
+        document.getElementById('instruction1').textContent = '';
+        document.getElementById('instruction2').textContent = '';
+
+        document.getElementById('numQuestion').textContent = '';
+        removeChild('gameBoard', 'game');
 
    } else {
-       nextQuestion();
-       startCount();
+        nextQuestion();
+        startCount();
    }
 
 }
@@ -423,15 +462,13 @@ function stopCountPhase3() {
         document.getElementById('instruction4').innerHTML = '';
         document.getElementById('numQuestion').innerHTML = '';
 
-        var samples = getAnswerSamplesFromTest(answers, scores, timeTaken);
+        var prevScores = getPart1Scores();
+        var samples = getAnswerSamplesFromTest(answers, scores, prevScores, timeTaken);
 
         // fetch saved samples from part 1 and load into current session
-        var prevSamples = getPart1Examples();
-	part4Examples.push(prevSamples[0]);
-        part4Examples.push(samples[0]);
-        part4Scores.push(prevSamples[1]);
-        part4Scores.push(samples[1]);
-        console.log(part4Examples);
+        part4Examples = samples[0];
+        part4Scores = samples[1];
+        console.log(samples);
 
 	    record += '\n\nPart 3: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
@@ -457,9 +494,8 @@ function stopCountPhase4() {
     currentQuestion += 1;
 
     // three questions from part 1 responses, three from part 2 responses
-    var totalN = part4Examples[0].length + part4Examples[1].length;
 
-    if (currentQuestion > totalN) {
+    if (currentQuestion > part4Examples.length) {
 
         removeChild('nextQuestionButton', 'nextQuestion');
         removeChild('nextExampleButton', 'nextExample');
@@ -480,7 +516,7 @@ function stopCountPhase4() {
 	    record += '\n\nPart 4: \n'
                + answers.map(g => '[[' + g.join('],[') + ']]\n')
                + 'responses: [' + verbalResponses + ']\n'
-               + 'scores: [' + part4Scores[0] + ',' + part4Scores[1] + ']\n'
+               + 'scores: [' + part4Scores + ']\n'
                + 'time on expl: [' + timeTakenExpl + ']\n';
         createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
 
@@ -675,7 +711,7 @@ function nextQuestionPart4() {
     // available moves / num of winning moves
     difficulty.push(computeBoardDifficulty(prevBoard));
     // odd numbered questions are from part 1, even from part 2
-    var move = part4Examples[(currentQuestion - 1) % 2][Math.floor((currentQuestion - 1) / 2)];
+    var move = part4Examples[currentQuestion - 1];
     console.log(move);
     answers.push(move);
 
