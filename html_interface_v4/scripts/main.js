@@ -8,7 +8,8 @@ var TOTAL_QUESTIONS = PHASE1_QUESTIONS.length,
     TURN = 'X',
     TOTAL_GROUP = 2,
     QUESTION_TIME = 60 * 60 * 24,
-    EXPL_TIME = 120;
+    EXPL_TIME = 120,
+    PART4_TOTAL_SAMPLES = 6;
 
 var t,
     participantID = 0,
@@ -259,7 +260,6 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
             type = 2;
         }
 
-
         if (s[sp] != 10 && prevS[sp] != 10) {
             cases[0].push([type, incorT[type].length]);
             incor[type].push(ans[sp]);
@@ -281,51 +281,32 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
 
     // sample answers based on response time for each type
     // fill in by type from depth 1 to depth 3
-    var wrongInBothTests = cases[0];
-    for (var inc = 0; inc < 3; ++ inc) {
+    for (var k = 0; k < 4; ++ k) {
 
-        var idxs = wrongInBothTests.filter(x => x[0] == inc).map(y => y[1]);
+        var c = cases[k];
+        var rt, as;
+        if (k < 2) {rt = incorT; as = incor;}
+        else {rt = corT; as = cor;}
 
-        // get one incorrect question-response pair
-        // if there exists at least one incorrect answer
-        if (idxs.length != 0) {
-            if (idxs.length == 1) {
-                sample.push(incor[inc][idxs[0]]);
-                sampleScores.push(0);
-            } else {
-                incorT[inc].sort((a, b) => b[0] - a[0]);
-                for (var ti = 0; ti < incorT[inc].length; ++ ti) {
-                    var i = idxs.indexOf(incorT[inc][ti][1]);
-                    if (i != -1){
-                        sample.push(incor[inc][idxs[i]]);
-                        sampleScores.push(0);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+        for (var inc = 0; inc < 3; ++ inc) {
 
+            if (sample.length < PART4_TOTAL_SAMPLES) {
+                var idxs = c.filter(x => x[0] == inc).map(y => y[1]);
 
-    var wrongInPostTest = cases[1];
-    for (var inc = 0; inc < 3; ++ inc) {
-
-        var idxs = wrongInPostTest.filter(x => x[0] == inc).map(y => y[1]);
-
-        // get one incorrect question-response pair
-        // if there exists at least one incorrect answer
-        if (idxs.length != 0) {
-            if (idxs.length == 1) {
-                sample.push(incor[inc][idxs[0]]);
-                sampleScores.push(1);
-            } else {
-                incorT[inc].sort((a, b) => b[0] - a[0]);
-                for (var ti = 0; ti < incorT[inc].length; ++ ti) {
-                    var i = idxs.indexOf(incorT[inc][ti][1]);
-                    if (i != -1){
-                        sample.push(incor[inc][idxs[i]]);
-                        sampleScores.push(1);
-                        break;
+                if (idxs.length != 0) {
+                    if (idxs.length == 1) {
+                        sample.push(as[inc][idxs[0]]);
+                        sampleScores.push(k);
+                    } else {
+                        rt[inc].sort((a, b) => b[0] - a[0]);
+                        for (var ti = 0; ti < rt[inc].length; ++ ti) {
+                            var i = idxs.indexOf(rt[inc][ti][1]);
+                            if (i != -1){
+                                sample.push(as[inc][idxs[i]]);
+                                sampleScores.push(k);
+                                break;
+                            }
+                        }
                     }
                 }
             }
