@@ -263,60 +263,64 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
         if (s[sp] != 10 && prevS[sp] != 10) {
             cases[0].push([type, incorT[type].length]);
             incor[type].push(ans[sp]);
-            incorT[type].push([resT[sp], incorT[type].length]);
+            incorT[type].push([resT[sp], incorT[type].length, s[sp] - prevS[sp]]);
         } else if (s[sp] == 10 && prevS[sp] != 10) {
             cases[1].push([type, incorT[type].length]);
             incor[type].push(ans[sp]);
-            incorT[type].push([resT[sp], incorT[type].length]);
+            incorT[type].push([resT[sp], incorT[type].length, s[sp] - prevS[sp]]);
         } else if (s[sp] != 10 && prevS[sp] == 10) {
             cases[2].push([type, corT[type].length]);
             cor[type].push(ans[sp]);
-            corT[type].push([resT[sp], corT[type].length]);
+            corT[type].push([resT[sp], corT[type].length, s[sp] - prevS[sp]]);
         } else {
             cases[3].push([type, corT[type].length]);
             cor[type].push(ans[sp]);
-            corT[type].push([resT[sp], corT[type].length]);
+            corT[type].push([resT[sp], corT[type].length, 0]);
         }
     }
 
     // sample answers based on response time for each type
     // fill in by type from depth 1 to depth 3
-    for (var k = 0; k < 4; ++ k) {
+    while (sample.length < PART4_TOTAL_SAMPLES) {
 
-        var c = cases[k];
-        var rt, as;
-        if (k < 2) {rt = incorT; as = incor;}
-        else {rt = corT; as = cor;}
+        for (var k = 0; k < 4; ++ k) {
 
-        for (var inc = 0; inc < 3; ++ inc) {
+            var c = cases[k];
+            var rt, as;
+            if (k < 2) {rt = incorT; as = incor;}
+            else {rt = corT; as = cor;}
 
-            if (sample.length < PART4_TOTAL_SAMPLES) {
-                var idxs = c.filter(x => x[0] == inc).map(y => y[1]);
+            for (var inc = 0; inc < 3; ++ inc) {
 
-                if (idxs.length != 0) {
-                    if (idxs.length == 1) {
-                        sample.push(as[inc][idxs[0]]);
-                        sampleScores.push(k);
-                    } else {
-                        rt[inc].sort((a, b) => b[0] - a[0]);
-                        for (var ti = 0; ti < rt[inc].length; ++ ti) {
-                            var i = idxs.indexOf(rt[inc][ti][1]);
-                            if (i != -1){
-                                sample.push(as[inc][idxs[i]]);
-                                sampleScores.push(k);
-                                break;
+                if (sample.length < PART4_TOTAL_SAMPLES) {
+                    var idxs = c.filter(x => x[0] == inc).map(y => y[1]);
+
+                    if (idxs.length != 0) {
+                        if (idxs.length == 1) {
+                            sample.push(as[inc][idxs[0]]);
+                            sampleScores.push(k);
+                        } else {
+                            rt[inc].sort((a, b) => b[0] * (-1) * b[2] - a[0] * (-1) * a[2]);
+                            for (var ti = 0; ti < rt[inc].length; ++ ti) {
+                                var i = idxs.indexOf(rt[inc][ti][1]);
+                                if (i != -1){
+                                    sample.push(as[inc][idxs[i]]);
+                                    sampleScores.push(k);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
-    console.log(cor);
-    console.log(corT);
-    console.log(incor);
-    console.log(incorT);
+//    console.log(cor);
+//    console.log(corT);
+//    console.log(incor);
+//    console.log(incorT);
 
     return [sample, sampleScores];
 }
