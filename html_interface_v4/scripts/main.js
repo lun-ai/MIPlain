@@ -303,7 +303,7 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
                             rt[inc].sort((a, b) => b[0] * (-1) * b[2] - a[0] * (-1) * a[2]);
                             for (var ti = 0; ti < rt[inc].length; ++ ti) {
                                 var i = idxs.indexOf(rt[inc][ti][1]);
-                                if (i != -1){
+                                if (i != -1 && sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs[i]])).length == 0){
                                     sample.push(as[inc][idxs[i]]);
                                     sampleScores.push(k);
                                     break;
@@ -572,8 +572,9 @@ function board1Click() {
 }
 
 function recordExplanationPart4() {
-    if (document.getElementById('answerExp').value.length >= 10) {
-        verbalResponses.push(document.getElementById('answerExp').value);
+    var res = document.getElementById('answerExp').value;
+    if (res.trim().length >= 10) {
+        verbalResponses.push(res);
         timeTakenExpl.push(Math.max(floatRoundTo2(Math.max(0, sec - 1)), 0));
         ended = true;
         stopCount();
