@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+    <div align="center">
+        <scan style="font-size:3vw">Definitions</scan>
+    </div>
+
+ <div style="clear:both" align="center">
+     <p>   A player could have <b>NO PAIR</b>. Following examples highlight such cases.
+            <br />
+            <br />
+            <br />
+            <br />
+            </p>
+            </div>
+
+    <div align="center"><div id="other1" style="height:280px;" class="center"></div></div>
+        <script>
+        var other1 = createBoardExpl([1,0,0,2,0,1,1,0,2], 'no1', 'other1','Orange has no pair', 'black');
+        other1.classList.remove('column3');
+        other1.style.width = '70%';
+        other1.style.height = '100%';
+        </script> <br /> <br />
+
+    <div align="center"><div id="other2" style="height:280px;" class="center"></div></div>
+        <script>
+        var other2 = createBoardExpl([1,2,1,1,0,0,2,2,0], 'no2', 'other2','Green has no pair', 'black');
+        other2.classList.remove('column3');
+        other2.style.width = '70%';
+        other2.style.height = '100%';
+        </script> <br /> <br />
+
+    <div align="center"><div id="other3" style="height:280px;" class="center"></div></div>
+        <script>
+        var other3 = createBoardExpl([0,2,1,2,0,1,0,0,0], 'no3', 'other3','Neither Orange nor Green has a pair', 'black');
+        other3.classList.remove('column3');
+        other3.style.width = '70%';
+        other3.style.height = '100%';
+        </script> <br />
+
+
+     <form action="" style="clear:both" align="center">
+            <br /> <br />
+          <input type="button" class="introButton" value="Back" onclick="window.location.href='pairs.html';"/>
+        <input type="button" class="introButton" value="Next" onclick="window.location.href='phase2.html';"/>
+      </form>
+    </div>
+
+</body>
+</html>

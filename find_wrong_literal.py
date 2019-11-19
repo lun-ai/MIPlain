@@ -35,9 +35,9 @@ def list_map(f, l):
     return list(map(f, l))
 
 
-for file_name in os.listdir('./records/island'):
+for file_name in os.listdir('./records/island1'):
     if file_name.endswith('.txt'):
-        with open('./records/island/' + file_name, 'r') as file:
+        with open('./records/island1/' + file_name, 'r') as file:
             i = int(file_name.split('.')[0].split('_')[1]) % 2
             id = int(read_nth_line(file, 1).strip('\n'))
             a1 = []

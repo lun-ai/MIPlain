@@ -37,6 +37,26 @@ education_records = [[], []]
 ids = [[], []]
 c_participant_size = 0
 t_participant_size = 0
+used_vocab = [1572359790554,
+              1572359824791,
+              1572360316336,
+              1572360855157,
+              1572361174316,
+              1572361729016,
+              1572361751064,
+              1572361957131,
+              1572363106362,
+              1572364056446,
+              1572364097865,
+              1572364559332,
+              1572366826882,
+              1572366848727,
+              1572367806687,
+              1572370358959,
+              1572370673361,
+              1572371073427,
+              1572374337197]
+
 
 def read_nth_line(file, n):
     file.seek(0, 0)
@@ -46,29 +66,45 @@ def read_nth_line(file, n):
 
 
 def strip_arr_text(attr, text):
-    print(text.strip(attr + ':').strip(' ').strip('[').split(']')[0].split(','))
     return list(map(float, text.strip(attr + ':').strip(' ').strip('[').split(']')[0].split(',')))
 
 def list_map(f, l):
     return list(map(f, l))
 
-for file_name in os.listdir('./records/island2'):
-    if file_name.endswith('.txt'):
-        with open('./records/island2/' + file_name, 'r') as file:
-            print(file_name)
-            i = int(file_name.split('.')[0].split('_')[1]) % 2
-            ids[i].append(int(read_nth_line(file, 1).strip('\n')))
-            pretest_scores[i].append(strip_arr_text('scores', read_nth_line(file, 22)))
-            pretest_time[i].append(strip_arr_text('time', read_nth_line(file, 23)))
-            examples_scores[i].append(strip_arr_text('scores', read_nth_line(file, 43)))
-            example_time[i].append(strip_arr_text('time on expl', read_nth_line(file, 45)))
-            posttest_scores[i].append(strip_arr_text('scores', read_nth_line(file, 65)))
-            posttest_time[i].append(strip_arr_text('time', read_nth_line(file, 66)))
-            gender_records[i].append(read_nth_line(file, 69).strip('\n'))
-            age_records[i].append(read_nth_line(file, 71).strip('\n'))
-            education_records[i].append(read_nth_line(file, 73).strip('\n'))
-    c_participant_size = len(pretest_scores[0])
-    t_participant_size = len(pretest_scores[1])
+
+def load_records(dirs):
+    os_dirs = [f for d in dirs for f in os.listdir(d)]
+    for file_name in os_dirs:
+        if file_name.endswith('.txt'):
+            ffptr = ''
+            for d in dirs:
+                try:
+                    open(d + file_name, 'r')
+                except IOError:
+                    continue
+                else:
+                    ffptr = d + file_name
+
+            i = int(file_name.split('.')[0].split('_')[1])
+            file = open(ffptr, 'r')
+            if i not in []:
+                i = i % 2
+                ids[i].append(int(read_nth_line(file, 1).strip('\n')))
+                pretest_scores[i].append(strip_arr_text('scores', read_nth_line(file, 22)))
+                pretest_time[i].append(strip_arr_text('time', read_nth_line(file, 23)))
+                examples_scores[i].append(strip_arr_text('scores', read_nth_line(file, 43)))
+                example_time[i].append(strip_arr_text('time on expl', read_nth_line(file, 45)))
+                posttest_scores[i].append(strip_arr_text('scores', read_nth_line(file, 65)))
+                posttest_time[i].append(strip_arr_text('time', read_nth_line(file, 66)))
+                gender_records[i].append(read_nth_line(file, 69).strip('\n'))
+                age_records[i].append(read_nth_line(file, 71).strip('\n'))
+                education_records[i].append(read_nth_line(file, 73).strip('\n'))
+
+
+load_records(['./records/island1/', './records/island2/'])
+# load_records(['./records/island1/'])
+c_participant_size = len(pretest_scores[0])
+t_participant_size = len(pretest_scores[1])
 
 control_pre = np.array(pretest_scores[0], dtype=np.int)
 control_post = np.array(posttest_scores[0], dtype=np.int)
@@ -224,7 +260,7 @@ def filter(f1, f2):
     print('***************************')
     print('Control group pretest average correct: ' + str(c_pre_average))
     print('Control group pretest std: ' + str(c_pre_std))
-    print('Removed from control group data: ' + str(len(perfect_c_player)))
+    print('Removed / remaining control group data: %d / %d' % (len(perfect_c_player), len(c_pre_d1) - len(perfect_c_player)))
 
     t_pre_d1 = get_correct_question(treatment_pre[:, :5], f1)
     t_pre_d2 = get_correct_question(treatment_pre[:, 5:10], f1)
@@ -234,7 +270,7 @@ def filter(f1, f2):
     perfect_t_player = [i for i in range(t_participant_size) if f2(t_pre_d1[i] + t_pre_d2[i] + t_pre_d3[i], t_pre_average - t_pre_std, t_pre_average + t_pre_std)]
     print('Treatment group pretest average correct: ' + str(t_pre_average))
     print('Treatment group pretest std: ' + str(t_pre_std))
-    print('Removed from treatment group data: ' + str(len(perfect_t_player)))
+    print('Removed / remaining treatment group data: %d / %d' % (len(perfect_t_player), len(t_pre_d1) - len(perfect_t_player)))
     print('Total subject number: ' + str(len(c_pre_d1) + len(t_pre_d1) - len(perfect_t_player) - len(perfect_c_player)))
     print('***************************')
     return perfect_c_player, perfect_t_player, [c_pre_d1, c_pre_d2, c_pre_d3], [t_pre_d1, t_pre_d2, t_pre_d3]
@@ -431,6 +467,10 @@ def ttest(f):
                           get_correct_question(treatment_post[:, :], f))[1]))
     create_bar_graph_for_depth(f)
 
+
+def ttest_two_tailed_to_one_tailed(test):
+    return test[0], test[1] / 2
+
 def ttest_with_threshold(f1, f2, title):
     perfect_c_player, perfect_t_player, c_pre, t_pre = filter(f1, f2)
 
@@ -448,26 +488,26 @@ def ttest_with_threshold(f1, f2, title):
     t_post_d2 = np.delete(get_correct_question(treatment_post[:, 5:10], f1), perfect_t_player)
     t_post_d3 = np.delete(get_correct_question(treatment_post[:, 10:15], f1), perfect_t_player)
 
-    print('depth 1 - control p: ' + str(stats.ttest_rel(c_pre_d1, c_post_d1)[1]))
-    print('depth 2 - control p: ' + str(stats.ttest_rel(c_pre_d2, c_post_d2)[1]))
-    print('depth 3 - control p: ' + str(stats.ttest_rel(c_pre_d3, c_post_d3)[1]))
-    print('depth 1 - treatment p: ' + str(stats.ttest_rel(t_pre_d1, t_post_d1)[1]))
-    print('depth 2 - treatment p: ' + str(stats.ttest_rel(t_pre_d2, t_post_d2)[1]))
-    print('depth 3 - treatment p: ' + str(stats.ttest_rel(t_pre_d3, t_post_d3)[1]))
+    print('depth 1 - control t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
+    print('depth 2 - control t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
+    print('depth 3 - control t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
+    print('depth 1 - treatment t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
+    print('depth 2 - treatment t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
+    print('depth 3 - treatment t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
 
-    print('depth 1 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d1, t_pre_d1)[1]))
-    print('depth 2 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d2, t_pre_d2)[1]))
-    print('depth 3 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d3, t_pre_d3)[1]))
+    print('depth 1 - control vs. treatment pretest t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d1, t_pre_d1)))
+    print('depth 2 - control vs. treatment pretest t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d2, t_pre_d2)))
+    print('depth 3 - control vs. treatment pretest t: %.3f - p: %.3f' % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d3, t_pre_d3)))
 
     control_all_depth = np.append(np.append(c_pre_d1, c_pre_d2), c_pre_d3)
     control_post_all_depth = np.append(np.append(c_post_d1, c_post_d2), c_post_d3)
     treatment_all_depth = np.append(np.append(t_pre_d1, t_pre_d2), t_pre_d3)
     treatment_post_all_depth = np.append(np.append(t_post_d1, t_post_d2), t_post_d3)
 
-    print('overall - control ttest: ' + str(stats.ttest_rel(control_all_depth, control_post_all_depth)))
+    print('overall - control ttest: ' + str(stats.ttest_rel(control_all_depth, control_post_all_depth)[1]))
     print('overall - control ttest means: ' + str(np.average(control_all_depth)) + ', '
           + str(np.average(control_post_all_depth)))
-    print('overall - treatment ttest: ' + str(stats.ttest_rel(treatment_all_depth, treatment_post_all_depth)))
+    print('overall - treatment ttest: ' + str(stats.ttest_rel(treatment_all_depth, treatment_post_all_depth)[1]))
     print('overall - treatment ttest means: ' + str(np.average(treatment_all_depth)) + ', '
                                               + str(np.average(treatment_post_all_depth)))
 
@@ -643,9 +683,9 @@ def population_pie_original(f):
 
 
 # ttest((lambda x: x == 10))
-ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants, u - sigma <= initial accuracy < u + sigma ')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants, u - sigma <= initial accuracy < u + sigma ')
 ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean No. correct answer of participants, u + sigma <= initial accuracy')
-ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x > lo), 'Mean No. correct answer of participants, initial accuracy < u - sigma')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x > lo), 'Mean No. correct answer of participants, initial accuracy < u - sigma')
 # population_pie_chart((lambda x: x == 10), (lambda x: x >= 12))
 # population_pie_original((lambda x: x == 10))
 # create_time_graph_for_depth()

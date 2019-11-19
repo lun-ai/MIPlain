@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+    <div align="center">
+        <scan style="font-size:3vw">Introduction</scan>
+        <p> Do you want to become an expert of the Island game? <br /> <br />
+
+            To do so, you will pass a trial which includes <b>5 parts</b>. <br />
+            You will first get familiar with the rules of the game. <br />
+            Then you will answer some questions about single moves. <br />
+            Next you will become an apprentice of the Great Wizard who is a master of the island game. <br />
+            Finally, you will apply what you have learnt by answering some more questions about single moves.<br />
+            <br />
+            </p>
+    </div>
+
+
+    <div align="center">
+        <scan style="font-size:2vw"> <u>Rules of the game</u> </scan>
+
+        <p> The game is played on the board below. There are three islands: <br />
+            <font size="4"> <i> Island 1, Island 2, Island 3. </i> </font> <br /> <br />
+
+            Each island consists of three territories (white cells). <br />
+            Each territory can contain one, two or three different resources. Resources are: <br />
+            <font size="4"> <i>  Forest(<img src="imgs/Forest.png" class="iconImgS">),
+                Castle(<img src="imgs/Castle.png" class="iconImgS">),
+                Cornfield(<img src="imgs/Cornfield.png" class="iconImgS">),
+                Water(<img src="imgs/Water.png" class="iconImgS">),
+                Fish(<img src="imgs/Fish.png" class="iconImgS">)</i> </font> <br />
+                Resources are drawn on the board.<br />
+            </p>
+    </div>
+
+    <div align="center">
+
+        <p> The arrangement of islands and resources is fixed. <br />
+            Any untaken territory (white cell) can be conquered until the game terminates. <br />
+            You can capture some resources by clicking on an untaken territory containing them. <br /> <br />
+            <u>Select one territory (white cell) on the board below to capture some resources.</u> <br /> <br />
+            </p>
+    </div>
+
+ <div id = "commentdiv" style="clear:both" align="center">
+            </div>
+
+    <br />
+    <br />
+
+    <div align="center">
+        <div id="initialboarddiv" style="height:380px;" class="center">
+        <script>
+            boxes = [];
+            createBoard_oneclick([0,0,0,0,0,0,0,0,0],'emptyWorld','initialboarddiv','Initial World','black');
+        </script>
+        </div>
+    </div>
+
+    <div align="center">
+      <form action="">
+          <input type="button" class="introButton" value="Continue" onclick="window.location.href='won_def.html';"/>
+      </form>
+    </div> 
+
+</body>
+</html>
