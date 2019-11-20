@@ -440,10 +440,9 @@ function stopCountPhase3() {
         document.getElementById('phase').textContent =
                 'Well done for completing Part 3!'
         document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').innerHTML = '</br>In Part 4, you will answer 6 questions '
-                                                    + 'all of which are based on your answers to previous sections.';
-        document.getElementById('instruction2').innerHTML = 'For each question, you will review one move you made and ';
-        document.getElementById('instruction3').innerHTML = 'need to provide a short explanation for each move.';
+        document.getElementById('instruction1').innerHTML = 'Please now complete the following short survey';
+        document.getElementById('instruction2').innerHTML = '';
+        document.getElementById('instruction3').innerHTML = '';
         document.getElementById('instruction4').innerHTML = '';
         document.getElementById('numQuestion').innerHTML = '';
 
@@ -460,7 +459,7 @@ function stopCountPhase3() {
                + 'difficulty: [' + difficulty + ']\n'
                + 'scores: [' + scores + ']\n'
                + 'time: [' + timeTaken + ']\n';
-        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
+        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase4);
 
     } else {
         nextQuestion();
@@ -469,47 +468,6 @@ function stopCountPhase3() {
 
 }
 
-function stopCountPhase4() {
-    if (t != null) {
-        clearTimeout(t);
-        sec = 0;
-    }
-
-    var participantID = getParticipantID();
-    currentQuestion += 1;
-
-    // three questions from part 1 responses, three from part 2 responses
-
-    if (currentQuestion > part4Examples.length) {
-
-        removeChild('nextQuestionButton', 'nextQuestion');
-        removeChild('nextExampleButton', 'nextExample');
-        removeChild('gameBoard', 'game');
-        removeChild('gamep1CountTable', 'game');
-        removeChild('gamep2CountTable', 'game');
-        removeChild('nextPhaseButton', 'nextPhase');
-        removeChild('answerExp','game');
-        document.getElementById('phase').textContent = 'Well done for completing Part 4!'
-        document.getElementById('timer').textContent = '';
-        document.getElementById('instruction1').textContent = 'Please now complete the following short survey';
-        document.getElementById('instruction2').textContent = '';
-        document.getElementById('instruction3').textContent = '';
-        document.getElementById('instruction4').textContent = '';
-        document.getElementById('instruction5').textContent = '';
-        document.getElementById('numQuestion').textContent = '';
-
-	    record += '\n\nPart 4: \n'
-               + answers.map(g => '[[' + g.join('],[') + ']]\n')
-               + 'responses: [' + verbalResponses + ']\n'
-               + 'scores: [' + part4Scores + ']\n'
-               + 'time on expl: [' + timeTakenExpl + ']\n';
-        createButton('nextPhaseButton', 'nextPhase', 'Continue', phase5);
-
-    } else {
-        nextQuestionPart4();
-        startCount();
-    }
-}
 
 function boardClickedGame() {
 
@@ -940,43 +898,25 @@ function phase3() {
     stopCount();
 }
 
-
 function phase4() {
-
-    removeChild('nextPhaseButton', 'nextPhase');
-
-    flushLocalCache();
-
-    phase = 4,
-    totalTime = QUESTION_TIME;
-
-    document.getElementById('phase').textContent = 'Part ' + phase;
-    document.getElementById('instruction1').innerHTML = 'For each question, you will see one move you made in one of the previous sections and';
-    document.getElementById('instruction2').innerHTML = 'you need to <b>EXPLAIN</b> briefly why you chose that move as you would say to a friend';
-
-    test_boards = PHASE4_QUESTIONS;
-    stopCount();
-
-}
-
-function phase5() {
 
     var participantID = getParticipantID();
 
     console.log(record);
     flushLocalCache();
 
-    phase = 5;
+    phase = 4;
     var u;
     if (S > th) {
-	u = 2;
-    } else {u = phase;
+	    u = 2;
+    } else {
+        u = phase;
     }
 
     // localStorage.setItem("expResult", record);
     var element = document.getElementById("postrecord");
     element.value = record;
-    document.getElementById('phase').textContent = 'Part ' + u;
+    document.getElementById('phase').textContent = 'Part ' + phase;
     removeChild('nextPhaseButton', 'nextPhase');
     document.getElementById('genderform').style.display = 'block';
     document.getElementById('participantid').value = participantID
@@ -1005,8 +945,6 @@ function stopCount() {
         stopCountPhase3();
     } else if (phase == 4) {
         stopCountPhase4();
-    } else if (phase == 5) {
-        stopCountPhase5();
     }
 }
 
