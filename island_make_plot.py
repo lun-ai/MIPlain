@@ -87,6 +87,8 @@ def load_records(dirs):
 
             i = int(file_name.split('.')[0].split('_')[1])
             file = open(ffptr, 'r')
+            # if i not in used_vocab:
+            # if i in used_vocab:
             if i not in []:
                 i = i % 2
                 ids[i].append(int(read_nth_line(file, 1).strip('\n')))
@@ -103,6 +105,7 @@ def load_records(dirs):
 
 load_records(['./records/island1/', './records/island2/'])
 # load_records(['./records/island1/'])
+# load_records(['./records/island2/'])
 c_participant_size = len(pretest_scores[0])
 t_participant_size = len(pretest_scores[1])
 
@@ -184,48 +187,74 @@ def create_bar_graph_overall(f):
 
     plt.show()
 
-def create_time_graph_for_depth():
+def create_time_graph_for_depth1(title):
 
-    control_pre_mean = [round(np.average(list(control_pre_time[:, :5].flat)), 2),
-                        round(np.average(list(control_pre_time[:, 5:10].flat)), 2),
-                        round(np.average(list(control_pre_time[:, 10:15].flat)), 2)]
-    control_pre_std = [round(np.std(list(control_pre_time[:, :5].flat), ddof=1), 2),
-                       round(np.std(list(control_pre_time[:, 5:10].flat), ddof=1), 2),
-                       round(np.std(list(control_pre_time[:, 10:15].flat), ddof=1), 2)
-                       ]
+    c_pre_d1 = list(control_pre_time[:, :5].flat)
+    c_pre_d2 = list(control_pre_time[:, 5:10].flat)
+    c_pre_d3 = list(control_pre_time[:, 10:15].flat)
+    c_post_d1 = list(control_post_time[:, :5].flat)
+    c_post_d2 = list(control_post_time[:, 5:10].flat)
+    c_post_d3 = list(control_post_time[:, 10:15].flat)
 
-    control_post_mean = [round(np.average(list(control_post_time[:, :5].flat)), 2),
-                         round(np.average(list(control_post_time[:, 5:10].flat)), 2),
-                         round(np.average(list(control_post_time[:, 10:15].flat)), 2)]
-    control_post_std = [round(np.std(list(control_post_time[:, :5].flat), ddof=1), 2),
-                       round(np.std(list(control_post_time[:, 5:10].flat), ddof=1), 2),
-                       round(np.std(list(control_post_time[:, 10:15].flat), ddof=1), 2)
-                       ]
+    t_pre_d1 = list(treatment_pre_time[:, :5].flat)
+    t_pre_d2 = list(treatment_pre_time[:, 5:10].flat)
+    t_pre_d3 = list(treatment_pre_time[:, 10:15].flat)
+    t_post_d1 = list(treatment_post_time[:, :5].flat)
+    t_post_d2 = list(treatment_post_time[:, 5:10].flat)
+    t_post_d3 = list(treatment_post_time[:, 10:15].flat)
+    t_pre_d3.pop(28)
+    t_post_d3.pop(28)
 
-    treatment_pre_mean = [round(np.average(list(treatment_pre_time[:, :5].flat)), 2),
-                          round(np.average(list(treatment_pre_time[:, 5:10].flat)), 2),
-                          round(np.average(list(treatment_pre_time[:, 10:15].flat)), 2)]
-    treatment_pre_std = [round(np.std(list(treatment_pre_time[:, :5].flat), ddof=1), 2),
-                       round(np.std(list(treatment_pre_time[:, 5:10].flat), ddof=1), 2),
-                       round(np.std(list(treatment_pre_time[:, 10:15].flat), ddof=1), 2)
-                       ]
+    control_pre_mean = [round(np.average(c_pre_d1), 2),
+                        round(np.average(c_pre_d2), 2),
+                        round(np.average(c_pre_d3), 2)]
+    # control_pre_std = [round(np.std(list(control_pre_time[:, :5].flat), ddof=1), 2),
+    #                    round(np.std(list(control_pre_time[:, 5:10].flat), ddof=1), 2),
+    #                    round(np.std(list(control_pre_time[:, 10:15].flat), ddof=1), 2)
+    #                    ]
 
-    treatment_post_mean = [round(np.average(list(treatment_post_time[:, :5].flat)), 2),
-                           round(np.average(list(treatment_post_time[:, 5:10].flat)), 2),
-                           round(np.average(list(treatment_post_time[:, 10:15].flat)), 2)]
-    treatment_post_std = [round(np.std(list(treatment_post_time[:, :5].flat), ddof=1), 2),
-                       round(np.std(list(treatment_post_time[:, 5:10].flat), ddof=1), 2),
-                       round(np.std(list(treatment_post_time[:, 10:15].flat), ddof=1), 2)
-                       ]
+    control_post_mean = [round(np.average(c_post_d1), 2),
+                         round(np.average(c_post_d2), 2),
+                         round(np.average(c_post_d3), 2)]
+    # control_post_std = [round(np.std(list(control_post_time[:, :5].flat), ddof=1), 2),
+    #                    round(np.std(list(control_post_time[:, 5:10].flat), ddof=1), 2),
+    #                    round(np.std(list(control_post_time[:, 10:15].flat), ddof=1), 2)
+    #                    ]
+
+    treatment_pre_mean = [round(np.average(t_pre_d1), 2),
+                          round(np.average(t_pre_d2), 2),
+                          round(np.average(t_pre_d3), 2)]
+    # treatment_pre_std = [round(np.std(list(treatment_pre_time[:, :5].flat), ddof=1), 2),
+    #                    round(np.std(list(treatment_pre_time[:, 5:10].flat), ddof=1), 2),
+    #                    round(np.std(list(treatment_pre_time[:, 10:15].flat), ddof=1), 2)
+    #                    ]
+
+    treatment_post_mean = [round(np.average(t_post_d1), 2),
+                           round(np.average(t_post_d2), 2),
+                           round(np.average(t_post_d3), 2)]
+    # treatment_post_std = [round(np.std(list(treatment_post_time[:, :5].flat), ddof=1), 2),
+    #                    round(np.std(list(treatment_post_time[:, 5:10].flat), ddof=1), 2),
+    #                    round(np.std(list(treatment_post_time[:, 10:15].flat), ddof=1), 2)
+    #                    ]
+
+
+    # data = [list(control_pre_time[:, :5].flat), list(control_post_time[:, :5].flat),
+    #         list(control_pre_time[:, 5:10].flat), list(control_post_time[:, 5:10].flat),
+    #         list(control_pre_time[:, 10:15].flat), list(control_post_time[:, 10:15].flat),
+    #         list(treatment_pre_time[:, :5].flat), list(treatment_post_time[:, :5].flat),
+    #         list(treatment_pre_time[:, 5:10].flat), list(treatment_post_time[:, 5:10].flat),
+    #         list(treatment_pre_time[:, 10:15].flat), list(treatment_post_time[:, 10:15].flat)]
+
     width = 0.35
     fig, ax = plt.subplots()
-    ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
+    # ax.boxplot(data, showfliers=False)
+    ax.bar(np.arange(0, 3) - width / 2., control_pre_mean, width, #yerr=control_pre_std,
            label='Control Pre-test', color='r', ecolor='black')
-    ax.bar(np.arange(0, 3) + width / 2, control_post_mean, width,
+    ax.bar(np.arange(0, 3) + width / 2., control_post_mean, width, #yerr=control_post_std,
            label='Control Post-test', color='g', ecolor='black')
-    ax.bar(np.arange(3, 6) - width / 2, treatment_pre_mean, width,
+    ax.bar(np.arange(3, 6) - width / 2., treatment_pre_mean, width, #yerr=treatment_pre_std,
            label='Treatment Pre-test', color='y', ecolor='black')
-    ax.bar(np.arange(3, 6) + width / 2, treatment_post_mean, width,
+    ax.bar(np.arange(3, 6) + width / 2., treatment_post_mean, width, #yerr=treatment_post_std,
            label='Treatment Post-test', color='c', ecolor='black')
 
     ax.text(0 - 0.3, np.array(control_pre_mean)[0] + 0.05, control_pre_mean[0], fontweight='bold')
@@ -242,9 +271,20 @@ def create_time_graph_for_depth():
     ax.text(4 + 0.1, np.array(treatment_post_mean)[1] + 0.05, treatment_post_mean[1], fontweight='bold')
     ax.text(5 + 0.1, np.array(treatment_post_mean)[2] + 0.05, treatment_post_mean[2], fontweight='bold')
 
+    print('depth 1 - control p: ' + str(stats.ttest_rel(c_pre_d1, c_post_d1)[1]))
+    print('depth 2 - control p: ' + str(stats.ttest_rel(c_pre_d2, c_post_d2)[1]))
+    print('depth 3 - control p: ' + str(stats.ttest_rel(c_pre_d3, c_post_d3)[1]))
+    print('depth 1 - treatment p: ' + str(stats.ttest_rel(t_pre_d1, t_post_d1)[1]))
+    print('depth 2 - treatment p: ' + str(stats.ttest_rel(t_pre_d2, t_post_d2)[1]))
+    print('depth 3 - treatment p: ' + str(stats.ttest_rel(t_pre_d3, t_post_d3)[1]))
+
+    print('depth 1 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d1, t_pre_d1)[1]))
+    print('depth 2 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d2, t_pre_d2)[1]))
+    print('depth 3 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d3, t_pre_d3)[1]))
+
     ax.set_ylabel('Mean Time(sec)')
-    ax.set_title('Mean Time for Answer')
-    ax.set_xticks(np.arange(6) + 0.17)
+    ax.set_title(title)
+    ax.set_xticks(np.arange(6))
     ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
     ax.legend(loc='lower left')
 
@@ -275,6 +315,11 @@ def filter(f1, f2):
     print('***************************')
     return perfect_c_player, perfect_t_player, [c_pre_d1, c_pre_d2, c_pre_d3], [t_pre_d1, t_pre_d2, t_pre_d3]
 
+
+def filter_t(x, mean, std):
+    return [i for i in range(len(x)) if (mean + std) <= x[i] or x[i] <= (mean - std)]
+
+
 def create_time_graph_for_depth(f1, f2, title):
 
     perfect_c_player, perfect_t_player, _, _ = filter(f1, f2)
@@ -292,6 +337,8 @@ def create_time_graph_for_depth(f1, f2, title):
     t_post_d1 = list(np.delete(treatment_post_time[:, :5], perfect_t_player, axis=0).flat)
     t_post_d2 = list(np.delete(treatment_post_time[:, 5:10], perfect_t_player, axis=0).flat)
     t_post_d3 = list(np.delete(treatment_post_time[:, 10:15], perfect_t_player, axis=0).flat)
+    t_pre_d2.pop(9)
+    t_post_d2.pop(9)
 
     print('depth 1 - control p: ' + str(stats.ttest_rel(c_pre_d1, c_post_d1)[1]))
     print('depth 2 - control p: ' + str(stats.ttest_rel(c_pre_d2, c_post_d2)[1]))
@@ -301,11 +348,8 @@ def create_time_graph_for_depth(f1, f2, title):
     print('depth 3 - treatment p: ' + str(stats.ttest_rel(t_pre_d3, t_post_d3)[1]))
 
     print('depth 1 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d1, t_pre_d1)[1]))
-    print('depth 2 - control vs. treatment pre p: ' + str(stats.ttest_ind(t_pre_d2, c_pre_d1)[1]))
+    print('depth 2 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d2, t_pre_d2)[1]))
     print('depth 3 - control vs. treatment pre p: ' + str(stats.ttest_ind(c_pre_d3, t_pre_d3)[1]))
-
-    print(c_pre_d2)
-    print(t_pre_d2)
 
     control_pre_mean = [round(np.average(c_pre_d1), 2),
                         round(np.average(c_pre_d2), 2),
@@ -335,6 +379,9 @@ def create_time_graph_for_depth(f1, f2, title):
     #                       round(np.std(t_post_d2, ddof=1), 2),
     #                       round(np.std(t_post_d3, ddof=1), 2)]
 
+    print(t_pre_d1)
+    print(t_pre_d2)
+
     width = 0.35
     fig, ax = plt.subplots()
     ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
@@ -362,7 +409,7 @@ def create_time_graph_for_depth(f1, f2, title):
 
     ax.set_ylabel('Mean Time(sec)')
     ax.set_title(title)
-    ax.set_xticks(np.arange(6) + 0.17)
+    ax.set_xticks(np.arange(6))
     ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
     ax.legend(loc='lower left')
 
@@ -443,7 +490,7 @@ def create_bar_graph_for_depth(f):
 
     ax.set_ylabel('Mean')
     ax.set_title('Mean No. Correct Answer')
-    ax.set_xticks(np.arange(6) + 0.17)
+    ax.set_xticks(np.arange(6))
     ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
     ax.legend(loc='lower left')
 
@@ -539,9 +586,7 @@ def ttest_with_threshold(f1, f2, title):
                         round(np.std(t_post_d2, ddof=1), 2),
                         round(np.std(t_post_d3, ddof=1), 2)]
     width = 0.35
-
     fig, ax = plt.subplots()
-    print(control_pre_mean)
     ax.bar(np.arange(0, 3) - width / 2, control_pre_mean, width,
            label='Control Pre-test', yerr=control_pre_std, color='r', ecolor='black')
     ax.bar(np.arange(0, 3) + width / 2, control_post_mean, width,
@@ -568,7 +613,7 @@ def ttest_with_threshold(f1, f2, title):
     ax.set_ylabel('Mean')
     ax.set_ylim(0.0, 6.0)
     ax.set_title(title)
-    ax.set_xticks(np.arange(6) + 0.17)
+    ax.set_xticks(np.arange(6))
     ax.set_xticklabels(('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
     ax.legend(loc='lower left')
     plt.show()
@@ -683,11 +728,13 @@ def population_pie_original(f):
 
 
 # ttest((lambda x: x == 10))
-# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants, u - sigma <= initial accuracy < u + sigma ')
-ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean No. correct answer of participants, u + sigma <= initial accuracy')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma')
+# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean No. correct answer of participants, u + sigma <= initial accuracy')
 # ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x > lo), 'Mean No. correct answer of participants, initial accuracy < u - sigma')
 # population_pie_chart((lambda x: x == 10), (lambda x: x >= 12))
 # population_pie_original((lambda x: x == 10))
-# create_time_graph_for_depth()
-# create_time_graph_for_depth((lambda x: x == 10), (lambda x: x >= 12), 'Mean response time of selected participants')
-# create_time_graph_for_depth((lambda x: x == 10), (lambda x: x < 12),'Mean response time of filtered participants')
+# create_time_graph_for_depth1('Mean Time for Answer, used vocab')
+# create_time_graph_for_depth1('Mean Time for Answer, did not use vocab')
+create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean response time of participants, u - sigma <= initial accuracy < u + sigma')
+# create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean response time of participants, u + sigma <= initial accuracy')
+# create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x > lo),'Mean response time of participants, initial accuracy < u - sigma')
