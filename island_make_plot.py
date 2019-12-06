@@ -88,8 +88,8 @@ def load_records(dirs):
             i = int(file_name.split('.')[0].split('_')[1])
             file = open(ffptr, 'r')
             # if i not in used_vocab:
-            # if i in used_vocab:
-            if i not in []:
+            if i in used_vocab:
+            # if i not in []:
                 i = i % 2
                 ids[i].append(int(read_nth_line(file, 1).strip('\n')))
                 pretest_scores[i].append(strip_arr_text('scores', read_nth_line(file, 22)))
@@ -103,9 +103,9 @@ def load_records(dirs):
                 education_records[i].append(read_nth_line(file, 73).strip('\n'))
 
 
-load_records(['./records/island1/', './records/island2/'])
+# load_records(['./records/island1/', './records/island2/'])
 # load_records(['./records/island1/'])
-# load_records(['./records/island2/'])
+load_records(['./records/island2/'])
 c_participant_size = len(pretest_scores[0])
 t_participant_size = len(pretest_scores[1])
 
@@ -728,13 +728,13 @@ def population_pie_original(f):
 
 
 # ttest((lambda x: x == 10))
-# ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma')
+ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma')
 # ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean No. correct answer of participants, u + sigma <= initial accuracy')
 # ttest_with_threshold((lambda x: x == 10), (lambda x, lo, hi: x > lo), 'Mean No. correct answer of participants, initial accuracy < u - sigma')
 # population_pie_chart((lambda x: x == 10), (lambda x: x >= 12))
 # population_pie_original((lambda x: x == 10))
 # create_time_graph_for_depth1('Mean Time for Answer, used vocab')
 # create_time_graph_for_depth1('Mean Time for Answer, did not use vocab')
-create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean response time of participants, u - sigma <= initial accuracy < u + sigma')
+# create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x >= hi or x <= lo), 'Mean response time of participants, u - sigma <= initial accuracy < u + sigma')
 # create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x < hi), 'Mean response time of participants, u + sigma <= initial accuracy')
 # create_time_graph_for_depth((lambda x: x == 10), (lambda x, lo, hi: x > lo),'Mean response time of participants, initial accuracy < u - sigma')
