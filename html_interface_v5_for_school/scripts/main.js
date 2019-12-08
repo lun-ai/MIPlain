@@ -779,7 +779,7 @@ function phase0() {
 function prephase1() {
 
     document.getElementById('phase').textContent = '';
-    document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span> and it always chooses the <span style="font-weight:bold">best</span> possible move. <br /><br />' +
+    document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span> and it always chooses the <span style="font-weight:bold">BEST</span> possible move. <br /><br />' +
     			'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions.';
     document.getElementById('instruction2').innerHTML = 'You should select what you think is the best territory to WIN.<br />'
                                                     + ' You have ONE CHANCE for each question and you should try your best.<br /><br />';
