@@ -293,20 +293,33 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
             for (var inc = 0; inc < 3; ++ inc) {
 
                 if (sample.length < PART4_TOTAL_SAMPLES) {
+
                     var idxs = c.filter(x => x[0] == inc).map(y => y[1]);
 
                     if (idxs.length != 0) {
+
                         if (idxs.length == 1) {
-                            sample.push(as[inc][idxs[0]]);
-                            sampleScores.push(k);
+                            if (sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs])).length == 0) {
+
+                                sample.push(as[inc][idxs[0]]);
+                                sampleScores.push(k);
+
+                            }
+
                         } else {
+
                             rt[inc].sort((a, b) => b[0] * (-1) * b[2] - a[0] * (-1) * a[2]);
+
                             for (var ti = 0; ti < rt[inc].length; ++ ti) {
+
                                 var i = idxs.indexOf(rt[inc][ti][1]);
+
                                 if (i != -1 && sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs[i]])).length == 0){
+
                                     sample.push(as[inc][idxs[i]]);
                                     sampleScores.push(k);
                                     break;
+
                                 }
                             }
                         }
@@ -821,7 +834,7 @@ function phase0() {
 function prephase1() {
 
     document.getElementById('phase').textContent = '';
-    document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span> and it always chooses the <span style="font-weight:bold">BEST</span> possible move. <br /><br />' +
+    document.getElementById('instruction1').innerHTML = 'Your opponent now plays <span style="font-weight:bold">OPTIMALLY</span> and it always chooses the <span style="font-weight:bold">BESTh</span> possible move. <br /><br />' +
     			'In Part 1, you will be given ' + TOTAL_QUESTIONS + ' questions.';
     document.getElementById('instruction2').innerHTML = 'You should select what you think is the best territory to WIN.<br />'
                                                     + ' You have ONE CHANCE for each question and you should try your best.<br /><br />';
