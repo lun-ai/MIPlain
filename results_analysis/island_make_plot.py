@@ -74,22 +74,33 @@ def load_records(dirs):
 
             i = int(file_name.split(".")[0].split("_")[1])
             file = open(ffptr, "r")
-            # if i not in used_vocab:
-            # if i in used_vocab:
-            if i not in []:
-                i = i % 2
-                age_ = read_nth_line(file, 71).strip("\n")
-                age_records[i].append(age_)
-                if age_ == "18-24" or age_ == "25-34":
-                    ids[i].append(int(read_nth_line(file, 1).strip("\n")))
-                    pretest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 22)))
-                    pretest_time[i].append(strip_arr_text("time", read_nth_line(file, 23)))
-                    examples_scores[i].append(strip_arr_text("scores", read_nth_line(file, 43)))
-                    example_time[i].append(strip_arr_text("time on expl", read_nth_line(file, 45)))
-                    posttest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 65)))
-                    posttest_time[i].append(strip_arr_text("time", read_nth_line(file, 66)))
-                    gender_records[i].append(read_nth_line(file, 69).strip("\n"))
-                    education_records[i].append(read_nth_line(file, 73).strip("\n"))
+            # if i not in []:
+            #     i = i % 2
+            #     age_ = read_nth_line(file, 71).strip("\n")
+            #     age_records[i].append(age_)
+            #     if age_ == "18-24" or age_ == "25-34":
+            #         ids[i].append(int(read_nth_line(file, 1).strip("\n")))
+            #         pretest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 22)))
+            #         pretest_time[i].append(strip_arr_text("time", read_nth_line(file, 23)))
+            #         examples_scores[i].append(strip_arr_text("scores", read_nth_line(file, 43)))
+            #         example_time[i].append(strip_arr_text("time on expl", read_nth_line(file, 45)))
+            #         posttest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 65)))
+            #         posttest_time[i].append(strip_arr_text("time", read_nth_line(file, 66)))
+            #         gender_records[i].append(read_nth_line(file, 69).strip("\n"))
+            #         education_records[i].append(read_nth_line(file, 73).strip("\n"))
+            i = i % 2
+            age_ = read_nth_line(file, 71).strip("\n")
+            age_records[i].append(age_)
+            ids[i].append(int(read_nth_line(file, 1).strip("\n")))
+            pretest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 22)))
+            pretest_time[i].append(strip_arr_text("time", read_nth_line(file, 23)))
+            examples_scores[i].append(strip_arr_text("scores", read_nth_line(file, 43)))
+            example_time[i].append(strip_arr_text("time on expl", read_nth_line(file, 45)))
+            posttest_scores[i].append(strip_arr_text("scores", read_nth_line(file, 65)))
+            posttest_time[i].append(strip_arr_text("time", read_nth_line(file, 66)))
+            gender_records[i].append(read_nth_line(file, 69).strip("\n"))
+            education_records[i].append(read_nth_line(file, 73).strip("\n"))
+
 
 
 def resT_graph_and_ttest(title):
@@ -106,7 +117,7 @@ def resT_graph_and_ttest(title):
     def id2(l, f): return list_map(f, list(l.flat))
 
     # treatment_pre_time[2].pop(28)
-    # treatment_post[2].pop(28)
+    # treatment_post_time[2].pop(28)
 
     control_pre_mean, control_pre_std = compute_mean_std(id1, control_pre_time, id2)
     control_post_mean, control_post_std = compute_mean_std(id1, control_post_time, id2)
@@ -115,10 +126,10 @@ def resT_graph_and_ttest(title):
 
     integrated_ttest([control_pre_time, control_post_time], [treatment_pre_time, treatment_post_time], id1, id2)
 
-    plot_bar_graph_aux([control_pre_mean, []],
-                       [control_post_mean, []],
-                       [treatment_pre_mean, []],
-                       [treatment_post_mean, []],
+    plot_bar_graph_aux([control_pre_mean, control_pre_std],
+                       [control_post_mean, control_post_std],
+                       [treatment_pre_mean, treatment_pre_std],
+                       [treatment_post_mean, treatment_post_std],
                        "Time(sec)", title)
 
 
@@ -176,9 +187,9 @@ def plot_bar_graph_for_depths(c_raw, t_raw, f):
 
     _, ax = plt.subplots()
 
-    ax.hlines(1.7, -2.0, 6.0, label="random depth 1", color="darkviolet", linestyles="dashed")
-    ax.hlines(1.4, -2.0, 6.0, label="random depth 2", color="b", linestyles="dashed")
-    ax.hlines(2.3, -2.0, 6.0, label="random depth 3", color="darkslategrey", linestyles="dashed")
+    ax.hlines(1.7, -0.5, 5.5, label="random depth 1", color="darkviolet", linestyles="dashed")
+    ax.hlines(1.4, -0.5, 5.5, label="random depth 2", color="b", linestyles="dashed")
+    ax.hlines(2.3, -0.5, 5.5, label="random depth 3", color="darkslategrey", linestyles="dashed")
 
     plot_bar_graph_aux([control_pre_mean, control_pre_std],
                        [control_post_mean, control_post_std],
@@ -355,7 +366,7 @@ def population_pie_original(f):
     plt.show()
 
 
-def multiple_thresholds(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer_sums):
+def threshold_on_post(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer_sums, idxs=None):
     """
 
     Partition the pre-test and post-test results of control and treatment separately by f2 and f3
@@ -371,10 +382,17 @@ def multiple_thresholds(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answ
     c_pre, c_post = c_raw
     t_pre, t_post = t_raw
 
-    c_idxs, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
-        = compute_filtered_mean_std(f1, f3, c_post, "Control group post", k=k)
-    t_idxs, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
-        = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k)
+    if idxs == None:
+        c_idxs, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
+            = compute_filtered_mean_std(f1, f3, c_post, "Control group post", k=k)
+        t_idxs, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
+            = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k)
+    else:
+        c_idxs, t_idxs = idxs
+        _, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
+            = compute_filtered_mean_std(f1, f3, c_post, "Control group post", k=k, idxs=c_idxs)
+        _, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
+            = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k, idxs=t_idxs)
 
     # f2 not used when idxs is given
     _, [c_pre_d1, c_pre_d2, c_pre_d3], control_pre_mean, control_pre_std \
@@ -403,6 +421,8 @@ def multiple_thresholds(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answ
                        [treatment_post_mean, treatment_post_std],
                        y_axis_name, title)
 
+    return c_idxs, t_idxs
+
 
 if __name__ == "__main__":
 
@@ -428,21 +448,22 @@ if __name__ == "__main__":
     # load_records([DATA_DIR + "/island1/", DATA_DIR + "/island2/"])
 
     # (6)
-    # load_records(["./records/island3/records_9_12/"])
-    # load_records(["./records/island3/records_10_12/"])
-    load_records(["./records/island3/records_9_12/", "./records/island3/records_10_12/"])
+    # load_records([DATA_DIR + "/island3/records_9_12/"])
+    load_records([DATA_DIR + "/island3/records_10_12/"])
+    # load_records([DATA_DIR + "/island3/records_9_12/", DATA_DIR + "/island3/records_10_12/"])
 
     c_size = len(pretest_scores[0])
     t_size = len(pretest_scores[1])
+    print("Total number of subjects: %d" % (c_size + t_size))
 
     control_pre = np.array(pretest_scores[0], dtype=np.int)
     control_post = np.array(posttest_scores[0], dtype=np.int)
     treatment_pre = np.array(pretest_scores[1], dtype=np.int)
     treatment_post = np.array(posttest_scores[1], dtype=np.int)
-    control_pre_time = np.array(pretest_time[0], dtype=np.float16)
-    control_post_time = np.array(posttest_time[0], dtype=np.float16)
-    treatment_pre_time = np.array(pretest_time[1], dtype=np.float16)
-    treatment_post_time = np.array(posttest_time[1], dtype=np.float16)
+    control_pre_time = np.array(pretest_time[0], dtype=np.float32)
+    control_post_time = np.array(posttest_time[0], dtype=np.float32)
+    treatment_pre_time = np.array(pretest_time[1], dtype=np.float32)
+    treatment_post_time = np.array(posttest_time[1], dtype=np.float32)
 
     c_raw = [control_pre, control_post]
     t_raw = [treatment_pre, treatment_post]
@@ -480,17 +501,17 @@ if __name__ == "__main__":
     Filtered processed data performance
     
     """
-    perf_graph_and_ttest_with_threshold("Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma",
-                                        (lambda x: x == 10), (lambda x, u, std: x >= u + std or x <= u - std))
-    # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: x < u + std), "Mean No. correct answer of participants, u + sigma <= initial accuracy")
-    # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: x >= u - std), "Mean No. correct answer of participants, initial accuracy < u - sigma")
+    # perf_graph_and_ttest_with_threshold("Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma",
+    #                                     (lambda x: x == 10), (lambda x, u, std: not (u - std <= x and x < u + std)))
+    # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: not (u + std <= x)), "Mean No. correct answer of participants, u + sigma <= initial accuracy")
+    # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: not (x < u - std)), "Mean No. correct answer of participants, initial accuracy < u - sigma")
 
     """
     
     Whole processed data response time
     
     """
-    # resT_graph_and_ttest("Mean Time for Answer, used vocab")
+    resT_graph_and_ttest("Mean response time")
     # resT_graph_and_ttest("Mean Time for Answer, did not use vocab")
 
     """
@@ -510,23 +531,27 @@ if __name__ == "__main__":
     Multiple partitions performance
     
     """
-    # multiple_thresholds("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x > u), (lambda x, u, std: x > u))
-    # multiple_thresholds("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x > u),
-    #                     (lambda x, u, std: x <= u))
-    # multiple_thresholds("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
-    #                     (lambda x, u, std: x > u))
-    # multiple_thresholds("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
-    #                     (lambda x, u, std: x <= u))
-
-    # multiple_thresholds("Response time", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                     (lambda x, u, std: x > u), (lambda x, u, std: x > u), k=id2)
-    # multiple_thresholds("Response time", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                     (lambda x, u, std: x > u),
-    #                     (lambda x, u, std: x <= u), k=id2)
-    # multiple_thresholds("Response time", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                     (lambda x, u, std: x <= u),
-    #                     (lambda x, u, std: x > u), k=id2)
-    # multiple_thresholds("Response time", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                     (lambda x, u, std: x <= u),
-    #                     (lambda x, u, std: x <= u), k=id2)
+    # idx1 = threshold_on_post("Mean Performance (post test performance <= u)", "NO. correct answer", c_raw, t_raw, correct,
+    #                          (lambda x, u, std: x),
+    #                          (lambda x, u, std: x > u))
+    # idx2 = threshold_on_post("Mean Performance (post test performance > u)", "NO. correct answer", c_raw, t_raw, correct,
+    #                          (lambda x, u, std: x),
+    #                          (lambda x, u, std: x <= u))
+    # threshold_on_post("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
+    #                   (lambda x, u, std: x > u))
+    # threshold_on_post("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
+    #                   (lambda x, u, std: x <= u))
+    #
+    # threshold_on_post("Response time (post test performance <= u)", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x),
+    #                   (lambda x, u, std: x > u), k=id2, idxs=idx1)
+    # threshold_on_post("Response time (post test performance > u)", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x),
+    #                   (lambda x, u, std: x <= u), k=id2, idxs=idx2)
+    # threshold_on_post("Response time (post test performance <= u)", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x),
+    #                   (lambda x, u, std: x > u), k=id2)
+    # threshold_on_post("Response time", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x <= u),
+    #                   (lambda x, u, std: x <= u), k=id2)
 

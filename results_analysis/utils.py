@@ -40,9 +40,9 @@ def compute_mean_std(f, raw_data, k=get_answer_sums):
     mean = [round(np.average(k(raw_data[:, :5], f)), 2),
             round(np.average(k(raw_data[:, 5:10], f)), 2),
             round(np.average(k(raw_data[:, 10:15], f)), 2)]
-    std = [round(np.std(k(raw_data[:, :5], f), ddof=1), 2),
-           round(np.std(k(raw_data[:, 5:10], f), ddof=1), 2),
-           round(np.std(k(raw_data[:, 10:15], f), ddof=1), 2)]
+    std = [round(np.std(k(raw_data[:, :5], f), ddof=1, dtype=np.float32), 2),
+           round(np.std(k(raw_data[:, 5:10], f), ddof=1, dtype=np.float32), 2),
+           round(np.std(k(raw_data[:, 10:15], f), ddof=1, dtype=np.float32), 2)]
 
     return mean, std
 
@@ -74,9 +74,9 @@ def compute_filtered_mean_std(f1, f2, raw_data, name, k=get_answer_sums, idxs=No
     mean = [round(np.average(d1), 2),
             round(np.average(d2), 2),
             round(np.average(d3), 2)]
-    std = [round(np.std(d1, ddof=1), 2),
-           round(np.std(d2, ddof=1), 2),
-           round(np.std(d3, ddof=1), 2)]
+    std = [round(np.std(d1, ddof=1, dtype=np.float32), 2),
+           round(np.std(d2, ddof=1, dtype=np.float32), 2),
+           round(np.std(d3, ddof=1, dtype=np.float32), 2)]
 
     return idx_for_removal, [d1, d2, d3], mean, std
 
@@ -130,15 +130,15 @@ def ttest(c_data, t_data):
     [c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3] = c_data
     [t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3] = t_data
 
-    print("depth 1 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
-    print("depth 2 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
-    print("depth 3 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
+    print("depth 1 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
+    print("depth 2 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
+    print("depth 3 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
     print(
-        "depth 1 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
+        "depth 1 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
     print(
-        "depth 2 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
+        "depth 2 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
     print(
-        "depth 3 - treatment t: %.3f - p: %.3f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
+        "depth 3 - treatment t: %.3f - p: %.5f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
 
     print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
         stats.ttest_ind(c_pre_d1, t_pre_d1)))
@@ -185,14 +185,14 @@ def filter_aux(f1, f2, data, name, k=get_answer_sums):
     d2 = k(data[:, 5:10], f1)
     d3 = k(data[:, 10:15], f1)
     average = np.average(k(data[:, :], f1))
-    std = np.std(k(data[:, :], f1))
+    std = np.std(k(data[:, :], f1), dtype=np.float32)
     idx_for_removal = [i for i in range(size) if
                        f2(d1[i] + d2[i] + d3[i], average, std)]
     print("***************************")
     print(name + " mean: " + str(average))
     print(name + " std: " + str(std))
     print("Removed / remaining group data: %d / %d \n" % (
-        len(idx_for_removal), len(d1) - len(idx_for_removal)))
+        len(idx_for_removal), size - len(idx_for_removal)))
 
     return idx_for_removal, [d1, d2, d3]
 
@@ -239,13 +239,13 @@ def plot_bar_graph_aux(a1, a2, a3, a4, ylabel, title, ax=None):
 
     width = 0.35
     ax.bar(np.arange(0, 3) - width / 2, c_pre_mean, width,
-           label="Control Pre-test", yerr=c_pre_std, color="r", edgecolor="black", hatch="/")
+           label="Control Pre-test", yerr=c_pre_std, alpha=0.7, capsize=5, color="r", edgecolor="black", hatch="/")
     ax.bar(np.arange(0, 3) + width / 2, c_post_mean, width,
-           label="Control Post-test", yerr=c_post_std, color="b", edgecolor="black", hatch=".")
+           label="Control Post-test", yerr=c_post_std, alpha=0.7, capsize=5, color="b", edgecolor="black", hatch=".")
     ax.bar(np.arange(3, 6) - width / 2, t_pre_mean, width,
-           label="Treatment Pre-test", yerr=t_pre_std, color="y", edgecolor="black", hatch="\\")
+           label="Treatment Pre-test", yerr=t_pre_std, alpha=0.7, capsize=5, color="y", edgecolor="black", hatch="\\")
     ax.bar(np.arange(3, 6) + width / 2, t_post_mean, width,
-           label="Treatment Post-test", yerr=t_post_std, color="g", edgecolor="black", hatch="o")
+           label="Treatment Post-test", yerr=t_post_std, alpha=0.7, capsize=5, color="g", edgecolor="black", hatch="o")
 
     ax.text(0 - 0.3, np.array(c_pre_mean)[0] + 0.05, c_pre_mean[0], fontweight="bold")
     ax.text(1 - 0.3, np.array(c_pre_mean)[1] + 0.05, c_pre_mean[1], fontweight="bold")
@@ -261,13 +261,23 @@ def plot_bar_graph_aux(a1, a2, a3, a4, ylabel, title, ax=None):
     ax.text(4 + 0.1, np.array(t_post_mean)[1] + 0.05, t_post_mean[1], fontweight="bold")
     ax.text(5 + 0.1, np.array(t_post_mean)[2] + 0.05, t_post_mean[2], fontweight="bold")
 
-    hl = np.max([c_pre_mean[0], c_pre_mean[1], c_pre_mean[2], c_post_mean[0], c_post_mean[1], c_post_mean[2],
-            t_pre_mean[0], t_pre_mean[1], t_pre_mean[2], t_post_mean[0], t_post_mean[1], t_post_mean[2]])
+    hl = np.max([c_pre_mean[0] + c_pre_std[0],
+                 c_pre_mean[1] + c_pre_std[1],
+                 c_pre_mean[2] + c_pre_std[2],
+                 c_post_mean[0] + c_post_std[0],
+                 c_post_mean[1] + c_post_std[1],
+                 c_post_mean[2] + c_post_std[2],
+                 t_pre_mean[0] + t_pre_std[0],
+                 t_pre_mean[1] + t_pre_std[1],
+                 t_pre_mean[2] + t_pre_std[2],
+                 t_post_mean[0] + t_post_std[0],
+                 t_post_mean[1] + t_post_std[1],
+                 t_post_mean[2] + t_post_std[2]])
 
     ax.set_ylabel(ylabel)
     ax.set_ylim(0.0, np.round(1.5 * hl))
     ax.set_title(title)
-    ax.set_xticks(np.arange(0, 6), ("Depth 1", "Depth 2", "Depth 3", "Depth 1", "Depth 2", "Depth 3"))
+    plt.xticks(np.arange(0, 6), ('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
     ax.legend(loc="best", fontsize="large")
 
     plt.show()
