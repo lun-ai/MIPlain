@@ -73,9 +73,12 @@ Part 4:
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,0,0,1]]
 ,[[0,0,0,1,0,0,2,0,0],[1,0,0,1,0,0,2,0,0]]
-responses: [pair of fish,two pairs, opponent gets one ,triple of castle,opponent does not get triple
-,try to get triple and achieve more pairs
-,i will get two pairs in the end]
+responses: [pair of fish,
+two pairs, opponent gets one ,
+triple of castle,
+opponent does not get triple,
+try to get triple and achieve more pairs,
+i will get two pairs in the end]
 scores: [1,2,3,3,3,1]
 time on expl: [105.8,37.6,11.4,22,26,40]
 

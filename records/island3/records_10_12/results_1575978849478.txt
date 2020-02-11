@@ -73,7 +73,12 @@ Part 4:
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,0,0,2,0,1,2]]
-responses: [To have a pair of fish and a pair of castle. But did not see that pair of castles can not lead to triple.,To prevent orange from having island 3. To have a pair of fish.,To have a triple of castles. This leads immediately to win.,To have a pair of fish and water. The opponent can not prevent me from completing the triple water AND the triple fish.,To have a pair of fish. To prevent orange from having island 1.,To have a pair of castles and a pair of fish. Did not see that orange has the 3. castle.]
+responses: [To have a pair of fish and a pair of castle. But did not see that pair of castles can not lead to triple.,
+To prevent orange from having island 3. To have a pair of fish.,
+To have a triple of castles. This leads immediately to win.,
+To have a pair of fish and water. The opponent can not prevent me from completing the triple water AND the triple fish.,
+To have a pair of fish. To prevent orange from having island 1.,
+To have a pair of castles and a pair of fish. Did not see that orange has the 3. castle.]
 scores: [0,0,3,3,3,0]
 time on expl: [136.4,37,33.2,73.2,45.4,51.6]
 

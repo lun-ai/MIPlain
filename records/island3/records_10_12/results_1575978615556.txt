@@ -73,7 +73,12 @@ Part 4:
 ,[[1,0,2,1,1,0,0,2,2],[1,0,2,1,1,1,0,2,2]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[0,1,0,0,0,0,0,0,2],[1,1,0,0,0,0,0,0,2]]
-responses: [i have a pair of two castles and want to make a triplet to win.,i now have a pair on island two as well as a pair of fish, so in the next round orange can only block one of my two options.,i made a pair on island two.,I now have a triplet of corn,I made a pair of water and fish and blocked island two from becoming a pair for orange.,I have a pair of water and the only field with 3 resources.]
+responses: [i have a pair of two castles and want to make a triplet to win.,
+i now have a pair on island two as well as a pair of fish, so in the next round orange can only block one of my two options.,
+i made a pair on island two.,
+I now have a triplet of corn,
+I made a pair of water and fish and blocked island two from becoming a pair for orange.,
+I have a pair of water and the only field with 3 resources.]
 scores: [3,3,3,3,3,3]
 time on expl: [37.6,72.4,31.6,28.4,67.2,53.2]
 

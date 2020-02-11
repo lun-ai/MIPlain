@@ -73,7 +73,12 @@ Part 4:
 ,[[1,0,2,1,1,0,0,2,2],[1,0,2,1,1,1,0,2,2]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[0,1,0,0,0,0,0,0,2],[0,1,0,1,0,0,0,0,2]]
-responses: [With this move, you get a TRIPLE of Castles/Towers. As having a Triple means winning, and winning is the best possible outcome, this is a good move.,With this move, you get two pairs: Two fields with fish (the third one being free) and two fields on Island 1. This enables two ways two win in the next move, with your opponent only able to block one of them.,In this case, the opponent is forced to play Field 1 in Island 1. After that move, you have to take Field 3 on Island 1. Now you have two pairs (fish and corn), but the opponent can only block one of them with his/her move.,Before this turn, you have the pair "corn". Selecting this field completes the triple (corn), therefore winning the game.,This move gains you two pairs, fish and water. Your opponent can only block one of them becoming a triple in the next turn. Guaranteed win.,This move threatens a triple with the fields of Island 1, thereby forcing the opponent to take Field 2 of Island 1. You can then take Field 2 of Island 2, opening up two pairs (water, fish). Your opponent can only block one of them in the following turn, therefore you are then able to gain a triplet and win.]
+responses: [With this move, you get a TRIPLE of Castles/Towers. As having a Triple means winning, and winning is the best possible outcome, this is a good move.,
+With this move, you get two pairs: Two fields with fish (the third one being free) and two fields on Island 1. This enables two ways two win in the next move, with your opponent only able to block one of them.,
+In this case, the opponent is forced to play Field 1 in Island 1. After that move, you have to take Field 3 on Island 1. Now you have two pairs (fish and corn), but the opponent can only block one of them with his/her move.,
+Before this turn, you have the pair "corn". Selecting this field completes the triple (corn), therefore winning the game.,
+This move gains you two pairs, fish and water. Your opponent can only block one of them becoming a triple in the next turn. Guaranteed win.,
+This move threatens a triple with the fields of Island 1, thereby forcing the opponent to take Field 2 of Island 1. You can then take Field 2 of Island 2, opening up two pairs (water, fish). Your opponent can only block one of them in the following turn, therefore you are then able to gain a triplet and win.]
 scores: [3,3,3,3,3,3]
 time on expl: [99.2,91.6,155.4,75,44.6,98.6]
 

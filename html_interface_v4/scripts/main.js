@@ -235,7 +235,7 @@ function stopCountPhase0() {
 }
 
 
-function getAnswerSamplesFromTest(ans, s, prevS, resT) {
+function getAnswerSamplesFromTest(ans, prevS, s, resT) {
 
     // cor/incor :- type, move
     // corT/incorT :- T, idx to cor/incor
@@ -252,30 +252,34 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
     // partition answers based on correctness and question type
     for (var sp = 0; sp < s.length; ++ sp) {
 
-        var type = 0;
+        var depth = 0;
 
         if (5 <= sp && sp < 10) {
-            type = 1;
+            depth = 1;
         } else if (10 <= sp && sp < s.length) {
-            type = 2;
+            depth = 2;
         }
 
+        // type 0: lose - lose
+        // type 1: lose - win
+        // type 2: win - lose
+        // type 3: win - win
         if (s[sp] != 10 && prevS[sp] != 10) {
-            cases[0].push([type, incorT[type].length]);
-            incor[type].push(ans[sp]);
-            incorT[type].push([resT[sp], incorT[type].length, s[sp] - prevS[sp]]);
+            cases[0].push([depth, incorT[depth].length]);
+            incor[depth].push(ans[sp]);
+            incorT[depth].push([resT[sp], incorT[depth].length, s[sp] - prevS[sp]]);
         } else if (s[sp] == 10 && prevS[sp] != 10) {
-            cases[1].push([type, incorT[type].length]);
-            incor[type].push(ans[sp]);
-            incorT[type].push([resT[sp], incorT[type].length, s[sp] - prevS[sp]]);
+            cases[1].push([depth, incorT[depth].length]);
+            incor[depth].push(ans[sp]);
+            incorT[depth].push([resT[sp], incorT[depth].length, s[sp] - prevS[sp]]);
         } else if (s[sp] != 10 && prevS[sp] == 10) {
-            cases[2].push([type, corT[type].length]);
-            cor[type].push(ans[sp]);
-            corT[type].push([resT[sp], corT[type].length, s[sp] - prevS[sp]]);
+            cases[2].push([depth, corT[type].length]);
+            cor[depth].push(ans[sp]);
+            corT[depth].push([resT[sp], corT[depth].length, s[sp] - prevS[sp]]);
         } else {
-            cases[3].push([type, corT[type].length]);
-            cor[type].push(ans[sp]);
-            corT[type].push([resT[sp], corT[type].length, 0]);
+            cases[3].push([depth, corT[depth].length]);
+            cor[depth].push(ans[sp]);
+            corT[depth].push([resT[sp], corT[depth].length, 0]);
         }
     }
 
@@ -294,12 +298,15 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
 
                 if (sample.length < PART4_TOTAL_SAMPLES) {
 
+                    // for a specific case, choose response time list indices of
+                    // a given depth
                     var idxs = c.filter(x => x[0] == inc).map(y => y[1]);
 
                     if (idxs.length != 0) {
 
+                        //  choose this example if a specific case has only one example
                         if (idxs.length == 1) {
-                            if (sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs])).length == 0) {
+                            if (sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs[0]])).length == 0) {
 
                                 sample.push(as[inc][idxs[0]]);
                                 sampleScores.push(k);
@@ -308,15 +315,18 @@ function getAnswerSamplesFromTest(ans, s, prevS, resT) {
 
                         } else {
 
+                            // sort the response time list of depth inc
                             rt[inc].sort((a, b) => b[0] * (-1) * b[2] - a[0] * (-1) * a[2]);
 
                             for (var ti = 0; ti < rt[inc].length; ++ ti) {
 
+                                // index at which the response time element is added in the answer list
+                                // use this index to find the game position corresponding to the sorted response time
                                 var i = idxs.indexOf(rt[inc][ti][1]);
 
-                                if (i != -1 && sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][idxs[i]])).length == 0){
+                                if (i != -1 && sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][i])).length == 0){
 
-                                    sample.push(as[inc][idxs[i]]);
+                                    sample.push(as[inc][i]);
                                     sampleScores.push(k);
                                     break;
 
@@ -461,7 +471,7 @@ function stopCountPhase3() {
         document.getElementById('numQuestion').innerHTML = '';
 
         var prevScores = getPart1Scores();
-        var samples = getAnswerSamplesFromTest(answers, scores, prevScores, timeTaken);
+        var samples = getAnswerSamplesFromTest(answers, prevScores, scores, timeTaken);
 
         // fetch saved samples from part 1 and load into current session
         part4Examples = samples[0];

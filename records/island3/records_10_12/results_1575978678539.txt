@@ -128,7 +128,12 @@ Part 4:
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,1,0,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,1,2,0,0,0,0,2,1],[1,1,2,0,0,0,0,2,1]]
-responses: [Not give Island 1 to player 2,Get fish pair ,Not give house pair to player 2,Tree pair for me,Three house ,Water pair]
+responses: [Not give Island 1 to player 2,
+Get fish pair ,
+Not give house pair to player 2,
+Tree pair for me,
+Three house ,
+Water pair]
 scores: [1,1,2,2,3,3]
 time on expl: [40,24,39.6,41.8,14.6,27.4]
 

@@ -73,8 +73,12 @@ Part 4:
 ,[[0,0,0,1,0,0,2,0,0],[1,0,0,1,0,0,2,0,0]]
 ,[[1,0,2,0,0,1,1,2,2],[1,0,2,1,0,1,1,2,2]]
 ,[[0,1,2,1,0,0,0,0,2],[0,1,2,1,0,0,0,1,2]]
-responses: [Because then i got a tower triple, and a corn pair as well as a water pair ,i get a fish pair, , opponent is prevented from getting a tower triple ,i get a corn pair, and van in a next step get a fish pair as well, as opponent can only chosse one field at a time 
-,i get a fish pair and opponent is prevented from building a tree triple in the end ,I chose it to get a fish pair. It would be more intelligent to choose the third tower in order to prevent the opponent from getting a tower triple. ,I chose it to get a tower pair and fish pair, in order to prevent my oppont from getting a tower pair. ]
+responses: [Because then i got a tower triple, and a corn pair as well as a water pair ,
+i get a fish pair, , opponent is prevented from getting a tower triple ,
+i get a corn pair, and van in a next step get a fish pair as well, as opponent can only chosse one field at a time ,
+i get a fish pair and opponent is prevented from building a tree triple in the end ,
+I chose it to get a fish pair. It would be more intelligent to choose the third tower in order to prevent the opponent from getting a tower triple. ,
+I chose it to get a tower pair and fish pair, in order to prevent my oppont from getting a tower pair. ]
 scores: [0,0,0,1,2,2]
 time on expl: [56.8,34.4,47,33.6,89.6,77.2]
 

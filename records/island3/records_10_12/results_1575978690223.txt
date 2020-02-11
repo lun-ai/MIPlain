@@ -73,9 +73,12 @@ Part 4:
 ,[[0,0,0,1,0,0,2,0,0],[0,0,0,1,0,0,2,1,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
-responses: [I chose this field to stop the opponent from capturing island 1 and completed 2 pairs (corn and fish) with that move,Added a new pair with the move while denying the opponent to capture island 3
-,Added 2 pairs(fish and castle) and denied the opponent capturing all fields on island 3,New Pair(fish) and denied an enemies triplet on island 3
-,Ended the game with a triplet (castle) with this move.,Added two new pairs with that move (water and fish). Also I denied the opponent from capturing island 2]
+responses: [I chose this field to stop the opponent from capturing island 1 and completed 2 pairs (corn and fish) with that move,
+Added a new pair with the move while denying the opponent to capture island 3,
+Added 2 pairs(fish and castle) and denied the opponent capturing all fields on island 3,
+New Pair(fish) and denied an enemies triplet on island 3,
+Ended the game with a triplet (castle) with this move.,
+Added two new pairs with that move (water and fish). Also I denied the opponent from capturing island 2]
 scores: [1,1,2,2,3,3]
 time on expl: [68.6,37,54.4,28.2,33,81.8]
 

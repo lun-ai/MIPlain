@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,1,0,0,0]]
-responses: [I've got two pairs. Pair 1 is on Island 1, Pair 2 is the fish,I've got 1 pair, player 2 doesn't has the opportunity to get a pair with tower or fish.,I have one pair on Island 1 and player 2 doesnt't have the opportunity to get a pair with the tree,I've got a triplett with the towers.,I prevented a triplett for player two,I have one pair and can achieve later another one]
+responses: [I've got two pairs. Pair 1 is on Island 1, Pair 2 is the fish,
+I've got 1 pair, player 2 doesn't has the opportunity to get a pair with tower or fish.,
+I have one pair on Island 1 and player 2 doesnt't have the opportunity to get a pair with the tree,
+I've got a triplett with the towers.,
+I prevented a triplett for player two,
+I have one pair and can achieve later another one]
 scores: [1,1,2,3,3,3]
 time on expl: [101.8,104.4,49.2,35.6,32,68.8]
 

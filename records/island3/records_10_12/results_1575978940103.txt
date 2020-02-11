@@ -73,7 +73,12 @@ Part 4:
 ,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,1,1,0,0,2]]
 ,[[0,1,2,1,0,0,0,0,2],[0,1,2,1,0,1,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,1,0,0,0]]
-responses: [got all castels,got all castles,targeting water and corn,got corn an all islands,targeting corn and water ,targeting corn or fish via island1]
+responses: [got all castels,
+got all castles,
+targeting water and corn,
+got corn an all islands,
+targeting corn and water ,
+targeting corn or fish via island1]
 scores: [0,1,2,3,3,3]
 time on expl: [50,27.6,110.2,45.8,46.4,135.4]
 

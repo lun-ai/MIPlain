@@ -73,8 +73,12 @@ Part 4:
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
-responses: [I chose this field because it provided me with two pairs (fish,water). by taking this field I also stopped my opponent from getting the pairs forest and Island2.,I chose that field because it provided me with the pair fish and the possibility to get a pair on island2 in the future. I also stopped my opponent from getting the pair forest.,By selecting the last castle I gain the triplet castle and win the game. I also get the pair island2 as a bonus.,By selecting this field I gain the pair fish and the pair island1.
-I also stop my opponent from gaining the pair corn. In the next move I either win with the triplet island 1 or the triplet fish, because my opponent can only block one of these possibilities.,By selecting this field I gain the pair fish. I also stop my opponent from gaining the pair island1. I can now go on to collect the last fish, island2 or start collecting corn or water.,By selecting this field I gain the pairs water and fish. I also stop my opponent from gaining the pairforest and the pair island2.]
+responses: [I chose this field because it provided me with two pairs (fish,water). by taking this field I also stopped my opponent from getting the pairs forest and Island2.,
+I chose that field because it provided me with the pair fish and the possibility to get a pair on island2 in the future. I also stopped my opponent from getting the pair forest.,
+By selecting the last castle I gain the triplet castle and win the game. I also get the pair island2 as a bonus.,
+By selecting this field I gain the pair fish and the pair island1. I also stop my opponent from gaining the pair corn. In the next move I either win with the triplet island 1 or the triplet fish, because my opponent can only block one of these possibilities.,
+By selecting this field I gain the pair fish. I also stop my opponent from gaining the pair island1. I can now go on to collect the last fish, island2 or start collecting corn or water.,
+By selecting this field I gain the pairs water and fish. I also stop my opponent from gaining the pairforest and the pair island2.]
 scores: [1,1,3,3,3,1]
 time on expl: [132.8,123.8,75.4,122,99.4,83]
 

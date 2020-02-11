@@ -73,10 +73,12 @@ Part 4:
 ,[[0,0,0,1,0,0,2,0,0],[0,0,0,1,0,1,2,0,0]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,0,0,2,0,1,2]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
-responses: [I have castle and fish and I want to have fish, because I can't get a triplet of castle. I think it would have been better to choose the upper left of island 2.,I thought I wanted to obtain water. But trying to get the entire island would have been better.,I wanted to obtain the crobs or if that's not possible after the next move of orange get the entire island, and therefore a triplet
-,I wanted to obtein crobs here again. I think it would have been more clever to settle for the castle and fish on island 3, beacuse I already had fish
-,I wanted to obtein the castle with the fish, because player two got a castle and can't get a triplet and he can't get the water. So I wanted to obtain all the fish, because that's what he doesn't has,I wanted to have a triplet of castle. I already got two castles, here I claimed the third one
-]
+responses: [I have castle and fish and I want to have fish, because I can't get a triplet of castle. I think it would have been better to choose the upper left of island 2.,
+I thought I wanted to obtain water. But trying to get the entire island would have been better.,
+I wanted to obtain the crobs or if that's not possible after the next move of orange get the entire island, and therefore a triplet,
+I wanted to obtein crobs here again. I think it would have been more clever to settle for the castle and fish on island 3, beacuse I already had fish,
+I wanted to obtein the castle with the fish, because player two got a castle and can't get a triplet and he can't get the water. So I wanted to obtain all the fish, because that's what he doesn't has,
+I wanted to have a triplet of castle. I already got two castles, here I claimed the third one]
 scores: [0,0,1,1,2,3]
 time on expl: [143.6,57,50,66.4,102.2,33.2]
 

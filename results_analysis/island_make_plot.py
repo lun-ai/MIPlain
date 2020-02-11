@@ -6,7 +6,7 @@ from scipy import stats
 from results_analysis.utils import compute_mean_std, read_nth_line, strip_arr_text, get_answer_sums, \
     ttest, filter, compute_filtered_mean_std, plot_bar_graph_aux, list_map, integrated_ttest, ttest_ind
 
-DATA_DIR = "./records"
+DATA_DIR = "../records"
 
 COLORS = ["yellowgreen", "gold", "lightskyblue", "lightcoral", "orange", "deepskyblue"]
 GENDER = {"other": 0,
@@ -60,6 +60,14 @@ used_vocab = [1572359790554,
 
 
 def load_records(dirs):
+    '''
+
+    Even participant id is control group
+    Odd participant id is treatment group
+
+    :param dirs:
+    :return:
+    '''
     os_dirs = [f for d in dirs for f in os.listdir(d)]
     for file_name in os_dirs:
         if file_name.endswith(".txt"):
@@ -384,13 +392,13 @@ def threshold_on_post(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer
 
     if idxs == None:
         c_idxs, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
-            = compute_filtered_mean_std(f1, f3, c_post, "Control group post", k=k)
+            = compute_filtered_mean_std(f1, f2, c_post, "Control group post", k=k)
         t_idxs, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
             = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k)
     else:
         c_idxs, t_idxs = idxs
         _, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
-            = compute_filtered_mean_std(f1, f3, c_post, "Control group post", k=k, idxs=c_idxs)
+            = compute_filtered_mean_std(f1, f2, c_post, "Control group post", k=k, idxs=c_idxs)
         _, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
             = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k, idxs=t_idxs)
 
@@ -398,22 +406,10 @@ def threshold_on_post(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer
     _, [c_pre_d1, c_pre_d2, c_pre_d3], control_pre_mean, control_pre_std \
         = compute_filtered_mean_std(f1, f2, c_pre, "Control group pre", k=k, idxs=c_idxs)
     _, [t_pre_d1, t_pre_d2, t_pre_d3], treatment_pre_mean, treatment_pre_std \
-        = compute_filtered_mean_std(f1, f2, t_pre, "Treatment group pre", k=k, idxs=t_idxs)
+        = compute_filtered_mean_std(f1, f3, t_pre, "Treatment group pre", k=k, idxs=t_idxs)
 
     ttest([[c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3]],
           [[t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3]])
-
-    # control_all_depth = np.append(np.append(c_pre_d1, c_pre_d2), c_pre_d3)
-    # control_post_all_depth = np.append(np.append(c_post_d1, c_post_d2), c_post_d3)
-    # treatment_all_depth = np.append(np.append(t_pre_d1, t_pre_d2), t_pre_d3)
-    # treatment_post_all_depth = np.append(np.append(t_post_d1, t_post_d2), t_post_d3)
-
-    # print("Overall - control ttest: " + str(stats.ttest_rel(control_all_depth, control_post_all_depth)[1]))
-    # print("Overall - control ttest means: " + str(np.average(control_all_depth)) + ", "
-    #       + str(np.average(control_post_all_depth)))
-    # print("Overall - treatment ttest: " + str(stats.ttest_rel(treatment_all_depth, treatment_post_all_depth)[1]))
-    # print("Overall - treatment ttest means: " + str(np.average(treatment_all_depth)) + ", "
-    #       + str(np.average(treatment_post_all_depth)))
 
     plot_bar_graph_aux([control_pre_mean, control_pre_std],
                        [control_post_mean, control_post_std],
@@ -423,6 +419,41 @@ def threshold_on_post(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer
 
     return c_idxs, t_idxs
 
+def different_thresholds_on_control_treatment(title, y_axis_name, c_raw, t_raw, f1, f2, f3, k=get_answer_sums):
+    """
+
+    Partition the pre-test and post-test results of control and treatment separately by f2 and f3
+    pre-test by f2
+    post-test by f3
+
+    :param f1:
+    :param f2:
+    :param f3:
+    :return:
+    """
+
+    c_pre, c_post = c_raw
+    t_pre, t_post = t_raw
+
+    _, [c_pre_d1, c_pre_d2, c_pre_d3], control_pre_mean, control_pre_std \
+        = compute_filtered_mean_std(f1, f2, c_pre, "Control group pre", k=k)
+    c_idxs, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
+        = compute_filtered_mean_std(f1, f2, c_post, "C3ontrol group post", k=k)
+    _, [t_pre_d1, t_pre_d2, t_pre_d3], treatment_pre_mean, treatment_pre_std \
+        = compute_filtered_mean_std(f1, f3, t_pre, "Treatment group pre", k=k)
+    t_idxs, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
+        = compute_filtered_mean_std(f1, f3, t_post, "Treatment group post", k=k)
+
+    ttest([[c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3]],
+          [[t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3]])
+
+    plot_bar_graph_aux([control_pre_mean, control_pre_std],
+                       [control_post_mean, control_post_std],
+                       [treatment_pre_mean, treatment_pre_std],
+                       [treatment_post_mean, treatment_post_std],
+                       y_axis_name, title)
+
+    return c_idxs, t_idxs
 
 if __name__ == "__main__":
 
@@ -528,26 +559,32 @@ if __name__ == "__main__":
 
     """
     
-    Multiple partitions performance
+    Filtered processed data based on post-test performance
     
     """
     # idx1 = threshold_on_post("Mean Performance (post test performance <= u)", "NO. correct answer", c_raw, t_raw, correct,
-    #                          (lambda x, u, std: x),
+    #                          (lambda x, u, std: x > u),
     #                          (lambda x, u, std: x > u))
     # idx2 = threshold_on_post("Mean Performance (post test performance > u)", "NO. correct answer", c_raw, t_raw, correct,
-    #                          (lambda x, u, std: x),
+    #                          (lambda x, u, std: x <= u),
     #                          (lambda x, u, std: x <= u))
+    # threshold_on_post("Response time (post test performance <= u)", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x > u),
+    #                   (lambda x, u, std: x > u), k=id2, idxs=idx1)
+    # threshold_on_post("Response time (post test performance > u)", "Time (sec)", c_raw_T, t_raw_T, id1,
+    #                   (lambda x, u, std: x > u),
+    #                   (lambda x, u, std: x <= u), k=id2, idxs=idx2)
+
+    """
+    
+    Filter processed data good/bad control performance, good/bad treatment performance 
+    
+    """
     # threshold_on_post("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
     #                   (lambda x, u, std: x > u))
     # threshold_on_post("Performance", "NO. correct answer", c_raw, t_raw, correct, (lambda x, u, std: x <= u),
     #                   (lambda x, u, std: x <= u))
     #
-    # threshold_on_post("Response time (post test performance <= u)", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                   (lambda x, u, std: x),
-    #                   (lambda x, u, std: x > u), k=id2, idxs=idx1)
-    # threshold_on_post("Response time (post test performance > u)", "Time (sec)", c_raw_T, t_raw_T, id1,
-    #                   (lambda x, u, std: x),
-    #                   (lambda x, u, std: x <= u), k=id2, idxs=idx2)
     # threshold_on_post("Response time (post test performance <= u)", "Time (sec)", c_raw_T, t_raw_T, id1,
     #                   (lambda x, u, std: x),
     #                   (lambda x, u, std: x > u), k=id2)
