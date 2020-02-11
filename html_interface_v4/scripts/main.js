@@ -324,6 +324,7 @@ function getAnswerSamplesFromTest(ans, prevS, s, resT) {
                                 // use this index to find the game position corresponding to the sorted response time
                                 var i = idxs.indexOf(rt[inc][ti][1]);
 
+                                // Should not exist repeated answers from part 3 post test
                                 if (i != -1 && sample.filter(s => JSON.stringify(s) == JSON.stringify(as[inc][i])).length == 0){
 
                                     sample.push(as[inc][i]);
