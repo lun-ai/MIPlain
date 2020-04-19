@@ -101,7 +101,7 @@ run `swipl -s backtrack_and_replay.pl -g goal -t halt`
 
 ## Repository composition
 In the following section, we describe the compositions of this repository for reader reference.
-Details of the arrangement are be discussed. If interested about additional information, please find the contact of author at the page bottom.
+Details of the arrangement are be discussed. If interested about additional information and raw empirical data of experiments, please find the contact of author at the page bottom.
 
 ### Minimax database (not required to reproduce for MIPlain local use)
 - minimax/canonical_map.m
