@@ -217,11 +217,11 @@ def binary_to_JS():
     import json
     data = pickle.load(open('data.m', 'rb'))
     canonical_map = pickle.load(open('canonical_map.m', 'rb'))
-    with open('html_interface/scripts/data.scripts', 'w') as data_file:
+    with open('html_interface_v1/scripts/data.scripts', 'w') as data_file:
         data_file.write('var canonicalData = ')
         json.dump(data, data_file)
 
-    with open('html_interface/scripts/canonicalMap.scripts', 'w') as map_file:
+    with open('html_interface_v1/scripts/canonicalMap.scripts', 'w') as map_file:
         map_file.write('var canonicalMap = ')
         json.dump(canonical_map, map_file)
     print('-------------- Write completed -------------')

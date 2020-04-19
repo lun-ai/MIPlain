@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script type="text/javascript" src='./scripts/main.js'> </script>
+    <script type="text/javascript" src='./scripts/utils.js'> </script>
+    <title>Experiment Introduction</title>
+</head>
+<body onLoad="goNewWin()">
+
+<div style="clear:both" align="center">
+    <scan style="font-size:2vw"> <u>Rules of the game</u> </scan>
+    <p>     The Island game is a two-player game. <br />
+            The two players, <span style="background-color: #b1e3f4">Blue</span> and <span style="background-color: #f7cd92">Orange</span>, take turns conquering territories. <br />
+            You will play <span style="background-color: #b1e3f4">Blue</span>. <br />
+    </p>
+</div>
+
+<div style="clear:both" align="center">
+    <p> The goal is to capture <span style="font-weight:bold">the three territories of one island</span> or to obtain <span style="font-weight:bold"> three resources of one same type across islands</span>. <br /></p>
+</div>
+
+<div style="clear:both" align="center">
+    <p><u>Examples of winning states are shown below.</u></p>
+    <br />
+    <br />
+</div>
+
+<div align="center"><div id="triplets1" style="height:280px;" class="center"></div></div>
+    <script>
+    createBoard_withtriplet([0,1,0,1,0,2,2,2,1], 'triplet1', 'triplets1','Orange has won because it has all three territories of Island 3', 2);
+    </script> <br /> <br />
+<div align="center"><div id="triplets2" style="height:280px;" class="center"></div></div>
+    <script>
+    createBoard_withtriplet([0,1,0,2,2,1,2,1,1], 'triplet2', 'triplets2','Blue has won because it has all three resources of type Castle', 1); 
+    </script><br /> <br />
+
+
+	<!--		When it is your turn, you can select any untaken territory. <br /> 
+            Below is the initial world. <u>Select one territory (white cell) to get some resources.</u> <br />
+            </p>
+            </div> 
+    <br />
+    <br />	-->
+
+
+
+    <div align="center">
+      <form action="">
+          <input type="button" class="introButton" value="Back" onclick="window.location.href='index.html';"/>
+          <input type="button" class="introButton" value="Continue" onclick="window.location.href='triplets.html';"/>
+      </form>
+    </div> 
+
+</body>
+</html>
