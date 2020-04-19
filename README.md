@@ -52,18 +52,9 @@ MIPlain uses three primitives (highlighted in the above figure):
 ### Learning efficiency evaluation
 Q-Learing, DQN and MIGO are compared with MIPlain.
 
-An implementation of Q-learning (Q-learning tic-tac-toe accessed 14 April, 2019) and 
-an implementation of DeepQ-learning  (Solving  tic-tac-toe  using  deep  reinforcement 
-learning. accessed  14  April,  2019) were used to learn how to win Noughts-and-Crosses 
-as the player ”X” from the same set of 2-ply winnable boards as MIGO and MIPlain.  For each of the methods,
-we accumulated regrets from each game, and the regret for each won,  drawn,  lost game is 0,  1,  2 respectively.
-For Q-learning and Deep Q-learning, an illegal move is treated as a lost and the regret is 2.  
-We set the state space to include a state for each cell of the board and an action is a move made by player ”X”. 
-The DQN learner and the classical Q-Learning assume an optimal opponent for gameplay.  
-We defined reward functions that heavily penalize invalid moves for both Q-Learning and DQN. 
-We set discount factor to 0.9 for Q-learning and 0.8 for DQN. 
-For DQN, we used a small learning rate  to  avoid  over-fitting and a simple fully-connected network (256,  64)  as  the  value  network. 
-Both Q-Learning and DQN were given a set of initial boards for learning to ensure the best achievable outcome of gameplay is win.
+An implementation of Q-learning (Q-learning tic-tac-toe accessed 14 April, 2019) and an implementation of Deep Q-learning (Solving tic-tac-toe using deep reinforcement learning. accessed  14  April,  2019) were used to learn how to win Noughts-and-Crosses as the player ”X” from the same set of 2-ply winnable boards as MIGO and MIPlain. For each of the methods, we accumulated regrets from each game, and the regret for each won, drawn, lost game is 0, 1, 2 respectively.
+
+For Q-learning and Deep Q-learning, an illegal move is treated as a lost and the regret is 2. We set the state space to include a state for each cell of the board and an action is a move made by player ”X”. The DQN learner and the classical Q-Learning assume an optimal opponent for gameplay. We defined reward functions that heavily penalize invalid moves for both Q-Learning and DQN. We set discount factor to 0.9 for Q-learning and 0.8 for DQN. For DQN, we used a small learning rate  to  avoid  over-fitting and a simple fully-connected network (256,  64)  as  the  value  network. Both Q-Learning and DQN were given a set of initial boards for learning to ensure the best achievable outcome of gameplay is win.
 
 - MIPlain_impl_and_eval/Deep_Q_learning/output/DQN.txt
 
