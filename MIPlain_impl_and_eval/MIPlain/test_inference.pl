@@ -1,5 +1,5 @@
 %%  For comparing run-time performance of MIGO learned strategy and
-%%  MIGOc learned strategy.
+%%  MIPlain learned strategy.
 %%
 %%  The efficiency of higher-level game features was taken into account
 %%  and run-time performance of both strategies was measured by accumulative

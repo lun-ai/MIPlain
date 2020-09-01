@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% metaopt
+%% A. Cropper and S. H. Muggleton. Learning efficient logic programs.Machine Learning,108:1063–1083, 2019.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 pos_cost(Goal,Cost):-
   (functor(Goal,_,0) -> pos_cost_monadic(Goal,Cost); pos_cost_general(Goal,Cost)).
 neg_cost(Goal,Cost):-

@@ -1,4 +1,7 @@
-%% This is a copyrighted file under the BSD 3-clause licence, details of which can be found in the root directory.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  metagol
+%%  A. Cropper and S. H. Muggleton. Metagol system. https://github.com/metagol/metagol, 2016.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- user:use_module(library(lists)).
 

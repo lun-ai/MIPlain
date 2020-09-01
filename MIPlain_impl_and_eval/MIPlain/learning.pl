@@ -11,7 +11,7 @@
 :- ['./MIGO/dependent_learning'].
 :- ['./MIGO/assign_labels'].
 :- ['./MIGO/background'].
-:- ['./MIGO/episode_learning'].
+:- ['./episode_learning'].
 :- ['./MIGO/execute_strategy'].
 :- ['./util'].
 :- [playox].

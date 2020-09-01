@@ -1,3 +1,7 @@
+############################################################
+## Solving tic-tac-toe using deep reinforcement learning.(accessed 14 April, 2019).url:https://github.com/yanji84/tic-tac-toe-rl.
+############################################################
+
 import random
 import numpy as np
 import tensorflow as tf

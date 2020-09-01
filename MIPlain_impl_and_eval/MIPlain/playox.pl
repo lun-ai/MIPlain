@@ -1,15 +1,11 @@
-%%  Provide the background knowledge for arithmetical features
-%%  and for playing Noughts-and-Crosses
-%%
-%%  Empty mark has value 1
-%%  Player 1 mark has value 2
-%%  Player 2 mark has value 3
-%%
-%%  The arithmetical features describe conditions satisfied
-%%  by the current board state. These features are introduced
-%%  to MIGO for learning an hypothesis that does not use negation
-%%  and invented predicates. The MIGO learned strategy performs
-%%  a Minimax search over the game path tree.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  MIGO
+%%  S. H. Muggleton and C. Hocquette. Machine discovery of comprehensible strategies for
+%%  simple games using meta-interpretive learning.New Generation Computing, 37:203–217,2019.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Adapted part of MIGO's game play setting for MIPlain
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% ---------- BACKGROUND KNOWLEDGE ----------
@@ -42,12 +38,10 @@ line(7,b(A,_,_,_,B,_,_,_,C),[A,B,C]).
 line(8,b(_,_,A,_,B,_,C,_,_),[A,B,C]).
 
 
-%  MIGO and MIGOc have different definitions of line predicate
-%
-%  MIGO uses line/2 of arity 2 whereas MIGOc uses line/3 with
-%  an additional id assigned to each line of the board
-%
-%  This line/2 definition is useful when comparing MIGOc to MIGO
+%%  MIGO and MIPlain have different definitions of line predicate
+%%
+%%  MIGO uses line/2 of arity 2 whereas MIPlain uses line/3 with
+%%  an additional id assigned to each line of the board
 line(b(A,_,_,B,_,_,C,_,_),[A,B,C]).
 line(b(_,A,_,_,B,_,_,C,_),[A,B,C]).
 line(b(_,_,A,_,_,B,_,_,C),[A,B,C]).
@@ -90,28 +84,6 @@ line_value([o,x,o],18).
 line_value([o,o,x],18).
 line_value([o,o,o],27).
 
-%%  Arithmetical values of a given board position can also
-%%  be computed using the followings
-line_product(I,B,P) :- bvalue(B,Bv), line(I,Bv,L), prod_list(L,P).
-line_product_v(I,Bv,P) :- line(I,Bv,L), prod_list(L,P).
-
-rcd_product(s(_,_,B),P):-
-    between(1,8,I),
-    line_product(I,B,P).
-
-rcd_product_list(s(_,_,B),Ps):-
-    findall(P,(between(1,8,I),line_product(I,B,P)),Ps).
-
-rcd_sum_product(s(M,_,B),S) :-
-    next_mark(M,M1),value(M1,N),
-    findall(P,(between(1,8,I),line_product(I,B,P),pow_of_N(N,_,P)),Ps),
-    sum_list(Ps,S).
-
-rcd_sum_product_opponent(s(M,_,B),S) :-
-    value(M,N),
-    findall(P,(between(1,8,I),line_product(I,B,P),pow_of_N(N,_,P)),Ps),
-    sum_list(Ps,S).
-
 count([],_,0).
 count([X|T],X,Y):- !,count(T,X,Z), Y is 1+Z.
 count([X1|T],X,Z):- count(T,X,Z).
@@ -119,19 +91,7 @@ count([X1|T],X,Z):- count(T,X,Z).
 countall(List,X,C) :-
     count(List,X,C).
 
-prod_list([], 1).
-prod_list([H|T], Sum) :-
-    prod_list(T, Rest),
-    Sum is H*Rest.
-
-pow_of_N(N,1,N).
-pow_of_N(N,I,M):-
-    M>N,
-    0 is mod(M,N),
-    M1 is M//N,
-    pow_of_N(N,I1,M1),
-    I is I1+1.
-
+%% definition to check number of attacks of a given player
 number_of_pairs(s(_,_,B),M,C) :-
     mark(M),
     value(M,N),

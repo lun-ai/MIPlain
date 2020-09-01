@@ -1,6 +1,6 @@
-%%  MIGOc performs episode learning and constructs a winning strategy program
+%%  MIPlain performs episode learning and constructs a winning strategy program
 %%  by learning sub-tasks first. Negative examples are used to ensure hypothesis
-%%  learned cannot be over-generalized, and MIGOc backtracks on lost / drawn games
+%%  learned cannot be over-generalized, and MIPlain backtracks on lost / drawn games
 %%  to generate negative examples from gameplay.
 
 episode_learning(Sw,[]) :-

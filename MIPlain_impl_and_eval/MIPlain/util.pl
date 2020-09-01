@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   MIGO
+%%  S. H. Muggleton and C. Hocquette. Machine discovery of comprehensible strategies forsimple games using meta-interpretive learning.New Generation Computing, 37:203–217,2019.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 set_rand:-
     sleep(1),
     get_time(X),

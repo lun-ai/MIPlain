@@ -1,3 +1,7 @@
+############################################################
+## Q-learning tic-tac-toe(accessed 14 April, 2019). url:https://gist.github.com/fheisler/430e70fa249ba30e707f.
+############################################################
+
 from subprocess import call
 import os
 

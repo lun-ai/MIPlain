@@ -1,4 +1,7 @@
-%% This is a copyrighted file under the BSD 3-clause licence, details of which can be found in the root directory.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% metaopt
+%% A. Cropper and S. H. Muggleton. Learning efficient logic programs.Machine Learning,108:1063–1083, 2019.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- module(metagol,[metagol/2,metaopt/2,metagolo/2,pprint/1,op(950,fx,'@')]).
 
