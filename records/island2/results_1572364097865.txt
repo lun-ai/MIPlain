@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,0,0,0,2,0,0,2],[1,1,1,0,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
-responses: [stop orange from winning next move and to get pair of fish and pair of corn,get pair of corn which forces orange to move to stop me from winning,to get triple castle and win,to get pair of trees and two pair on same island forcing orange to choose and guarantee win,get pair of fish and force orange to take action then picking pair of corn and pair on same island letting me win,getting pair of fish and pair of corn. This forces orange to have two choices and letting me win.]
+responses: [stop orange from winning next move and to get pair of fish and pair of corn,
+get pair of corn which forces orange to move to stop me from winning,
+to get triple castle and win,
+to get pair of trees and two pair on same island forcing orange to choose and guarantee win,
+get pair of fish and force orange to take action then picking pair of corn and pair on same island letting me win,
+getting pair of fish and pair of corn. This forces orange to have two choices and letting me win.]
 scores: [1,2,3,3,3,1]
 time on expl: [43.2,155.8,20.2,53.6,63.6,55]
 

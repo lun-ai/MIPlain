@@ -35,33 +35,34 @@ def list_map(f, l):
     return list(map(f, l))
 
 
-for file_name in os.listdir('./records/island1'):
-    if file_name.endswith('.txt'):
-        with open('./records/island1/' + file_name, 'r') as file:
-            i = int(file_name.split('.')[0].split('_')[1]) % 2
-            id = int(read_nth_line(file, 1).strip('\n'))
-            a1 = []
-            a1.append(list_map(int, read_nth_line(file, 6).strip('\n').replace('[', '').replace(']', '').split(',')[9:]))
-            for line in range(7, 21):
-                a1.append(
-                    list_map(int, read_nth_line(file, line).strip('\n').replace('[', '').replace(']', '').split(',')[10:]))
-            if id in control_removed or id in treatment_removed:
-                removed_pre[i].append(a1[5:])
-            else:
-                answers_pre[i].append(a1[5:])
+# for file_name in os.listdir('./records/island1'):
+#     if file_name.endswith('.txt'):
+#         with open('./records/island1/' + file_name, 'r') as file:
+#             i = int(file_name.split('.')[0].split('_')[1]) % 2
+#             id = int(read_nth_line(file, 1).strip('\n'))
+#             a1 = []
+#             a1.append(list_map(int, read_nth_line(file, 6).strip('\n').replace('[', '').replace(']', '').split(',')[9:]))
+#             for line in range(7, 21):
+#                 a1.append(
+#                     list_map(int, read_nth_line(file, line).strip('\n').replace('[', '').replace(']', '').split(',')[10:]))
+#             if id in control_removed or id in treatment_removed:
+#                 removed_pre[i].append(a1[5:])
+#             else:
+#                 answers_pre[i].append(a1[5:])
+#
+#             a2 = []
+#             a2.append(
+#                 list_map(int, read_nth_line(file, 49).strip('\n').replace('[', '').replace(']', '').split(',')[9:]))
+#             for line in range(50, 64):
+#                 a2.append(
+#                     list_map(int, read_nth_line(file, line).strip('\n').replace('[', '').replace(']', '').split(',')[10:]))
+#             if id in control_removed or id in treatment_removed:
+#                 removed_post[i].append(a2[5:])
+#             else:
+#                 answers_post[i].append(a2[5:])
 
-            a2 = []
-            a2.append(
-                list_map(int, read_nth_line(file, 49).strip('\n').replace('[', '').replace(']', '').split(',')[9:]))
-            for line in range(50, 64):
-                a2.append(
-                    list_map(int, read_nth_line(file, line).strip('\n').replace('[', '').replace(']', '').split(',')[10:]))
-            if id in control_removed or id in treatment_removed:
-                removed_post[i].append(a2[5:])
-            else:
-                answers_post[i].append(a2[5:])
 
-
+# return the line position of weak options / single
 def find_weak_option(B, player):
     ls = []
     for l in lines:
@@ -70,6 +71,7 @@ def find_weak_option(B, player):
     return ls
 
 
+# return the line positions of strong options / pair
 def find_strong_option(B, player):
     ls = []
     for l in lines:
@@ -83,10 +85,12 @@ def count_occ(l, m):
 
 
 def check_win_2(B):
-    if len(find_strong_option(B, 1)) != 2:
-        return 'first condition failed'
+    if len(find_strong_option(B, 1)) != 2 and len(find_strong_option(B, 2)) != 0:
+        return 'all failed'
+    elif len(find_strong_option(B, 1)) != 2:
+        return 'first primitive failed'
     elif len(find_strong_option(B, 2)) != 0:
-        return 'second condition failed'
+        return 'second primitive failed'
     return 'success'
 
 
@@ -94,8 +98,7 @@ def check_win_3(B):
     l = find_strong_option(B, 1)
 
     if len(l) != 1:
-        print(B)
-        return 'first condition failed'
+        return 'all failed'
 
     B_c = list(B)
     for c in l[0]:
@@ -107,15 +110,15 @@ def check_win_3(B):
         if B_c_c[idx] == 0:
             B_c_c[idx] = 1
             if len(find_strong_option(B_c_c, 1)) == 2 and len(find_strong_option(B_c_c, 2)) == 0:
-                return 'success condition failed'
-    return 'second'
+                return 'success'
+    return 'second primitive failed'
 
 
 def check_for_mistakes(answers1, answers2):
 
     print('--------------------')
 
-    mistakes = {'first condition failed': 0, 'second condition failted': 0, 'success': 0}
+    mistakes = {'first primitive failed': 0, 'second primitive failed': 0, 'success': 0}
 
     mistakes_pre2 = mistakes.copy()
     mistakes_post2 = mistakes.copy()
@@ -141,12 +144,3 @@ def check_for_mistakes(answers1, answers2):
     print(mistakes_pre3)
     print(mistakes_post3)
     print('\n')
-
-print('Control selected:')
-check_for_mistakes(answers_pre[0], answers_post[0])
-print('Treatment selected:')
-check_for_mistakes(answers_pre[1], answers_post[1])
-print('Control removed:')
-check_for_mistakes(removed_pre[0], removed_post[0])
-print('Treatment removed:')
-check_for_mistakes(removed_pre[1], removed_post[1])

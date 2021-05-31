@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,0,0,0,2,0,0,2],[1,1,1,0,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,0,0,1]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,1,1,0]]
-responses: [you want to win and the castle is the highest and creates a win,you want to start off with a win so you take the castle ,the first one already took the castle so you want to take the next castle available to win,the first one already has the castle so you want to take the win by selecting the tree to get another box,you have a castle open to take with an already taken blue box for yourself.,you can win by taking the tree since you already have the castle.]
+responses: [you want to win and the castle is the highest and creates a win,
+you want to start off with a win so you take the castle ,
+the first one already took the castle so you want to take the next castle available to win,
+the first one already has the castle so you want to take the win by selecting the tree to get another box,
+you have a castle open to take with an already taken blue box for yourself.,
+you can win by taking the tree since you already have the castle.]
 scores: [0,0,0,1,1,2]
 time on expl: [33.6,20.4,24,26.2,18.4,16.2]
 

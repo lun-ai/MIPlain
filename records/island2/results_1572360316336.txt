@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,0,0,0,2,0,0,2],[1,1,1,0,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,1,0,0,0,0]]
 ,[[0,1,2,0,0,0,0,2,1],[0,1,2,0,0,1,0,2,1]]
-responses: [I thought that blocking them on the water would leave me open to take the corn, but I was incorrect. I should have taken a move on island 2 instead.,If I take the second resource on the island my opponent must block me to prevent me from winning the next turn. Then I am free to take the triple resource which would give to two avenues to win and my opponent would not be able to block both of them.,Choosing the castle would give me three castles. This is a winning move and I would win the game.,Choosing the tree gives me two avenues for winning. I can either collect three trees or have all three resource tiles on island one. The opponent can't block both of them in one turn, so I would win.,If I choose corn then the opponent has to block me the next turn to prevent me from winning with three island tiles. Then I can choose the corn and water tile on island three which will give me two of both corn and water and the opponent can only block one of them, so I would win.,I was probably trying to force a block on the water to go after the corn, but this was the wrong move. I would lose the game if I made this move.]
+responses: [I thought that blocking them on the water would leave me open to take the corn, but I was incorrect. I should have taken a move on island 2 instead.,
+If I take the second resource on the island my opponent must block me to prevent me from winning the next turn. Then I am free to take the triple resource which would give to two avenues to win and my opponent would not be able to block both of them.,
+Choosing the castle would give me three castles. This is a winning move and I would win the game.,
+Choosing the tree gives me two avenues for winning. I can either collect three trees or have all three resource tiles on island one. The opponent can't block both of them in one turn, so I would win.,
+If I choose corn then the opponent has to block me the next turn to prevent me from winning with three island tiles. Then I can choose the corn and water tile on island three which will give me two of both corn and water and the opponent can only block one of them, so I would win.,
+I was probably trying to force a block on the water to go after the corn, but this was the wrong move. I would lose the game if I made this move.]
 scores: [2,2,3,3,3,2]
 time on expl: [154.6,1010,40.8,61.6,118.2,127.8]
 

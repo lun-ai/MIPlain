@@ -73,7 +73,12 @@ Part 4:
 ,[[0,0,0,0,1,0,2,0,0],[0,0,0,0,1,1,2,0,0]]
 ,[[2,2,0,1,0,0,0,1,0],[2,2,0,1,1,0,0,1,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
-responses: [I choose tree to move.,I moved fish and castle since i don't have,I moved cord for for food,Corn and water are needed so i moved them,I need cord for food so i moved them,I moved castle for staying purpose]
+responses: [I choose tree to move.,
+I moved fish and castle since i don't have,
+I moved cord for for food,
+Corn and water are needed so i moved them,
+I need cord for food so i moved them,
+I moved castle for staying purpose]
 scores: [0,0,0,1,2,3]
 time on expl: [217.4,65,27.6,26.8,22,17.2]
 

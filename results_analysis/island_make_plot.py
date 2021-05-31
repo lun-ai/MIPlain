@@ -6,7 +6,7 @@ from scipy import stats
 from results_analysis.utils import compute_mean_std, read_nth_line, strip_arr_text, get_answer_sums, \
     ttest, filter, compute_filtered_mean_std, plot_bar_graph_aux, list_map, integrated_ttest, ttest_ind
 
-DATA_DIR = "../records"
+DATA_DIR = "./records"
 
 COLORS = ["yellowgreen", "gold", "lightskyblue", "lightcoral", "orange", "deepskyblue"]
 GENDER = {"other": 0,
@@ -233,13 +233,13 @@ def perf_graph_and_ttest_with_threshold(title, f1, f2):
     """
 
     perfect_c_player, [c_pre_d1, c_pre_d2, c_pre_d3], control_pre_mean, control_pre_std \
-        = compute_filtered_mean_std(f1, f2, control_pre, "Control group pre")
+        = compute_filtered_mean_std(f1, f2, control_pre, "")
     perfect_t_player, [t_pre_d1, t_pre_d2, t_pre_d3], treatment_pre_mean, treatment_pre_std \
-        = compute_filtered_mean_std(f1, f2, treatment_pre, "Treatment group pre")
+        = compute_filtered_mean_std(f1, f2, treatment_pre, "")
     _, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
-        = compute_filtered_mean_std(f1, f2, control_post, "Control group post", idxs=perfect_c_player)
+        = compute_filtered_mean_std(f1, f2, control_post, "", idxs=perfect_c_player)
     _, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
-        = compute_filtered_mean_std(f1, f2, treatment_post, "Treatment group post", idxs=perfect_t_player)
+        = compute_filtered_mean_std(f1, f2, treatment_post, "", idxs=perfect_t_player)
 
     ttest([[c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3]], [[t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3]])
 
@@ -438,7 +438,7 @@ def different_thresholds_on_control_treatment(title, y_axis_name, c_raw, t_raw, 
     _, [c_pre_d1, c_pre_d2, c_pre_d3], control_pre_mean, control_pre_std \
         = compute_filtered_mean_std(f1, f2, c_pre, "Control group pre", k=k)
     c_idxs, [c_post_d1, c_post_d2, c_post_d3], control_post_mean, control_post_std \
-        = compute_filtered_mean_std(f1, f2, c_post, "C3ontrol group post", k=k)
+        = compute_filtered_mean_std(f1, f2, c_post, "Control group post", k=k)
     _, [t_pre_d1, t_pre_d2, t_pre_d3], treatment_pre_mean, treatment_pre_std \
         = compute_filtered_mean_std(f1, f3, t_pre, "Treatment group pre", k=k)
     t_idxs, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
@@ -454,6 +454,72 @@ def different_thresholds_on_control_treatment(title, y_axis_name, c_raw, t_raw, 
                        y_axis_name, title)
 
     return c_idxs, t_idxs
+
+
+def create_line_graph1():
+    # style
+    plt.style.use('ggplot')
+
+    # create a color palette
+    palette = plt.get_cmap('Set1')
+    ax1 = plt.subplot()
+
+    x=np.arange(0, 5)
+
+    # ax1.plot([0, 2, 4], [0.250, 0.636, 1.00], label='win2 MSR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 2, 4], [0.333, 0.688, 0.667], label='win2 MMR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 2, 4], [1.00, 0.667, 1.00], label='win2 SSR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 2, 4], [0.00, 0.667, 0.778], label='win2 SMR', ls='--', lw=5, alpha=0.9)
+
+    ax1.plot([0, 1, 2], [0.5, 0.556, 0.5], label='win3 MSR', lw=5, alpha=0.9, marker='x', markersize=20)
+    ax1.plot([0, 1, 2, 3], [0.429, 0.667, 1.00, 1.00], label='win3 MMR', lw=5, alpha=0.9,marker='x', markersize=20)
+    ax1.plot([0, 1, 2], [0.00, 0.80, 1.00], label='win3 SSR', lw=5, alpha=0.9,marker='x', markersize=20)
+    ax1.plot([0, 1, 2], [0.50, 0.75, 1.00], label='win3 SMR', lw=5, alpha=0.9,marker='x', markersize=20)
+
+    # Add legend
+    ax1.legend(loc='best', fontsize='xx-large', ncol=2)
+
+    # Add labels and ticks
+    ax1.set_ylim(0.0, 1.1)
+    ax1.tick_params(labelsize='xx-large')
+    plt.ylabel('Accuracy of Selected Post-test Moves', fontsize=20)
+    plt.xlabel('Primitive Coverage', fontsize=20)
+    plt.xticks(x, ('0', '1', '2', '3', '4'))
+    plt.yticks(rotation='90')
+    plt.setp(ax1.get_xticklabels(), fontsize=20)
+    plt.show()
+
+def create_line_graph2():
+    # style
+    plt.style.use('ggplot')
+
+    # create a color palette
+    palette = plt.get_cmap('Set1')
+    ax1 = plt.subplot()
+
+    x=np.arange(0, 5)
+
+    # ax1.plot([0, 1, 2], np.divide([20, 11, 2], 33), label='win2 MSR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 1, 2], np.divide([18, 16, 3], 37), label='win2 MMR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 1, 2], np.divide([2, 6, 1], 9), label='win2 SSR', ls='--', lw=5, alpha=0.9)
+    # ax1.plot([0, 1, 2], np.divide([2, 12, 9], 23), label='win2 SMR', ls='--', lw=5, alpha=0.9)
+
+    ax1.plot(x, np.divide([18, 9, 2, 0, 0], 29), label='win3 MSR', lw=5, alpha=0.9,marker='x', markersize=20)
+    ax1.plot(x, np.divide([21, 3, 2, 1, 0], 27), label='win3 MMR', lw=5, alpha=0.9,marker='x', markersize=20)
+    ax1.plot(x, np.divide([2, 5, 2, 0, 0], 9), label='win3 SSR', lw=5, alpha=0.9,marker='x', markersize=20)
+    ax1.plot(x, np.divide([2, 12, 5, 0, 0], 19), label='win3 SMR', lw=5, alpha=0.9,marker='x', markersize=20)
+
+    # Add legend
+    ax1.legend(loc='best', fontsize='xx-large', ncol=2)
+
+    # Add labels and ticks
+    ax1.tick_params(labelsize='xx-large')
+    plt.ylabel('Proportion of Verbal Responses', fontsize=20)
+    plt.xlabel('Primitive Coverage', fontsize=20)
+    plt.xticks(x, ('0', '1', '2', '3', '4'))
+    plt.yticks(rotation='90')
+    plt.setp(ax1.get_xticklabels(), fontsize=20)
+    plt.show()
 
 if __name__ == "__main__":
 
@@ -476,17 +542,17 @@ if __name__ == "__main__":
     # load_records(["./records/island2/"])
 
     # (4) and (5)
-    # load_records([DATA_DIR + "/island1/", DATA_DIR + "/island2/"])
+    load_records([DATA_DIR + "/island1/", DATA_DIR + "/island2/"])
 
     # (6)
     # load_records([DATA_DIR + "/island3/records_9_12/"])
-    load_records([DATA_DIR + "/island3/records_10_12/"])
+    # load_records([DATA_DIR + "/island3/records_10_12/"])
     # load_records([DATA_DIR + "/island3/records_9_12/", DATA_DIR + "/island3/records_10_12/"])
 
     c_size = len(pretest_scores[0])
     t_size = len(pretest_scores[1])
     print("Total number of subjects: %d" % (c_size + t_size))
-
+    #
     control_pre = np.array(pretest_scores[0], dtype=np.int)
     control_post = np.array(posttest_scores[0], dtype=np.int)
     treatment_pre = np.array(pretest_scores[1], dtype=np.int)
@@ -495,7 +561,7 @@ if __name__ == "__main__":
     control_post_time = np.array(posttest_time[0], dtype=np.float32)
     treatment_pre_time = np.array(pretest_time[1], dtype=np.float32)
     treatment_post_time = np.array(posttest_time[1], dtype=np.float32)
-
+    #
     c_raw = [control_pre, control_post]
     t_raw = [treatment_pre, treatment_post]
     c_raw_T = [control_pre_time, control_post_time]
@@ -529,11 +595,11 @@ if __name__ == "__main__":
 
     """
     
-    Filtered processed data performance
+    Filtered processed data performance based on pre-test performance
     
     """
-    # perf_graph_and_ttest_with_threshold("Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma",
-    #                                     (lambda x: x == 10), (lambda x, u, std: not (u - std <= x and x < u + std)))
+    perf_graph_and_ttest_with_threshold("Mean No. correct answer of participants,  u - sigma <= initial accuracy < u + sigma",
+                                        (lambda x: x == 10), (lambda x, u, std: not (u - std <= x and x < u + std)))
     # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: not (u + std <= x)), "Mean No. correct answer of participants, u + sigma <= initial accuracy")
     # perf_graph_and_ttest_with_threshold((lambda x: x == 10), (lambda x, u, std: not (x < u - std)), "Mean No. correct answer of participants, initial accuracy < u - sigma")
 
@@ -542,7 +608,7 @@ if __name__ == "__main__":
     Whole processed data response time
     
     """
-    resT_graph_and_ttest("Mean response time")
+    # resT_graph_and_ttest("Mean response time")
     # resT_graph_and_ttest("Mean Time for Answer, did not use vocab")
 
     """
@@ -592,3 +658,5 @@ if __name__ == "__main__":
     #                   (lambda x, u, std: x <= u),
     #                   (lambda x, u, std: x <= u), k=id2)
 
+    # create_line_graph1()
+    # create_line_graph2()

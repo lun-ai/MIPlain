@@ -73,7 +73,12 @@ Part 4:
 ,[[0,1,2,0,0,0,0,2,1],[1,1,2,0,0,0,0,2,1]]
 ,[[0,0,0,1,0,0,0,2,0],[0,1,0,1,0,0,0,2,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,1,2,0,1,0]]
-responses: [I thought I would not give them a chance t pair a castle. Blocking that off made sense.,If I took the castle and the fish they wouldn't have enough moves to get the most pairs. I could get the tree next.,I wanted t keep them from the water and corn. They had so few items, I thought I could keep going.,I already had two castles. that square had 3 items. The next move for the other player wouldn't give them the pairs they needed.,I wasn't sure on this to be honest.I look now and theis seems like a mistake. I should have picked the square with more items.,This also seems like a dumb move now. I wasn't thinking ahead enough. They already had corn.]
+responses: [I thought I would not give them a chance t pair a castle. Blocking that off made sense.,
+If I took the castle and the fish they wouldn't have enough moves to get the most pairs. I could get the tree next.,
+I wanted t keep them from the water and corn. They had so few items, I thought I could keep going.,
+I already had two castles. that square had 3 items. The next move for the other player wouldn't give them the pairs they needed.,
+I wasn't sure on this to be honest.I look now and theis seems like a mistake. I should have picked the square with more items.,
+This also seems like a dumb move now. I wasn't thinking ahead enough. They already had corn.]
 scores: [0,0,1,1,1,2]
 time on expl: [45,62.2,40.8,71.8,66.2,49]
 

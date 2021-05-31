@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,0,2,0,0,2,1,2],[1,1,0,2,0,1,2,1,2]]
 ,[[2,2,0,1,0,0,0,1,0],[2,2,0,1,0,1,0,1,0]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,1,0,0,0,0]]
-responses: [Forest Move ,Castle Move,Forest Move,Water Move,Pop and water move,Popcorn move]
+responses: [Forest Move ,
+Castle Move,
+Forest Move,
+Water Move,
+Pop and water move,
+Popcorn move]
 scores: [0,0,1,3,3,3]
 time on expl: [184.4,42.8,15.4,57.2,30.4,58.2]
 

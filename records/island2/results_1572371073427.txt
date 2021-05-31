@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,0,0,1]]
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,0,0,1,0,1,0]]
-responses: [It makes two pairs. Island 3 and fish,It makes a pair: Island 1. Orange will be forced to take remaining cell of island 1, then I can do something,It completes the triplet. I have 3 castles.,It makes 2 pairs. Island 1 and fish,It forces orange to take island 2's remaining white cell. Then i can do something to make 2 pairs.,It makes 2 pairs. Island 3 and fish]
+responses: [It makes two pairs. Island 3 and fish,
+It makes a pair: Island 1. Orange will be forced to take remaining cell of island 1, then I can do something,
+It completes the triplet. I have 3 castles.,
+It makes 2 pairs. Island 1 and fish,
+It forces orange to take island 2's remaining white cell. Then i can do something to make 2 pairs.,
+It makes 2 pairs. Island 3 and fish]
 scores: [2,2,3,3,3,2]
 time on expl: [297.8,68.4,24.4,28.4,43.8,20.4]
 

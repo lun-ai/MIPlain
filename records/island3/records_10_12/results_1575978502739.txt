@@ -75,8 +75,7 @@ Part 4:
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
 responses: [Take this field to not loose on the next turn.Take this field to create two pairs with fish and corn.,
 First, force the opponent to take the remaining corn. Then by taking tree-water-fish you create two pairs you can complete.,
-Finish the game by aquiring three castles.
-It is as easy as that.,
+Finish the game by aquiring three castles.It is as easy as that.,
 Create two pairs with trees and island 1 by taking this tree. Opponent cannot prevent you from winning next turn.,
 Force the opponent to take corn-water. Then aquire castle to create two open pairs to win the following turn.,
 First, prevent opponent from winning next turn. Secondly, creating two pairs with corn and fish that cannot be prevented by the opponent.]

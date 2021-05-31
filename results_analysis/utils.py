@@ -147,6 +147,13 @@ def ttest(c_data, t_data):
     print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
         stats.ttest_ind(c_pre_d3, t_pre_d3)))
 
+    print("depth 1 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+        stats.ttest_ind(c_post_d1, t_post_d1)))
+    print("depth 2 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+        stats.ttest_ind(c_post_d2, t_post_d2)))
+    print("depth 3 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+        stats.ttest_ind(c_post_d3, t_post_d3)))
+
 
 def ttest_ind(c_data, t_data):
     """
@@ -234,18 +241,29 @@ def plot_bar_graph_aux(a1, a2, a3, a4, ylabel, title, ax=None):
     t_pre_mean, t_pre_std = a3
     t_post_mean, t_post_std = a4
 
+    plt.style.use('ggplot')
+
     if ax == None:
         _, ax = plt.subplots()
 
     width = 0.35
     ax.bar(np.arange(0, 3) - width / 2, c_pre_mean, width,
-           label="Control Pre-test", yerr=c_pre_std, alpha=0.7, capsize=5, color="r", edgecolor="black", hatch="/")
+           label="MS pre-test", yerr=c_pre_std, alpha=0.7, capsize=5, edgecolor="black", hatch="/")
     ax.bar(np.arange(0, 3) + width / 2, c_post_mean, width,
-           label="Control Post-test", yerr=c_post_std, alpha=0.7, capsize=5, color="b", edgecolor="black", hatch=".")
+           label="MS post-test", yerr=c_post_std, alpha=0.7, capsize=5, edgecolor="black", hatch=".")
     ax.bar(np.arange(3, 6) - width / 2, t_pre_mean, width,
-           label="Treatment Pre-test", yerr=t_pre_std, alpha=0.7, capsize=5, color="y", edgecolor="black", hatch="\\")
+           label="MM pre-test", yerr=t_pre_std, alpha=0.7, capsize=5, edgecolor="black", hatch="\\")
     ax.bar(np.arange(3, 6) + width / 2, t_post_mean, width,
-           label="Treatment Post-test", yerr=t_post_std, alpha=0.7, capsize=5, color="g", edgecolor="black", hatch="o")
+           label="MM post-test", yerr=t_post_std, alpha=0.7, capsize=5, edgecolor="black", hatch="o")
+
+    # ax.bar(np.arange(0, 3) - width / 2, c_pre_mean, width,
+    #        label="SS pre-test", yerr=c_pre_std, alpha=0.7, capsize=5, edgecolor="black", hatch="/")
+    # ax.bar(np.arange(0, 3) + width / 2, c_post_mean, width,
+    #        label="SS post-test", yerr=c_post_std, alpha=0.7, capsize=5, edgecolor="black", hatch=".")
+    # ax.bar(np.arange(3, 6) - width / 2, t_pre_mean, width,
+    #        label="SM pre-test", yerr=t_pre_std, alpha=0.7, capsize=5, edgecolor="black", hatch="\\")
+    # ax.bar(np.arange(3, 6) + width / 2, t_post_mean, width,
+    #        label="SM post-test", yerr=t_post_std, alpha=0.7, capsize=5, edgecolor="black", hatch="o")
 
     ax.text(0 - 0.3, np.array(c_pre_mean)[0] + 0.05, c_pre_mean[0], fontweight="bold")
     ax.text(1 - 0.3, np.array(c_pre_mean)[1] + 0.05, c_pre_mean[1], fontweight="bold")
@@ -274,10 +292,13 @@ def plot_bar_graph_aux(a1, a2, a3, a4, ylabel, title, ax=None):
                  t_post_mean[1] + t_post_std[1],
                  t_post_mean[2] + t_post_std[2]])
 
-    ax.set_ylabel(ylabel)
+    ax.tick_params(labelsize='xx-large')
+    ax.set_ylabel(ylabel, fontsize=20)
     ax.set_ylim(0.0, np.round(1.5 * hl))
-    ax.set_title(title)
-    plt.xticks(np.arange(0, 6), ('Depth 1', 'Depth 2', 'Depth 3', 'Depth 1', 'Depth 2', 'Depth 3'))
-    ax.legend(loc="best", fontsize="large")
+    plt.xticks(np.arange(0, 6), ('win1', 'win2', 'win3', 'win1', 'win2', 'win3'))
+    plt.setp(ax.get_xticklabels(), rotation='45', fontsize=20)
+    plt.yticks(rotation='90')
+    ax.legend(loc="best", fontsize="xx-large")
 
+    plt.tight_layout()
     plt.show()

@@ -73,7 +73,12 @@ Part 4:
 ,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,0,1,0,1,2]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,0,0,2,0,1,2]]
 ,[[0,1,0,0,0,0,0,0,2],[0,1,0,0,0,0,0,1,2]]
-responses: [It gives me the better chance to win,It prevents my opponent from getting a triple,It prevented my opponent for get all the trees,My opponent couldn't get a triple,I'm closer to getting a triple,It allowed my to get more resources to potentially win the game]
+responses: [It gives me the better chance to win,
+It prevents my opponent from getting a triple,
+It prevented my opponent for get all the trees,
+My opponent couldn't get a triple,
+I'm closer to getting a triple,
+It allowed my to get more resources to potentially win the game]
 scores: [0,0,1,2,2,2]
 time on expl: [42.4,21.2,47.4,22.4,22,18.8]
 

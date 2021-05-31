@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,0,1,0]]
-responses: [I could win either by selecting the 3rd piece on that island or the 3rd water,It gave me more options. I would have 3 resources to choose from,I was trying to go for getting three pieces on one island. Choosing the tree would also block orange from getting it,I would win with this move. It would give me 3 castles,It had 2 options for. I could go for either the water or the fish.,I think I was going for the fish. I could try to grab the 3rd fish on the next move.]
+responses: [I could win either by selecting the 3rd piece on that island or the 3rd water,
+It gave me more options. I would have 3 resources to choose from,
+I was trying to go for getting three pieces on one island. Choosing the tree would also block orange from getting it,
+I would win with this move. It would give me 3 castles,
+It had 2 options for. I could go for either the water or the fish.,
+I think I was going for the fish. I could try to grab the 3rd fish on the next move.]
 scores: [1,2,2,3,3,3]
 time on expl: [57.2,62.8,37.8,28,35,37.4]
 

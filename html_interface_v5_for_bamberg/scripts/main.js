@@ -1460,7 +1460,7 @@ function createIslandAux(elem, islandID, text, iconClass) {
                               .map(a => '<img id="' + islandID + ISLAND_ATTR_MAP[a]
                                                      + elem
                                                      + '" src="imgs/' + ISLAND_ATTR_MAP[a]
-                                                     + '.png" class="' + iconClass + '">')
+                                                     + '.png" class="' + iconClass + '"width="200" height="150">')
                               .join(' ')
                         + '</p>';
     cell.style.backgroundColor = elem === 'e' ?

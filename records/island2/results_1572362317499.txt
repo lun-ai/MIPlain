@@ -73,7 +73,12 @@ Part 4:
 ,[[0,1,0,0,0,0,0,0,2],[0,1,1,0,0,0,0,0,2]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,1,1,0]]
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,0,0,1,1,0,0]]
-responses: [given the diagram above , the best way to win is to follow the best logic and make the blue match with the other,blue should own the island,castle occurs more often,making the blue many is the best,island needs more of blue,beat the castle]
+responses: [given the diagram above , the best way to win is to follow the best logic and make the blue match with the other,
+blue should own the island,
+castle occurs more often,
+making the blue many is the best,
+island needs more of blue,
+beat the castle]
 scores: [0,0,0,1,2,2]
 time on expl: [75.2,17.2,47,30,22.4,18.6]
 

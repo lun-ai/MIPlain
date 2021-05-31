@@ -73,7 +73,12 @@ Part 4:
 ,[[1,0,2,1,1,0,0,2,2],[1,0,2,1,1,1,0,2,2]]
 ,[[0,1,0,0,0,0,0,0,2],[1,1,0,0,0,0,0,0,2]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,1,1,0]]
-responses: [It is the best one,It is the correct move,I think that was well move,correct position,I think it is the best one,Very accurate one]
+responses: [It is the best one,
+It is the correct move,
+I think that was well move,
+correct position,
+I think it is the best one,
+Very accurate one]
 scores: [0,0,0,1,1,2]
 time on expl: [13.4,10.2,13.6,9.8,15.6,8.2]
 

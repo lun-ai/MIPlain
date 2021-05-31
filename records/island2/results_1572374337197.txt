@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,0,0,1]]
-responses: [I needed to stop the opponent from getting a triplet on island 1 or I'd immediately lose.  It also put me in a position to win by either corn or fish no matter what the opponent did next.,I went for a double resource on this move since I didn't see any good options to take.  I'm not sure I can win off this but I can prevent the opponent from winning.,Going for the triple resource at this point would let me get a number of doubles in future moves easily.  I think I could reach a winning solution from there.,I completed triple castle on this move, winning me the match.  The opponent would get no turn to recover.,Taking the triple resource at this point would give me doubles on both water and fish.  No matter what the opponent did next I'd be able to reach a triple.,I was unsure how to win from this point, so I just aimed for a double on the island to force my opponent to take a single resource.  I'd be able to get doubles on either fish or water while blocking them from getting a triple later on.]
+responses: [I needed to stop the opponent from getting a triplet on island 1 or I'd immediately lose.  It also put me in a position to win by either corn or fish no matter what the opponent did next.,
+I went for a double resource on this move since I didn't see any good options to take.  I'm not sure I can win off this but I can prevent the opponent from winning.,
+Going for the triple resource at this point would let me get a number of doubles in future moves easily.  I think I could reach a winning solution from there.,
+I completed triple castle on this move, winning me the match.  The opponent would get no turn to recover.,
+Taking the triple resource at this point would give me doubles on both water and fish.  No matter what the opponent did next I'd be able to reach a triple.,
+I was unsure how to win from this point, so I just aimed for a double on the island to force my opponent to take a single resource.  I'd be able to get doubles on either fish or water while blocking them from getting a triple later on.]
 scores: [1,2,2,3,3,3]
 time on expl: [62.4,100,44.2,42.8,32,48.4]
 

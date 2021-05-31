@@ -73,7 +73,12 @@ Part 4:
 ,[[0,0,0,1,0,0,0,2,0],[0,0,1,1,0,0,0,2,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
-responses: [I chose this to get a pair.  I already had one fish.,I chose this to get a water pair.  I had one water already.,I chose this because I had one corn.  I thought if I chose this I might have a pair.,I chose this to try and get an island.  i will try and get the castle on the island in the next move.,I chose this to get three castles.  This is a triplet.,I went with this to try and get the triplet.  I will go for the tree the next move.]
+responses: [I chose this to get a pair.  I already had one fish.,
+I chose this to get a water pair.  I had one water already.,
+I chose this because I had one corn.  I thought if I chose this I might have a pair.,
+I chose this to try and get an island.  i will try and get the castle on the island in the next move.,
+I chose this to get three castles.  This is a triplet.,
+I went with this to try and get the triplet.  I will go for the tree the next move.]
 scores: [0,1,1,2,3,3]
 time on expl: [38.6,23.2,34.8,30.8,19.4,23.2]
 

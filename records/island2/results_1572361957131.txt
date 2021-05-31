@@ -73,7 +73,12 @@ Part 4:
 ,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,1,1,0,0,2]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,1,0,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
-responses: [Now I have 3 corn. This means I gained a triplet. ,I now have two pairs that could become a triplet, fish and corn. No matter what the opponent chooses next, I win. ,In retrospect, this was the wrong move. However, I could still probably triplet with water. ,I've gained a triplet. I win with corn.,I can win two ways now. Either I will triplet with the island or with the tree.,Again, probably the wrong move. I now have a fish pair though. ]
+responses: [Now I have 3 corn. This means I gained a triplet. ,
+I now have two pairs that could become a triplet, fish and corn. No matter what the opponent chooses next, I win. ,
+In retrospect, this was the wrong move. However, I could still probably triplet with water. ,
+I've gained a triplet. I win with corn.,
+I can win two ways now. Either I will triplet with the island or with the tree.,
+Again, probably the wrong move. I now have a fish pair though. ]
 scores: [1,1,1,3,3,3]
 time on expl: [66.2,55,82.8,18.8,26.6,50.8]
 

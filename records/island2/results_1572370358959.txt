@@ -73,7 +73,12 @@ Part 4:
 ,[[0,0,0,0,1,0,2,0,0],[1,0,0,0,1,0,2,0,0]]
 ,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,0,1,0,1,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,0,1,0,0]]
-responses: [I chose this move to get two pairs. I'd have 2 castles and 2 fishes.,I'd have a pair. Orange couldn't make a pair of castles.,I'd have a pair. Orange couldn't make a pair of corn.,I made a mistake here. I didn't mean to make this ove.,I would have two pairs. I'd have 2 castles and 2 fishes.,I'd prevent orange from making a pair of forests. I wanted to get as many resources as possible in one cell.]
+responses: [I chose this move to get two pairs. I'd have 2 castles and 2 fishes.,
+I'd have a pair. Orange couldn't make a pair of castles.,
+I'd have a pair. Orange couldn't make a pair of corn.,
+I made a mistake here. I didn't mean to make this ove.,
+I would have two pairs. I'd have 2 castles and 2 fishes.,
+I'd prevent orange from making a pair of forests. I wanted to get as many resources as possible in one cell.]
 scores: [0,0,1,1,2,2]
 time on expl: [108.2,70.2,54,50,73.6,87.2]
 

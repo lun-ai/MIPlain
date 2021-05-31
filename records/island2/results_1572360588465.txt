@@ -73,7 +73,12 @@ Part 4:
 ,[[1,0,2,1,1,0,0,2,2],[1,0,2,1,1,1,0,2,2]]
 ,[[0,0,0,1,0,0,0,2,0],[0,0,0,1,0,1,0,2,0]]
 ,[[0,1,2,1,0,0,0,0,2],[0,1,2,1,0,0,1,0,2]]
-responses: [because it is i like it and it is my highest guess.,it is good and i like very much,my strategy is my memories power,because i feel good of the game,it is very easy to play,i like it and feeling very good ]
+responses: [because it is i like it and it is my highest guess.,
+it is good and i like very much,
+my strategy is my memories power,
+because i feel good of the game,
+it is very easy to play,
+i like it and feeling very good ]
 scores: [0,0,0,1,1,2]
 time on expl: [337.6,78.8,77.2,41.4,27.4,19.2]
 

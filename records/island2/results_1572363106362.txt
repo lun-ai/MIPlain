@@ -73,7 +73,12 @@ Part 4:
 ,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,0,1,1,0,2]]
 ,[[1,2,2,0,0,1,0,0,0],[1,2,2,0,1,1,0,0,0]]
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
-responses: [I get a double on this island white getting three potential rain drops as a match. ,I got a double on this island. The double gives me the win while also supporting the three of a kind chance. ,I have a double on this island with potential for three of a kind. ,Right now I have a double on the 3rd island. One more move and I would be allow to capture this island with all resources. ,Right now, I have the potential for three of a kind. I have two of the corn stalks already, so one more on the 1st island would secure the win. ,This move wins me the game. I have 3 of a kind of the castles. ]
+responses: [I get a double on this island white getting three potential rain drops as a match. ,
+I got a double on this island. The double gives me the win while also supporting the three of a kind chance. ,
+I have a double on this island with potential for three of a kind. ,
+Right now I have a double on the 3rd island. One more move and I would be allow to capture this island with all resources. ,
+Right now, I have the potential for three of a kind. I have two of the corn stalks already, so one more on the 1st island would secure the win. ,
+This move wins me the game. I have 3 of a kind of the castles. ]
 scores: [1,1,1,2,2,3]
 time on expl: [34.4,30,40.2,18,25.6,11.8]
 

@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,0,1,0,0,0]]
-responses: [I already had a forest on Island 2. I picked the forest on Island 3 to make a pair.,I had forest, water and fish on Island 2, and corn and water on Island 3. I picked corn and fish on Island 1 to make three pairs: corn, water, and fish.,I had one castle and water on Island 1. I picked corn and water on Island 3 to make a pair of water.,I had a castle on Island 1 and Island 2. I picked the castle on Island 3 to win the game.,I had a castle, water, fish and corn on Island 1. I picked Island 2 to make a pair of water and fish.,I had a forest, water and fish on Island 2. I chose water on Island 3 to make a pair or water.]
+responses: [I already had a forest on Island 2. I picked the forest on Island 3 to make a pair.,
+I had forest, water and fish on Island 2, and corn and water on Island 3. I picked corn and fish on Island 1 to make three pairs: corn, water, and fish.,
+I had one castle and water on Island 1. I picked corn and water on Island 3 to make a pair of water.,
+I had a castle on Island 1 and Island 2. I picked the castle on Island 3 to win the game.,
+I had a castle, water, fish and corn on Island 1. I picked Island 2 to make a pair of water and fish.,
+I had a forest, water and fish on Island 2. I chose water on Island 3 to make a pair or water.]
 scores: [0,1,2,3,3,3]
 time on expl: [62.8,149.4,27.6,29.6,30.2,55.4]
 

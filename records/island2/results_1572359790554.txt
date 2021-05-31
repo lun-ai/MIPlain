@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
 ,[[1,0,2,0,0,0,0,0,0],[1,0,2,0,1,0,0,0,0]]
-responses: [Was going for three. The computer already had a castle so I took castle to dissuade him from taking it.,I was going for a set of three. The computer already had a tree so I blocked it from taking tree on my island.,I was going for a set of three. Computer already had castle and fish so I took castle to keep it from doing that.,I had two castles. By taking a third castle I won.,I wanted to get to three fish. I took the corn one because computer had a corn and might take it.,I wanted a set of three. I took the corn because I randomly picked it on the way to getting three.]
+responses: [Was going for three. The computer already had a castle so I took castle to dissuade him from taking it.,
+I was going for a set of three. The computer already had a tree so I blocked it from taking tree on my island.,
+I was going for a set of three. Computer already had castle and fish so I took castle to keep it from doing that.,
+I had two castles. By taking a third castle I won.,
+I wanted to get to three fish. I took the corn one because computer had a corn and might take it.,
+I wanted a set of three. I took the corn because I randomly picked it on the way to getting three.]
 scores: [0,0,1,3,3,3]
 time on expl: [38,18.4,28.4,37.2,59.2,29.4]
 

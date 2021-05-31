@@ -47,7 +47,8 @@ function getPart1Scores() {
 }
 
 function getParticipantID() {
-    var pid = localStorage['partID'];
+    // var pid = localStorage['partID'];
+    var pid = 1;
     return isNaN(pid) ? 1 : pid;
 }
 
@@ -313,7 +314,7 @@ function getAnswerSamplesFromTest(ans, prevS, s, resT) {
 
                             }
 
-                        } else {
+                        } else {2
 
                             // sort the response time list of depth inc
                             rt[inc].sort((a, b) => b[0] * (-1) * b[2] - a[0] * (-1) * a[2]);
@@ -889,8 +890,8 @@ function prephase2() {
                     'You will be given 2 minutes to think about your choice.'
     } else {
         document.getElementById('instruction3').textContent =
-                 'You will be given 2 minutes to study the explanation from MIGO, an AI agent.'
-        document.getElementById('MIGO_intro').style.display = 'block';
+                 'You will be given 2 minutes to study the explanation from MIPlain, an AI agent.'
+        document.getElementById('MIPLAIN_intro').style.display = 'block';
     }
 
     createButton('nextPhaseButton', 'nextPhase', 'Continue', phase2);
@@ -906,7 +907,7 @@ function phase2() {
     totalTime = QUESTION_TIME;
 
     document.getElementById('explanation').style.display = 'block';
-    document.getElementById('MIGO_intro').style.display = 'none';
+    document.getElementById('MIPLAIN_intro').style.display = 'none';
     document.getElementById('Great_Wizard_intro').style.display = 'none';
 
     document.getElementById('phase').textContent = 'Part ' + phase;
@@ -926,7 +927,7 @@ function phase2() {
         document.getElementById('feedbackPanel').style.display = 'none';
     } else {
         document.getElementById('instruction3').innerHTML +=
-                    '<br /> <b>You are given time to read comments of MIGO AI. '
+                    '<br /> <b>You are given time to read comments of MIPlain AI. '
                     + 'They explain why the right move is better than the wrong move. </b>';
         document.getElementById('instruction4').innerHTML = '<br /> <span style="text-decoration: underline">'
                     + 'Please pay attention to the highlighted resources and comments. </span><br /><br />'
@@ -1103,8 +1104,8 @@ function showExpl() {
     removeChild('wrongMoveButton', 'wrongMoveComment');
     removeChild('rightMoveButton', 'rightMoveComment');
 
-    document.getElementById('wrongMoveComment').innerHTML = '<span style="color: red">This is a wrong move</span>';
-    document.getElementById('rightMoveComment').innerHTML = '<span style="color: green">This is a right move</span>';
+    document.getElementById('wrongMoveComment').innerHTML = '<span style="color: red;font-size:20px;">This is a wrong move</span>';
+    document.getElementById('rightMoveComment').innerHTML = '<span style="color: green; font-size:20px;">This is a right move</span>';
 
     var initial = changeLabelsOnBoard(examples[currentExpl - 1]);
     var right = changeLabelsOnBoard(rightMoves[currentExpl - 1]);
@@ -1136,14 +1137,14 @@ function rightMoveChosen() {
     answers[currentExpl - 1].push(rightMoves[currentExpl - 1]);
     scores.push(10);
     showExpl();
-    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+    var button = createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 }
 
 function wrongMoveChosen() {
     answers[currentExpl - 1].push(wrongMoves[currentExpl - 1]);
     scores.push(getMiniMaxScore(answers[currentExpl - 1][0], answers[currentExpl - 1][1], 1));
     showExpl();
-    createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
+    button = createButton('nextExampleButton', 'nextExample', 'Next', stopCount);
 }
 
 function createParitalBoard(originalBoard, board, boardID, parentId) {
@@ -1347,6 +1348,7 @@ function createTableViewButton(buttonId, parentId, text, func) {
 function createMoveButton(buttonId, parentId, text, func) {
     var button = createTableViewButton(buttonId, parentId, text, func);
     button.style.position = 'relative';
+    button.style.fontSize = '20px';
     return button;
 }
 
@@ -1435,7 +1437,7 @@ function createBoardExpl(board, boardId, parentId, text, color) {
         comment.align = 'center';
         comment.style.fontSize = 'small';
         comment.style.whiteSpace = 'pre-wrap';
-        comment.innerHTML = '<span style="color: ' + color + '">'
+        comment.innerHTML = '<span style="color: ' + color + ';font-size:20px;">'
                         + text + '</span>';
     }
 
@@ -1546,6 +1548,7 @@ function createIslandAux(elem, islandID, text, iconClass) {
                               .map(a => '<img id="' + islandID + ISLAND_ATTR_MAP[a]
                                                      + elem
                                                      + '" src="imgs/' + ISLAND_ATTR_MAP[a]
+                                                     + '.png" class="' + iconClass + '">')
                                                      + '.png" class="' + iconClass + '">')
                               .join(' ')
                         + '</p>';

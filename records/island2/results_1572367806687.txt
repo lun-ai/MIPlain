@@ -73,7 +73,12 @@ Part 4:
 ,[[0,1,2,1,0,0,0,0,2],[0,1,2,1,0,1,0,0,2]]
 ,[[0,1,2,0,0,0,0,2,1],[0,1,2,0,0,1,0,2,1]]
 ,[[0,1,0,0,0,0,0,0,2],[0,1,0,0,0,1,0,0,2]]
-responses: [I thought this move would best maximize my chances. And give me the best option of winning. ,I thought the forest was the best option. It helped me maximize my chances to win. ,Clicking on the cornfield gave me the best chance. It maximized my chances. ,I countered the orange by choosing cornfield option in Island 3. It gave me the best chance. ,I couldn't get three castles.  I wanted to have a chance at 3 of the others.,Couldn't get 3 castles.  Wanted a chance at 3 others.]
+responses: [I thought this move would best maximize my chances. And give me the best option of winning. ,
+I thought the forest was the best option. It helped me maximize my chances to win. ,
+Clicking on the cornfield gave me the best chance. It maximized my chances. ,
+I countered the orange by choosing cornfield option in Island 3. It gave me the best chance. ,
+I couldn't get three castles.  I wanted to have a chance at 3 of the others.,
+Couldn't get 3 castles.  Wanted a chance at 3 others.]
 scores: [0,0,0,1,2,2]
 time on expl: [75.4,43.6,56.6,89.8,215,20.4]
 

@@ -73,7 +73,12 @@ Part 4:
 ,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
 ,[[0,0,0,0,1,0,2,0,0],[0,0,0,0,1,1,2,0,0]]
 ,[[1,1,0,0,0,2,0,0,2],[1,1,0,0,1,2,0,0,2]]
-responses: [The great wizard tells which one move is wright and which is not,It make a good relationship for all,pair make smooth way,It is used to select the best territory to win,it is used to got a relation between two potential moves ,it is always chooses the best possible move.]
+responses: [The great wizard tells which one move is wright and which is not,
+It make a good relationship for all,
+pair make smooth way,
+It is used to select the best territory to win,
+it is used to got a relation between two potential moves ,
+it is always chooses the best possible move.]
 scores: [0,0,0,1,1,2]
 time on expl: [121.8,23.8,265.2,39.8,69.4,29.6]
 
