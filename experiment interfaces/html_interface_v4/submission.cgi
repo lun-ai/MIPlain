@@ -21,7 +21,6 @@ fwrite($fp, PHP_EOL);
 fwrite($fp, $_POST[gender]);
 fclose($fp);
 ?>
-<p>yo l haricot</p>
 
     <div align="center">
         <scan style="color:red;font-size:3vw">Well done, you are now a Noughts and Crosses wizard!</scan>
