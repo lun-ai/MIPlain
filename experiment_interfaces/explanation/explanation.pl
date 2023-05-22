@@ -1,5 +1,7 @@
-:- ['../MIGO/metagol'].
-:- [sl_migo].
+:- ['MIPlain_impl_and_eval/MIPlain/MIGO/METAGOL/metagol'].
+:- ['experiment_interfaces/explanation/expl_MIPlain'].
+
+
 
 explanation_operator(or, ' / ').
 explanation_operator(and,' + ').
@@ -8,8 +10,10 @@ explanation_operator(not,'not').
 info :-
     write('*** Please press ENTER key for submitting explanations ***\n\n').
 
+
+
 interpret_program :-
-    \+ current_predicate(target/1),
+    \+ current_predicate(target/1),!,
     write('*** Target for explanation not specified ***\n\n').
 interpret_program :-
     info,nl,
@@ -20,6 +24,8 @@ interpret_program :-
 interpret_program(Target,I) :-
     interpret_rule(Target),
     format_interpretation(Target,I).
+
+
 
 interpret_rule(Pred) :-
     \+ multi_rule_definitions(Pred),
@@ -35,12 +41,15 @@ interpret_rule(Pred) :-
     add_rule_explanation(Pred,PredExp,Body,Exp_).
 
 
+
 interpret_rule_(_,_,[],'').
 interpret_rule_(Name,[Pred|Body],[B|[]],Exp1) :-
     interpret_rule_body(Name,[Pred|Body],[B|[]],Exp1,'').
 interpret_rule_(Name,[Pred|Body],Bs,Exp) :-
     interpret_rule_body(Name,[Pred|Body],Bs,Exp1,Exp2),
     concat_explanations(and,Exp1,Exp2,Exp).
+
+
 
 interpret_rule_body(Name,[Pred|Body],[B|Bs],Exp1,Exp2) :-
     primitive_explanation(B,Exp),
@@ -73,6 +82,8 @@ format_interpretation(Pred,I) :-
     string_concat(PredExp,' = ',Exp1),
     string_concat(Exp1,BodyExp,I),!.
 
+
+
 concat_explanations(Op,none,Exp,Exp) :-
     explanation_operator(Op,_).
 concat_explanations(Op,Exp,none,Exp) :-
@@ -82,11 +93,17 @@ concat_explanations(Op,Exp1,Exp2,Exp_) :-
     string_concat(Exp1,Op_ ,Exp3),
     string_concat(Exp3,Exp2,Exp_).
 
+
+
 remove_rule_explanation(Pred) :-
     retractall(rule_explanation(Pred,_,_,_)).
 
+
+
 add_rule_explanation(Pred,PredExp,Body,BodyExp) :-
     assertz(rule_explanation(Pred,PredExp,Body,BodyExp)).
+
+
 
 format_input([],'').
 format_input([W],W).
@@ -95,15 +112,22 @@ format_input([W|Ws],S) :-
     format_input(Ws,S_),
     string_concat(W1,S_,S),!.
 
+
+
 explanation_from_input(Userexp) :-
     readln(Input),
     format_input(Input,Userexp),
-    writeln(Userexp),nl.
+%    writeln(Userexp),
+    nl.
+
+
 
 multi_rule_definitions(Pred) :-
     findall(Pred,sub(_,Pred,_,_,_),Preds),
     length(Preds,L),
     L > 1.
+
+
 
 add_target(T) :-
     asserta(target(T)).
