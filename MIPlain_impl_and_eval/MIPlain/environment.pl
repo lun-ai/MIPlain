@@ -87,6 +87,17 @@ make_move(default,M,B,B2,default):-
     random_member(B2,Bs),
     retractall(board(_)),
     asserta(board(B2)).
+
+%%  play with a strategy described by a logic program LP
+%%  default - semi-random with fix seed move
+make_move(learned_strategy,x,B1,B2,default) :-
+    \+ execute_strategy(s(x,_,B1),_,s(o,_,B2)),
+    make_move(default,x,B1,B2,default),!.
+make_move(learned_strategy,x,B1,B2,none) :-
+    execute_strategy(s(x,_,B1),_,s(o,_,B2)),
+    retract(board(_)),
+    asserta(board(B2)).
+
 %%  Replay move when there is only one available move to be made
 make_move(branch,_,M,B,B2,_):-
     next_mark(M,M1),
@@ -94,9 +105,9 @@ make_move(branch,_,M,B,B2,_):-
     retractall(board(_)),
     asserta(board(B2)).
 %%  Replaying and pick a different game branch
-make_move(branch,K,M,B,B2,B2):-
+make_move(branch,_K,M,B,B2,B2):-
     next_mark(M,M1),
-    move(s(M,_,B),s(M1,_,B1)),
+    move(s(M,_,B),s(M1,_,_B1)),
     retractall(board(_)),
     asserta(board(B2)).
 %%  Replaying and pick a different game branch
@@ -109,16 +120,6 @@ make_move(branch,K,M,B,B3,_):-
     random_member(B3,Bs1),
     retractall(board(_)),
     asserta(board(B3)).
-
-%%  play with a strategy described by a logic program LP
-%%  default - semi-random with fix seed move
-make_move(learned_strategy,x,B1,B2,default) :-
-    \+ execute_strategy(s(x,_,B1),_,s(o,_,B2)),
-    make_move(default,x,B1,B2,default),!.
-make_move(learned_strategy,x,B1,B2,none) :-
-    execute_strategy(s(x,_,B1),_,s(o,_,B2)),
-    retract(board(_)),
-    asserta(board(B2)).
 
 
 %%  play a game until termination

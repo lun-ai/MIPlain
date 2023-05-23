@@ -11,11 +11,11 @@
 
 wina_1(A,B):-move(A,B),won(B).
 wina_2(A,B):-move(A,B),win_2_1(B).
-win_2_1(A):-count_double_mark_line(A,x,2),count_double_mark_line(A,o,0).
+win_2_1(A):-number_of_pairs(A,x,2),number_of_pairs(A,o,0).
 wina_3(A,B):-move(A,B),win_3_1(B).
-win_3_1(A):-count_double_mark_line(A,x,1),win_3_2(A).
+win_3_1(A):-number_of_pairs(A,x,1),win_3_2(A).
 win_3_2(A):-move(A,B),win_3_3(B).
-win_3_3(A):-count_double_mark_line(A,x,0),win_3_4(A).
+win_3_3(A):-number_of_pairs(A,x,0),win_3_4(A).
 win_3_4(A):-move(A,B),win_2_1(B).
 
 winb_1(A,B):-move(A,B),won(B).

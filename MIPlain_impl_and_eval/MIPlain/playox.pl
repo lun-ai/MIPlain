@@ -20,8 +20,10 @@ is_board(B) :-
 value(e,1) :- !.
 value(x,2) :- !.
 value(o,3) :- !.
-next_mark(x,o) :- !.
-next_mark(o,x) :- !.
+
+% defined also in environment.pl
+%next_mark(x,o) :- !.
+%next_mark(o,x) :- !.
 
 bvalue(b(A,B,C,D,E,F,G,H,I),b(Av,Bv,Cv,Dv,Ev,Fv,Gv,Hv,Iv)) :-
     value(A,Av), value(B,Bv), value(C,Cv), value(D,Dv), value(E,Ev), value(F,Fv),
@@ -86,7 +88,7 @@ line_value([o,o,o],27).
 
 count([],_,0).
 count([X|T],X,Y):- !,count(T,X,Z), Y is 1+Z.
-count([X1|T],X,Z):- count(T,X,Z).
+count([_X1|T],X,Z):- count(T,X,Z).
 
 countall(List,X,C) :-
     count(List,X,C).

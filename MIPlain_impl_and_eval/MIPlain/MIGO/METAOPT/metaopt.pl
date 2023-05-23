@@ -414,7 +414,7 @@ func_test(Atom,PS,G):-
 %  append(PosCosts,NegCosts,Costs),
 %  max_list(Costs,NewBound).
 
-program_cost(Pos,Neg,Prog,NewBound):-
+program_cost(Pos,_Neg,Prog,NewBound):-
   retract_win, retract_draw,
   metagol:assert_program(Prog),
   %trace,

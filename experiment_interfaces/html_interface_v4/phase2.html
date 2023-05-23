@@ -101,7 +101,6 @@
 <script type="text/javascript" src="scripts/lists.js"></script>
 <script id="strategy1.pl" type="text/prolog">
 % use embedding prolog script instead of loading from file
-% for reference check strategy_and_BK.pl
 :-use_module(library(lists)).
 
 is_board(B) :-
@@ -250,7 +249,6 @@ win_3_4(A):-win_2(A,B),win_2_1(B).
 </script>
 <script id="strategy2.pl" type="text/prolog">
 % use embedding prolog script instead of loading from file
-% for reference check strategy_and_BK.pl
 
 marks([x,o]).
 mark(M) :- marks(Ms), member(M,Ms).

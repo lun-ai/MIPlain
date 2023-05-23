@@ -1,10 +1,10 @@
 %%  MIPlain performs episode learning and constructs a winning strategy program
 %%  by learning sub-tasks first. Negative examples are used to ensure hypothesis
-%%  learned cannot be over-generalized, and MIPlain backtracks on lost / drawn games
+%%  learned are not too general, and MIPlain backtracks on lost / drawn games
 %%  to generate negative examples from gameplay.
 
 episode_learning(Sw,[]) :-
-    tasks(K1,K2),
+    tasks(K1,_K2),
     episode_learning_aux(win,1,K1,Primw,Invw,Gw),!,
     retract_win,
     flatten(Gw,Sw),
@@ -35,8 +35,6 @@ learn_efficient(Pos/Neg,G) :-
           (writeln('% timeout'),metagol:get_best_program(G))).
 
 flatten_retract_strategy(S,FS) :-
-    flatten(Prim,Prim2),
-    retractall_prim(Prim2),
     flatten(S,FS),
     retract_program(FS).
 
@@ -65,8 +63,8 @@ assert_program(Prog) :-
 retract_program(Prog) :-
     metagol:retract_program(Prog).
 
-pprint(Prog) :-
-    metagol:pprint(Prog).
+%pprint(Prog) :-
+%    metagol:pprint(Prog).
 
 compatible_with_pos(Pos,Neg) :-
     Pos=..[P,s(M,_,B),_],
@@ -81,3 +79,12 @@ retract_prim(Prim):-
     retractall(user:prim(Prim)),
     retractall(user:primcall(P,_)).
 
+retractall(Prim,Inv,G,S):-
+    flatten(Prim,Prim2),
+    retractall_prim(Prim2),
+    append(Inv,G,All),
+    flatten(All,S),
+    retract_program(S).
+
+find_prims(Prog,PrimSet):-
+    findall(P/A,(member(sub(_Name,P,A,_MetaSub,_PredTypes),Prog)),PrimSet).

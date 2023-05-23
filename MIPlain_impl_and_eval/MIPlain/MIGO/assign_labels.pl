@@ -42,7 +42,7 @@ update_exs([B1|Seq],M,Sw,Sd) :-
     write('Lose game\n'),
     assert_program(Sw),assert_win,
     assert_program(Sd),assert_draw,
-    depth([B1|Seq],Depth),
+    depth([B1|Seq],_Depth),
     retract_program(Sw),retract_win,
     update_backtrack(negative,[B1|Seq],[B1|Seq]).
 update_exs(_,M,_Sw,_Sd) :- mark(opponent,M).
@@ -64,7 +64,7 @@ update_exs([B1|Seq],d,Sw,Sd) :-
     write('Draw game\n'),
     assert_program(Sw),assert_win,
     assert_program(Sd),assert_draw,
-    depth([B1|Seq],Depth),
+    depth([B1|Seq],_Depth),
     retract_program(Sw),retract_win,
     update_backtrack(negative,[B1|Seq],[B1|Seq]).
 update_exs(_,d,_,_).
@@ -100,6 +100,17 @@ update_ex(Ex,positive,P) :-
 update_ex(Ex,positive,P) :-
     episode(P,Pos,_,_),
     member(Ex,Pos),!.
+%% Negative example can only be added after there is at least one positive example
+%% Negative example must be compatible with existing positive example
+update_ex(Ex,negative,P) :-
+    episode(P,_,Neg,_),
+    member(Ex,Neg),!.
+update_ex(Ex,negative,P) :-
+    episode(P,[Pos|Ps],Neg,BK),
+    \+(member(Ex,Neg)),!,
+    %compatible_with_pos(Pos,Ex),
+    retract(episode(P,[Pos|Ps],Neg,BK)),
+    assert(episode(P,[Pos|Ps],[Ex|Neg],BK)),!.
 
 update_ex_all_neg(_,_,win,0).
 update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D1) :-
@@ -116,17 +127,7 @@ update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D1) :-
     (user:call(Ex) -> update_ex(Ex,negative,P);true),
     D2 is D1 - 1,
     update_ex_all_neg(s(M,_,B),s(M1,_,B1),win,D2).
-%% Negative example can only be added after there is at least one positive example
-%% Negative example must be compatible with existing positive example
-update_ex(Ex,negative,P) :-
-    episode(P,_,Neg,_),
-    member(Ex,Neg),!.
-update_ex(Ex,negative,P) :-
-    episode(P,[Pos|Ps],Neg,BK),
-    \+(member(Ex,Neg)),!,
-    %compatible_with_pos(Pos,Ex),
-    retract(episode(P,[Pos|Ps],Neg,BK)),
-    assert(episode(P,[Pos|Ps],[Ex|Neg],BK)),!.
+
 
 %% reclassify draw position with respect to the updated winning strategy for mixed learning
 update_draw_moves(_,1) :- !.

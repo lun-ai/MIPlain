@@ -1,3 +1,4 @@
+%% metarules without the constant symbol assignments
 metarule([P,R,Q],([P,A,B]:-[[R,A,B],[Q,B]])).
 metarule([P,R,Q],([P,A]:-[[R,A],[Q,A]])).
 metarule([P,R,Q],([P,A]:-[[R,A,B],[Q,B]])).
@@ -17,7 +18,12 @@ prim(won/1).
 %target(win_2).
 %target(win_3).
 
-%%  Example program and basic primitive explanations
+%% Example program and basic primitive explanations
+%%
+%% n_strong_of_x(A) correspond to number_of_pairs(A,x,n)
+%% n_strong_of_o(A) correspond to number_of_pairs(A,o,n)
+%%
+%% Explanations of the island game can be generated similarly based on these
 primitive_explanation(move, 'move').
 primitive_explanation(won, 'three pieces in a line').
 primitive_explanation(zero_strong_of_X, 'X has no pair').

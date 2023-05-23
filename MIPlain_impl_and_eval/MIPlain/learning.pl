@@ -8,7 +8,6 @@
 
 :- ['./MIGO/METAOPT/metaopt'].
 :- ['./MIGO/METAOPT/tree-costs'].
-:- ['./MIGO/dependent_learning'].
 :- ['./MIGO/assign_labels'].
 :- ['./MIGO/background'].
 :- ['./episode_learning'].

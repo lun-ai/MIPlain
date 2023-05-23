@@ -6,7 +6,7 @@ This beneficial aspect of using machine learned model to aid human comprehension
 This work is described in a Machine Learning Journal publication, ["Beneficial and harmful explanatory machine learning"](https://link.springer.com/article/10.1007/s10994-020-05941-0).
 
 We incorporated the learned theory of this framework in empirical studies and investigated the explanatory effects of machine learned theory.
-The explanatory effects of machine learned theory are defined by us as being beneficial or harmful. 
+The explanatory effects of machine learned theory are defined by us as either being beneficial or harmful. 
 An operation definition relates to improvement or degradation of human out-of-sample performance after being provided a logic theory as an explanation.
 
 **Meta-Interpretive Learning** (MIL) is an Inductive Logic Programming (ILP) approach in which recursive logic programs can be induced incrementally from a small number of examples together with background predicates and metarules.
@@ -25,7 +25,8 @@ The following figure shows the logic program learned by MIPlain.
 MIPlain uses three primitives (highlighted in the above figure):
 1. move/2 for generating a valid Noughts and Crosses move
 2. won/1 for deciding a win of Noughts and Crosses
-3. number_of_pairs/3 for specifying the number of attacks for a player (X or O) on a given board. We have name such a game pattern "pair" because an attack involves two pieces of the same player but none of the opponent.
+3. number_of_pairs/3 for specifying the number of attacks for a player (X or O) on a given board. 
+We have name such a game pattern "pair" because it involves two pieces of the same player but none of the opponent's pieces blocks the line.
 
 (win_1) winning third move for X = X moves + X has three pieces in a line
 
@@ -57,9 +58,16 @@ Requirement:
 
 - SWI-Prolog
 
+The following cmd learns the target programs from replay and backtracking
+
 ```bash
-cd MIPlain_impl_and_eval/MIPlain/
-swipl -s backtrack_and_replay.pl -g goal -t halt
+cd MIPlain_impl_and_eval/MIPlain/ && swipl -s backtrack_and_replay.pl -g goal -t halt
+```
+
+The following cmd learns the target programs from supplied training examples (positive and negative examples)
+
+```bash
+cd MIPlain_impl_and_eval/MIPlain/ && swipl -s learn_from_examples.pl -g learn_from_examples -t halt -q
 ```
 
 ## MIPlain implementation and evaluation

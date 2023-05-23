@@ -102,6 +102,7 @@ def compute_canonical(board):
             canonical_board = transformed
     return b_min, canonical_board
 
+
 def compute_canonical_map(previous, num_free, to_move_player):
     left_space = num_free - 1
     for i in range(len(previous)):
@@ -141,7 +142,7 @@ def simulate_boards(previous, num_free, to_move_player):
 
             if not records.__contains__(repre_canonical):
                 if left_space == 0 and not check_for_win(next_canonical, to_move_player):
-                        records[repre_canonical] = ([], [0])
+                    records[repre_canonical] = ([], [0])
                 elif check_for_win(next_canonical, to_move_player):
                     records[repre_canonical] = ([], [-10 + 20 * (to_move_player % 2)])
                 else:
@@ -202,15 +203,16 @@ def visualize_board(board):
         if grid == 0:
             real_board.append(' ')
         elif grid == 1:
-            real_board.append('O')
-        else:
             real_board.append('X')
+        else:
+            real_board.append('O')
     board = ' %s | %s | %s' % (real_board[1], real_board[2], real_board[3]) + '\n'
     board += '---+---+---' + '\n'
     board += ' %s | %s | %s' % (real_board[8], real_board[0], real_board[4]) + '\n'
     board += '---+---+---' + '\n'
     board += ' %s | %s | %s' % (real_board[7], real_board[6], real_board[5]) + '\n'
     return board
+
 
 # Write pickled data to JS file and assign to a variable
 def binary_to_JS():
@@ -225,6 +227,20 @@ def binary_to_JS():
         map_file.write('var canonicalMap = ')
         json.dump(canonical_map, map_file)
     print('-------------- Write completed -------------')
+
+
+def convert_strs_to_boards(strs):
+    for s in strs:
+        b = []
+        for i in [1, 2, 3, 8, 0, 4, 7, 6, 5]:
+            if s[i] == '0':
+                b.append('e')
+            elif s[i] == '1':
+                b.append('x')
+            else:
+                b.append('o')
+        print('b(' + ','.join(b) + ')')
+
 
 def count_terminals():
     data = pickle.load(open('data.m', 'rb'))
@@ -252,6 +268,28 @@ def count_terminals():
     print('Terminals after two moves: ' + str(two_moves) + 'positions: ' + str(two_position))
     print('Terminals after three moves: ' + str(three_moves) + 'positions: ' + str(three_position))
 
-generate_board_configs()
-#binary_to_JS()
-#print(visualize_board([1,0,1,1,2,2,0,2,1]))
+# generate_board_configs()
+# binary_to_JS()
+# print(visualize_board([1,0,0,2,1,1,0,2,2]))
+
+# training examples used in experiment
+# win_1
+# convert_strs_to_boards(['100211022','212101020','112200012'])
+# good moves
+# convert_strs_to_boards(['110211022','212111020','112201012'])
+# bad moves
+# convert_strs_to_boards(['101211022','212101120','112210012'])
+
+# win_2
+# convert_strs_to_boards(['100010202','010002012','020002011'])
+# good moves
+# convert_strs_to_boards(['100110202','010102012','120002011'])
+# bad moves
+# convert_strs_to_boards(['100010212','110002012','020102011'])
+
+# win_3
+# convert_strs_to_boards(['002001000','001002000','000001020'])
+# good moves
+# convert_strs_to_boards(['002001010','001102000','010001020'])
+# bad moves
+# convert_strs_to_boards(['002001001','101002000','100001020'])
