@@ -1,0 +1,90 @@
+1572364559332
+
+
+
+Part 1: 
+[[1,1,0,1,0,2,0,2,2],[1,1,1,1,0,2,0,2,2]]
+,[[1,0,0,2,2,0,2,1,1],[1,1,0,2,2,0,2,1,1]]
+,[[2,0,0,1,0,1,2,1,2],[2,0,0,1,1,1,2,1,2]]
+,[[1,0,0,1,1,2,2,0,2],[1,0,0,1,1,2,2,1,2]]
+,[[1,1,2,1,0,2,0,0,2],[1,1,2,1,0,2,0,1,2]]
+,[[1,0,0,1,2,0,0,2,0],[1,1,0,1,2,0,0,2,0]]
+,[[0,0,0,0,0,1,2,1,2],[1,0,0,0,0,1,2,1,2]]
+,[[1,0,0,1,0,0,0,2,2],[1,0,0,1,0,1,0,2,2]]
+,[[0,0,0,0,0,2,1,1,2],[1,0,0,0,0,2,1,1,2]]
+,[[2,1,0,0,0,1,0,2,0],[2,1,0,1,0,1,0,2,0]]
+,[[1,0,0,0,2,0,0,0,0],[1,1,0,0,2,0,0,0,0]]
+,[[0,0,0,0,0,1,2,0,0],[1,0,0,0,0,1,2,0,0]]
+,[[0,0,0,1,0,0,0,0,2],[0,1,0,1,0,0,0,0,2]]
+,[[0,1,0,0,0,2,0,0,0],[1,1,0,0,0,2,0,0,0]]
+,[[0,0,1,0,0,0,0,0,2],[1,0,1,0,0,0,0,0,2]]
+difficulty: [3,3,3,3,3,2.5,2.5,5,5,5,1.17,2.33,2.33,3.5,3.5]
+scores: [10,10,10,10,10,10,10,-10,10,10,10,10,10,0,10]
+time: [4,4.4,3.8,2.8,3.8,12.2,4.8,10.6,3.8,8.2,12.4,5,4.2,2.4,3]
+
+
+
+
+
+
+
+
+
+Part 2: 
+[[1,0,0,2,1,1,0,2,2],[1,0,1,2,1,1,0,2,2]]
+,[[2,1,2,1,0,1,0,2,0],[2,1,2,1,1,1,0,2,0]]
+,[[1,1,2,2,0,0,0,1,2],[1,1,2,2,0,1,0,1,2]]
+,[[1,0,0,0,1,0,2,0,2],[1,0,0,1,1,0,2,0,2]]
+,[[0,1,0,0,0,2,0,1,2],[1,1,0,0,0,2,0,1,2]]
+,[[0,2,0,0,0,2,0,1,1],[1,2,0,0,0,2,0,1,1]]
+,[[0,0,2,0,0,1,0,0,0],[0,0,2,0,0,1,0,1,0]]
+,[[0,0,1,0,0,2,0,0,0],[1,0,1,0,0,2,0,0,0]]
+,[[0,0,0,0,0,1,0,2,0],[1,0,0,0,0,1,0,2,0]]
+scores: [-10,10,10,10,0,10,10,0,0]
+time: [16.4,9.8,5.8,7,7,6.6,8.2,6.4,4.2]
+time on expl: [2,0,0.2,0,0,0,0,0,0]
+
+
+Part 3: 
+[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
+,[[1,0,2,1,1,0,0,2,2],[1,0,2,1,1,1,0,2,2]]
+,[[2,1,2,1,0,1,0,0,2],[2,1,2,1,1,1,0,0,2]]
+,[[1,0,2,0,0,1,1,2,2],[1,1,2,0,0,1,1,2,2]]
+,[[1,1,0,2,0,0,2,1,2],[1,1,0,2,0,1,2,1,2]]
+,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
+,[[0,1,2,1,0,0,0,0,2],[1,1,2,1,0,0,0,0,2]]
+,[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
+,[[0,1,2,0,0,0,0,2,1],[1,1,2,0,0,0,0,2,1]]
+,[[2,2,0,1,0,0,0,1,0],[2,2,0,1,0,1,0,1,0]]
+,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
+,[[0,1,0,0,0,0,0,0,2],[0,1,0,0,0,0,0,1,2]]
+,[[0,0,0,1,0,0,2,0,0],[1,0,0,1,0,0,2,0,0]]
+,[[0,0,0,1,0,0,0,2,0],[0,0,0,1,0,1,0,2,0]]
+,[[0,0,0,0,1,0,2,0,0],[1,0,0,0,1,0,2,0,0]]
+difficulty: [3,3,3,3,3,2.5,2.5,5,5,5,1.17,2.33,2.33,3.5,3.5]
+scores: [10,10,10,10,10,10,10,10,10,10,10,0,10,10,10]
+time: [2.6,7.4,3,1.8,0.8,9.6,6.2,1,8.2,15,9.6,6.2,4.4,2,2.4]
+
+
+Part 4: 
+[[1,2,2,0,0,1,0,0,0],[1,2,2,1,0,1,0,0,0]]
+,[[0,0,0,1,0,0,0,2,0],[0,0,0,1,0,1,0,2,0]]
+,[[0,1,0,0,0,0,0,0,2],[0,1,0,0,0,0,0,1,2]]
+,[[1,1,2,2,0,2,0,1,0],[1,1,2,2,0,2,0,1,1]]
+,[[1,1,0,0,0,2,0,0,2],[1,1,0,1,0,2,0,0,2]]
+,[[1,0,2,0,0,0,0,0,0],[1,0,2,1,0,0,0,0,0]]
+responses: [I chose the tile because I thought it would be the optimal move most likely to lead to me winning the game. I would then have two corn, two water, and two fish, so that on my next move I would have multiple choices that would be victorious and the opponent couldn't block me. I would have multiple options to win.,
+I took this tile in order to win the game. I wanted to choose the best tile. I would block the opponent from gaining all three tiles in the bottom island while also gaining a second corn. Then on the next move I could possibly win.,
+I chose the tile in order to win the game. I would then have two castles. I would also have tiles on two islands. I would then try to acquire three island tiles, or three of one resource.,
+I chose this tile in order to win the game. I would then have two tiles on Island 2. More importantly, I would have three castles, which would resu.lt in me winning,
+I chose this tile in order to win the game. I would obtain a second tile in Island 1. I would then have two fish also. Then on my next turn I could either select the last tile of Island 1 OR the castle/fish tile on Island 3 in order to win.,
+I chose this tile to win the game. I chose it in order to get a second fish. I also chose it because it had multiple resources. I chose it as well to block the opponent from taking over all of island 1. ]
+scores: [1,1,2,3,3,3]
+time on expl: [77.6,54.8,59,43.4,43,38.2]
+
+
+male
+
+25-34
+
+bachelor
