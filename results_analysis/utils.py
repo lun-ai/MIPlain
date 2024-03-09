@@ -74,9 +74,9 @@ def compute_filtered_mean_std(f1, f2, raw_data, name, k=get_answer_sums, idxs=No
     mean = [round(np.average(d1), 2),
             round(np.average(d2), 2),
             round(np.average(d3), 2)]
-    std = [round(np.std(d1, ddof=1, dtype=np.float32), 2),
-           round(np.std(d2, ddof=1, dtype=np.float32), 2),
-           round(np.std(d3, ddof=1, dtype=np.float32), 2)]
+    std = [round(np.std(d1, ddof=1, dtype=np.float32) / np.sqrt(np.size(d1)), 2),
+           round(np.std(d2, ddof=1, dtype=np.float32) / np.sqrt(np.size(d2)), 2),
+           round(np.std(d3, ddof=1, dtype=np.float32) / np.sqrt(np.size(d3)), 2)]
 
     return idx_for_removal, [d1, d2, d3], mean, std
 
@@ -244,7 +244,7 @@ def plot_bar_graph_aux(a1, a2, a3, a4, ylabel, title, ax=None):
     plt.style.use('ggplot')
 
     if ax == None:
-        _, ax = plt.subplots()
+        _, ax = plt.subplots(figsize=(10, 10))
 
     width = 0.35
     ax.bar(np.arange(0, 3) - width / 2, c_pre_mean, width,

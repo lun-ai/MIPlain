@@ -531,7 +531,7 @@ if __name__ == "__main__":
     3) Amazon NNC
     4) Amazon Island 1
     5) Amazon Island 2
-    6) College student Island (need further analysis from data)
+    6) College student Island (test batch 9_12)
     
     """
 
