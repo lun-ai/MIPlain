@@ -99,22 +99,22 @@ def integrated_ttest(c_raw_data, t_raw_data, f, k=get_answer_sums):
     t_post_d2 = k(t_post[:, 5:10], f)
     t_post_d3 = k(t_post[:, 10:15], f)
 
-    print("depth 1 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
-    print("depth 2 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
-    print("depth 3 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
-    print(
-        "depth 1 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
-    print(
-        "depth 2 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
-    print(
-        "depth 3 - treatment t: %.3f - p: %.3f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
-
-    print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d1, t_pre_d1)))
-    print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d2, t_pre_d2)))
-    print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d3, t_pre_d3)))
+    # print("depth 1 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
+    # print("depth 2 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
+    # print("depth 3 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
+    # print(
+    #     "depth 1 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
+    # print(
+    #     "depth 2 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
+    # print(
+    #     "depth 3 - treatment t: %.3f - p: %.3f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
+    #
+    # print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d1, t_pre_d1)))
+    # print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d2, t_pre_d2)))
+    # print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d3, t_pre_d3)))
 
 
 def ttest(c_data, t_data):
@@ -130,29 +130,29 @@ def ttest(c_data, t_data):
     [c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3] = c_data
     [t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3] = t_data
 
-    print("depth 1 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
-    print("depth 2 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
-    print("depth 3 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
-    print(
-        "depth 1 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
-    print(
-        "depth 2 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
-    print(
-        "depth 3 - treatment t: %.3f - p: %.5f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
-
-    print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d1, t_pre_d1)))
-    print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d2, t_pre_d2)))
-    print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d3, t_pre_d3)))
-
-    print("depth 1 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_post_d1, t_post_d1)))
-    print("depth 2 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_post_d2, t_post_d2)))
-    print("depth 3 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_post_d3, t_post_d3)))
+    # print("depth 1 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d1, c_post_d1)))
+    # print("depth 2 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d2, c_post_d2)))
+    # print("depth 3 - control t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(c_pre_d3, c_post_d3)))
+    # print(
+    #     "depth 1 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d1, t_post_d1)))
+    # print(
+    #     "depth 2 - treatment t: %.3f - p: %.5f " % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d2, t_post_d2)))
+    # print(
+    #     "depth 3 - treatment t: %.3f - p: %.5f" % ttest_two_tailed_to_one_tailed(stats.ttest_rel(t_pre_d3, t_post_d3)))
+    #
+    # print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d1, t_pre_d1)))
+    # print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d2, t_pre_d2)))
+    # print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d3, t_pre_d3)))
+    #
+    # print("depth 1 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_post_d1, t_post_d1)))
+    # print("depth 2 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_post_d2, t_post_d2)))
+    # print("depth 3 - control vs. treatment post t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_post_d3, t_post_d3)))
 
 
 def ttest_ind(c_data, t_data):
@@ -168,22 +168,22 @@ def ttest_ind(c_data, t_data):
     [c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3] = c_data
     [t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3] = t_data
 
-    print("depth 1 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d1, c_post_d1)))
-    print("depth 2 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d2, c_post_d2)))
-    print("depth 3 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d3, c_post_d3)))
-    print(
-        "depth 1 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d1, t_post_d1)))
-    print(
-        "depth 2 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d2, t_post_d2)))
-    print(
-        "depth 3 - treatment t: %.3f - p: %.3f" % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d3, t_post_d3)))
-
-    print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d1, t_pre_d1)))
-    print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d2, t_pre_d2)))
-    print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
-        stats.ttest_ind(c_pre_d3, t_pre_d3)))
+    # print("depth 1 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d1, c_post_d1)))
+    # print("depth 2 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d2, c_post_d2)))
+    # print("depth 3 - control t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(c_pre_d3, c_post_d3)))
+    # print(
+    #     "depth 1 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d1, t_post_d1)))
+    # print(
+    #     "depth 2 - treatment t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d2, t_post_d2)))
+    # print(
+    #     "depth 3 - treatment t: %.3f - p: %.3f" % ttest_two_tailed_to_one_tailed(stats.ttest_ind(t_pre_d3, t_post_d3)))
+    #
+    # print("depth 1 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d1, t_pre_d1)))
+    # print("depth 2 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d2, t_pre_d2)))
+    # print("depth 3 - control vs. treatment pre t: %.3f - p: %.3f " % ttest_two_tailed_to_one_tailed(
+    #     stats.ttest_ind(c_pre_d3, t_pre_d3)))
 
 
 def filter_aux(f1, f2, data, name, k=get_answer_sums):

@@ -248,12 +248,12 @@ def perf_graph_and_ttest_with_threshold(title, f1, f2):
     treatment_all_depth = np.append(np.append(t_pre_d1, t_pre_d2), t_pre_d3)
     treatment_post_all_depth = np.append(np.append(t_post_d1, t_post_d2), t_post_d3)
 
-    print("Overall - control ttest: " + str(stats.ttest_rel(control_all_depth, control_post_all_depth)[1]))
-    print("Overall - control ttest means: " + str(np.average(control_all_depth)) + ", "
-          + str(np.average(control_post_all_depth)))
-    print("Overall - treatment ttest: " + str(stats.ttest_rel(treatment_all_depth, treatment_post_all_depth)[1]))
-    print("Overall - treatment ttest means: " + str(np.average(treatment_all_depth)) + ", "
-          + str(np.average(treatment_post_all_depth)))
+    # print("Overall - control ttest: " + str(stats.ttest_rel(control_all_depth, control_post_all_depth)[1]))
+    # print("Overall - control ttest means: " + str(np.average(control_all_depth)) + ", "
+    #       + str(np.average(control_post_all_depth)))
+    # print("Overall - treatment ttest: " + str(stats.ttest_rel(treatment_all_depth, treatment_post_all_depth)[1]))
+    # print("Overall - treatment ttest means: " + str(np.average(treatment_all_depth)) + ", "
+    #       + str(np.average(treatment_post_all_depth)))
 
     plot_bar_graph_aux([control_pre_mean, control_pre_std],
                        [control_post_mean, control_post_std],
