@@ -241,8 +241,6 @@ def perf_graph_and_ttest_with_threshold(title, f1, f2):
     _, [t_post_d1, t_post_d2, t_post_d3], treatment_post_mean, treatment_post_std \
         = compute_filtered_mean_std(f1, f2, treatment_post, "", idxs=perfect_t_player)
 
-    ttest([[c_pre_d1, c_pre_d2, c_pre_d3], [c_post_d1, c_post_d2, c_post_d3]], [[t_pre_d1, t_pre_d2, t_pre_d3], [t_post_d1, t_post_d2, t_post_d3]])
-
     control_all_depth = np.append(np.append(c_pre_d1, c_pre_d2), c_pre_d3)
     control_post_all_depth = np.append(np.append(c_post_d1, c_post_d2), c_post_d3)
     treatment_all_depth = np.append(np.append(t_pre_d1, t_pre_d2), t_pre_d3)

@@ -115,7 +115,7 @@ The Island Game contains three islands, each with three territories on which one
 
 - all experimental records are included in the folder records/
   - Grade-5 to 7 are obtained from school children using Noughts and Crosses experiment interfaces
-  - Island game experiments are performend with participants in a mixed background group from Amazon Mechanical Turk
+  - Island game experiments are performed with participants in a mixed background group from Amazon Mechanical Turk
 
 Python scripts used to analyse experimental results are included in results_analysis/ folder.
 The result plot in Ai et al. (2021) comparing human comprehension across different complexity of the Island game 
